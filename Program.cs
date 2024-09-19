@@ -107,14 +107,7 @@ app.MapGet(
     }
 );
 
-//GET - get all users
-// app.MapGet(
-//     "/api/v1/users",
-//     () =>
-//     {
-//         return Results.Ok(users);
-//     }
-// );
+
 app.MapGet("/api/v1/users", () => Results.Ok(users));
 //PUT - update user Name by User_Id
 
@@ -128,7 +121,7 @@ app.MapPut(
             return Results.NotFound();
         }
         foundUser.Name = updatedUser.Name;
-        return Results.Ok(foundUser);//        return Results.NotFound();>manar
+        return Results.Ok(foundUser);
 
     }
 );
@@ -165,61 +158,7 @@ app.MapPatch(
         return Results.Ok(foundUser);
     }
 );
-// //PUT - update user Address*******
-// app.MapPatch(
-//     "/api/v1/users/{id}",
-//     (int id, JsonElement updatedFields) =>
-//     {
-//         User? foundUser = users.FirstOrDefault(u => u.Id == id);
-//         if (foundUser == null)
-//         {
-//             return Results.NotFound();
-//         }
-//         if (updatedFields.TryGetProperty("Address", out var addressUpdated))
-//         //        if (updatedFields.TryGetProperty("Adress", out var addressUpdated))>manar
 
-//         {
-//             foundUser.Address = addressUpdated.GetString();
-//         }
-//         return Results.Ok(foundUser);
-//     }
-// );
-
-// //PUT - update user phone*******
-// app.MapPatch(
-//     "/api/v1/users/{id}",
-//     (int id, JsonElement updatedFields) =>
-//     {
-//         User? foundUser = users.FirstOrDefault(u => u.Id == id);
-//         if (foundUser == null)
-//         {
-//             return Results.NotFound();
-//         }
-//         if (updatedFields.TryGetProperty("Phone", out var phoneUpdated))
-//         {
-//             foundUser.Phone = phoneUpdated.GetInt32();
-//         }
-//         return Results.Ok(foundUser);
-//     }
-// );
-
-// //PUT - update user email******
-// app.MapPatch(
-//     "/api/v1/users/{id}",
-//     (int id, JsonElement updatedFields) =>
-//     {
-//         User? foundUser = users.FirstOrDefault(u => u.Id == id);
-//         if (foundUser == null)
-//         {
-//             return Results.NotFound();
-//         }
-//         if (updatedFields.TryGetProperty("Email", out var emailUpdated))
-//         {
-//             foundUser.Email = emailUpdated.GetString();
-//         }
-//         return Results.Ok(foundUser);
-//     }
-// );
 
 //DELETE - delete a user by User_Id
 
