@@ -1,12 +1,17 @@
 using System.Text.Json;
-using bookTest;
+using bookStore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// step 1: add controller
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+// step 2: use 
+app.MapControllers();
 
 if (app.Environment.IsDevelopment())
 {
@@ -14,41 +19,41 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 // Carts
-List<Cart> carts = new List<Cart>
-{
-    new Cart
-    {
-        CartId = 1,
-        UserId = 3,
-        Quantity = 3,
-        Price = 100,
-    },
-    new Cart
-    {
-        CartId = 2,
-        UserId = 2,
-        Quantity = 5,
-        Price = 250,
-    },
-};
+// List<Cart> carts = new List<Cart>
+// {
+//     new Cart
+//     {
+//         CartId = 1,
+//         UserId = 3,
+//         Quantity = 3,
+//         Price = 100,
+//     },
+//     new Cart
+//     {
+//         CartId = 2,
+//         UserId = 2,
+//         Quantity = 5,
+//         Price = 250,
+//     },
+// };
 
-app.MapPost(
-    "/api/v1/carts",
-    (Cart newCart) =>
-    {
-        carts.Add(newCart);
-        return Results.Created("New cart", newCart);
-    }
-);
+// app.MapPost(
+//     "/api/v1/carts",
+//     (Cart newCart) =>
+//     {
+//         carts.Add(newCart);
+//         return Results.Created("New cart", newCart);
+//     }
+// );
 
-app.MapGet(
-    "/api/v1/carts/{id}",
-    (int id) =>
-    {
-        var cart = carts.FirstOrDefault(p => p.CartId == id);
-        return Results.Ok(cart);
-    }
-);//?
+// app.MapGet(
+//     "/api/v1/carts/{id}",
+//     (int id) =>
+//     {
+//         var cart = carts.FirstOrDefault(p => p.CartId == id);
+//         return Results.Ok(cart);
+//     }
+// );//?
 // Users
 List<User> users = new List<User>
 {
@@ -176,19 +181,19 @@ app.MapDelete(
     }
 );
 
-app.MapDelete(
-    "/api/v1/carts/{id}",
-    (int id) =>
-    {
-        var cart = carts.FirstOrDefault(p => p.CartId == id);
-        if (cart == null)
-        {
-            return Results.NotFound(); //404
-        }
-        carts.Remove(cart);
-        return Results.NoContent(); //204
-    }
-);
+// app.MapDelete(
+//     "/api/v1/carts/{id}",
+//     (int id) =>
+//     {
+//         var cart = carts.FirstOrDefault(p => p.CartId == id);
+//         if (cart == null)
+//         {
+//             return Results.NotFound(); //404
+//         }
+//         carts.Remove(cart);
+//         return Results.NoContent(); //204
+//     }
+// );
 List<Book> booksList = new List<Book>
 {
     new Book(1, "Yellowface", "R.F. Kuang", "9780063250833", 5, 15.81f, Book.Format.hardcover),
@@ -295,5 +300,6 @@ app.MapPut("/api/v1/orders/{orderId}", (int orderId, Order.Status status) =>
     order.OrderStatus = status;
     return Results.Ok(order);
 });
+
 app.Run();
 
