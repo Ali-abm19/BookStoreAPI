@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace bookTest
+namespace BookStore
 {
     public class Cart
     {
@@ -11,6 +11,5 @@ namespace bookTest
         public int UserId { get; set; }
         public int Quantity { get; set; }
         public double Price { get; set; }
-
     }
 }

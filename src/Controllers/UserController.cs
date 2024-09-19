@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace bookTest;
-    public class UserController
-    {
-        
-    }
+namespace BookStore
+{
+    public class UserController { }
+}
