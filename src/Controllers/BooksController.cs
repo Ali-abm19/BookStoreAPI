@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookStore
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/v1/[Controller]")]
     public class BooksController : ControllerBase
     {
         static List<Book> books = new List<Book>
@@ -55,6 +55,59 @@ namespace BookStore
         public ActionResult GetBooks()
         {
             return Ok(books);
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult GetBookById(int id)
+        {
+            Book? bookToReturn = books.FirstOrDefault(i => i.Id == id);
+            if (bookToReturn == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(bookToReturn);
+        }
+
+        [HttpPost]
+        public ActionResult CreateBook(Book b)
+        {
+            books.Add(b);
+            return Created("", b);
+            //return CreatedAtAction(nameof(GetBookById), new { id = b.Id }, b);
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult DeleteBook(int id)
+        {
+            Book? b = books.FirstOrDefault(i => i.Id == id);
+            if (b == null)
+            {
+                return NotFound();
+            }
+
+            books.Remove(b);
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult UpdateBook(int id, Book newBook)
+        {
+            Book? bookToUpdate = books.FirstOrDefault(i => i.Id == id);
+            if (bookToUpdate == null)
+            {
+                return NotFound();
+            }
+
+            bookToUpdate.Id = newBook.Id;
+            bookToUpdate.Title = newBook.Title;
+            bookToUpdate.Author = newBook.Author;
+            bookToUpdate.Price = newBook.Price;
+            bookToUpdate.StockQuantity = newBook.StockQuantity;
+            bookToUpdate.ISBN = newBook.ISBN;
+            bookToUpdate.BookFormat = newBook.BookFormat;
+
+            return Ok(bookToUpdate);
         }
     }
 }
