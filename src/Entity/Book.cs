@@ -5,15 +5,23 @@ using System.Threading.Tasks;
 
 namespace BookStore
 {
-    public class Book
+    public class Book(
+        int id,
+        string title,
+        string author,
+        string isbn,
+        int stockQuantity,
+        float price,
+        Book.Format format
+    )
     {
-        public int Id { get; set; }
-        public string ISBN { get; set; }
-        public string Title { get; set; }
-        public string Author { get; set; }
-        public float Price { get; set; }
-        public int StockQuantity { get; set; }
-        public Format BookFormat { get; set; }
+        public int Id { get; set; } = id;
+        public string ISBN { get; set; } = isbn;
+        public string Title { get; set; } = title;
+        public string Author { get; set; } = author;
+        public float Price { get; set; } = price;
+        public int StockQuantity { get; set; } = stockQuantity;
+        public Format BookFormat { get; set; } = format;
 
         public enum Format
         {
@@ -22,28 +30,5 @@ namespace BookStore
             hardcover,
             ebook,
         }
-
-        /*public Format Format0 { get; set; }
-
-        public Book() { }
-
-        public Book(
-            int id,
-            string title,
-            string author,
-            string isbn,
-            int stockQuantity,
-            float price,
-            Format format
-        )
-        {
-            Id = id;
-            Title = title;
-            Author = author;
-            ISBN = isbn;
-            StockQuantity = stockQuantity;
-            Price = price;
-            Format0 = format;
-        }*/
     }
 }

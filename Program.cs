@@ -13,6 +13,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 // Carts
 List<Cart> carts = new List<Cart>
 {
@@ -48,7 +49,8 @@ app.MapGet(
         var cart = carts.FirstOrDefault(p => p.CartId == id);
         return Results.Ok(cart);
     }
-);//?
+); //?
+
 // Users
 List<User> users = new List<User>
 {
@@ -107,8 +109,8 @@ app.MapGet(
     }
 );
 
-
 app.MapGet("/api/v1/users", () => Results.Ok(users));
+
 //PUT - update user Name by User_Id
 
 app.MapPut(
@@ -122,7 +124,6 @@ app.MapPut(
         }
         foundUser.Name = updatedUser.Name;
         return Results.Ok(foundUser);
-
     }
 );
 
@@ -138,19 +139,28 @@ app.MapPatch(
         }
 
         // Check if the Address property is present and update it
-        if (updatedFields.TryGetProperty("Address", out var addressUpdated) && addressUpdated.ValueKind == JsonValueKind.String)
+        if (
+            updatedFields.TryGetProperty("Address", out var addressUpdated)
+            && addressUpdated.ValueKind == JsonValueKind.String
+        )
         {
             foundUser.Address = addressUpdated.GetString();
         }
 
         // Check if the Phone property is present and update it
-        if (updatedFields.TryGetProperty("Phone", out var phoneUpdated) && phoneUpdated.ValueKind == JsonValueKind.Number)
+        if (
+            updatedFields.TryGetProperty("Phone", out var phoneUpdated)
+            && phoneUpdated.ValueKind == JsonValueKind.Number
+        )
         {
             foundUser.Phone = phoneUpdated.GetInt32();
         }
 
         // Check if the Email property is present and update it
-        if (updatedFields.TryGetProperty("Email", out var emailUpdated) && emailUpdated.ValueKind == JsonValueKind.String)
+        if (
+            updatedFields.TryGetProperty("Email", out var emailUpdated)
+            && emailUpdated.ValueKind == JsonValueKind.String
+        )
         {
             foundUser.Email = emailUpdated.GetString();
         }
@@ -158,7 +168,6 @@ app.MapPatch(
         return Results.Ok(foundUser);
     }
 );
-
 
 //DELETE - delete a user by User_Id
 
@@ -189,37 +198,30 @@ app.MapDelete(
         return Results.NoContent(); //204
     }
 );
-List<Book> booksList = new List<Book>
-{
-    new Book(1, "Yellowface", "R.F. Kuang", "9780063250833", 5, 15.81f, Book.Format.hardcover),
-    new Book(2, "Weyward", "Emilia Hart", "9781250280800", 3, 13.76f, Book.Format.paperback),
-    new Book(3, "The Hunger Games", "Suzanne Collins", "0439023483", 3, 12.79f, Book.Format.hardcover),
-    new Book(4, "Catching Fire", "Suzanne Collins", "0439023491", 15, 14.99f, Book.Format.audio),
-   // new Book(5, "The Hunger Games", "Suzanne Collins", "1338334921", 15, 44.99f, Book.Format.audio)
-};
 
-
+/*
 app.MapGet(
     "/api/v1/books",
     () =>
     {
-        return Results.Ok(booksList);
+        return Results.Ok(books);
     }
-);
-
+);*/
+/*
 app.MapGet(
     "/api/v1/book/{id}",
     (int id) =>
     {
-        return Results.Ok(booksList.FirstOrDefault(x => x.Id == id));
+        return Results.Ok(books.FirstOrDefault(x => x.Id == id));
     }
-);
+);*/
 
+/*
 app.MapPost(
     "/api/v1/book",
     (Book b) =>
     {
-        booksList.Add(b);
+        books.Add(b);
         return Results.Created($"{b.Title} was added", b);
     }
 );
@@ -228,7 +230,7 @@ app.MapPut(
     "/api/v1/book/{id}",
     (int id, Book updateB) =>
     {
-        Book? book = booksList.FirstOrDefault(i => i.Id == id);
+        Book? book = books.FirstOrDefault(i => i.Id == id);
         if (book == null)
         {
             return Results.NotFound();
@@ -248,52 +250,69 @@ app.MapDelete(
     "api/v1/book/{id}",
     (int id) =>
     {
-        Book? book = booksList.FirstOrDefault(i => i.Id == id);
-        if (!booksList.Any(x => x.Id == id))
+        Book? book = books.FirstOrDefault(i => i.Id == id);
+        if (!books.Any(x => x.Id == id))
         {
             return Results.NotFound();
         }
-        booksList.Remove(book);
+        books.Remove(book);
 
         return Results.NoContent();
     }
-);
-//Order 
+);*/
+
+//Order
 List<Order> orders = new List<Order>();
+
 // POST - Create New Order>Under trial
-app.MapPost("/api/v1/orders", (Order newOrder) =>
-{
-    newOrder.OrderId = orders.Count + 1;
-    newOrder.DateCreated = DateTime.Now;
-    newOrder.OrderStatus = Order.Status.Pending;
-    orders.Add(newOrder);
-    return Results.Created($"/api/v1/orders/{newOrder.OrderId}", newOrder);
-});
+app.MapPost(
+    "/api/v1/orders",
+    (Order newOrder) =>
+    {
+        newOrder.OrderId = orders.Count + 1;
+        newOrder.DateCreated = DateTime.Now;
+        newOrder.OrderStatus = Order.Status.Pending;
+        orders.Add(newOrder);
+        return Results.Created($"/api/v1/orders/{newOrder.OrderId}", newOrder);
+    }
+);
 
 // GET - Get Order by OrderId>Under trial
-app.MapGet("/api/v1/orders/{orderId}", (int orderId) =>
-{
-    var order = orders.FirstOrDefault(o => o.OrderId == orderId);
-    return order == null ? Results.NotFound() : Results.Ok(order);
-});
+app.MapGet(
+    "/api/v1/orders/{orderId}",
+    (int orderId) =>
+    {
+        var order = orders.FirstOrDefault(o => o.OrderId == orderId);
+        return order == null ? Results.NotFound() : Results.Ok(order);
+    }
+);
 
 // GET - Get All Orders>Under trial
 app.MapGet("/api/v1/orders", () => Results.Ok(orders));
-// DELETE - Cancel Order>Under trial
-app.MapDelete("/api/v1/orders/{orderId}", (int orderId) =>
-{
-    var order = orders.FirstOrDefault(o => o.OrderId == orderId);
-    if (order == null) return Results.NotFound();
-    orders.Remove(order);
-    return Results.NoContent();
-});
-// PUT - Update Order Status>Under trial
-app.MapPut("/api/v1/orders/{orderId}", (int orderId, Order.Status status) =>
-{
-    var order = orders.FirstOrDefault(o => o.OrderId == orderId);
-    if (order == null) return Results.NotFound();
-    order.OrderStatus = status;
-    return Results.Ok(order);
-});
-app.Run();
 
+// DELETE - Cancel Order>Under trial
+app.MapDelete(
+    "/api/v1/orders/{orderId}",
+    (int orderId) =>
+    {
+        var order = orders.FirstOrDefault(o => o.OrderId == orderId);
+        if (order == null)
+            return Results.NotFound();
+        orders.Remove(order);
+        return Results.NoContent();
+    }
+);
+
+// PUT - Update Order Status>Under trial
+app.MapPut(
+    "/api/v1/orders/{orderId}",
+    (int orderId, Order.Status status) =>
+    {
+        var order = orders.FirstOrDefault(o => o.OrderId == orderId);
+        if (order == null)
+            return Results.NotFound();
+        order.OrderStatus = status;
+        return Results.Ok(order);
+    }
+);
+app.Run();
