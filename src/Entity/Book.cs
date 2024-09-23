@@ -24,12 +24,11 @@ namespace BookStore
         {
             audio,
             paperback,
-
             hardcover,
             ebook,
         }
 
-        public Format Format0 { get; set; }
+        public Format BookFormat { get; set; }
 
         public Book() { }
 
@@ -49,7 +48,7 @@ namespace BookStore
             ISBN = isbn;
             StockQuantity = stockQuantity;
             Price = price;
-            Format0 = format;
+            BookFormat = format;
         }
     }
 }
