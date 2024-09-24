@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using BookStore.src.Entity;
+using BookStore.src.Utils;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Mvc;
 
@@ -125,5 +126,39 @@ namespace BookStore.src.Controllers
 
             return Ok(foundUser);
         }
+
+        [HttpPost("signup")]
+        public ActionResult SignUpUser(User newUser)
+        {
+
+            PasswordUtils.Password(newUser.Password, out string hashedPassword, out byte[] salt);
+            newUser.Password = hashedPassword;
+            newUser.Salt = salt;
+            users.Add(newUser);
+
+            return Created($"/api/users/{newUser.Id}", newUser);
+        }
+
+        [HttpPost("login")]
+        public ActionResult LogInUser(User user)
+        {
+            User? foundUser = users.FirstOrDefault(e => e.Email == user.Email);
+
+            if (foundUser == null)
+            {
+                return NotFound();
+
+            }
+
+            bool isMatched = PasswordUtils.VerifyPassword(user.Password, foundUser.Salt, foundUser.Password);
+
+            if (!isMatched)
+            {
+                return Unauthorized(); 
+            }
+
+            return Ok(foundUser);
+        }
+
     }
 }
