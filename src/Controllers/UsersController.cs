@@ -130,7 +130,6 @@ namespace BookStore.src.Controllers
         [HttpPost("signup")]
         public ActionResult SignUpUser(User newUser)
         {
-
             PasswordUtils.Password(newUser.Password, out string hashedPassword, out byte[] salt);
             newUser.Password = hashedPassword;
             newUser.Salt = salt;
@@ -147,18 +146,20 @@ namespace BookStore.src.Controllers
             if (foundUser == null)
             {
                 return NotFound();
-
             }
 
-            bool isMatched = PasswordUtils.VerifyPassword(user.Password, foundUser.Salt, foundUser.Password);
+            bool isMatched = PasswordUtils.VerifyPassword(
+                user.Password,
+                foundUser.Salt,
+                foundUser.Password
+            );
 
             if (!isMatched)
             {
-                return Unauthorized(); 
+                return Unauthorized();
             }
 
             return Ok(foundUser);
         }
-
     }
 }
