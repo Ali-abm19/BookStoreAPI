@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace bookStore
+namespace BookStore
 {
     [ApiController]
     [Route("api/v1/[controller]")]
