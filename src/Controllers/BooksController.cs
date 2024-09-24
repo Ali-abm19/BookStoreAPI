@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BookStore.src.Entity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BookStore
+namespace BookStore.src.Controllers
 {
     [ApiController]
     [Route("api/v1/[Controller]")]
@@ -73,7 +74,7 @@ namespace BookStore
         public ActionResult CreateBook(Book b)
         {
             books.Add(b);
-            return Created("", b);
+            return Created("api/v1/Books" + b.Id, b);
             //return CreatedAtAction(nameof(GetBookById), new { id = b.Id }, b);
         }
 
