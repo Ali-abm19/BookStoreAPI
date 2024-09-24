@@ -9,29 +9,29 @@ using Microsoft.Extensions.Logging;
 namespace BookStore
 {
     [ApiController]
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/[Controller]")]
     public class CartsController : ControllerBase
     {
-        //In-memory cart 
+        //In-memory cart
         List<Cart> carts = new List<Cart>
-{
-    new Cart
-    {
-        CartId = 1,
-        UserId = 3,
-        Quantity = 3,
-        Price = 100,
-    },
-    new Cart
-    {
-        CartId = 2,
-        UserId = 2,
-        Quantity = 5,
-        Price = 250,
-    }
-};
+        {
+            new Cart
+            {
+                CartId = 1,
+                UserId = 3,
+                Quantity = 3,
+                Price = 100,
+            },
+            new Cart
+            {
+                CartId = 2,
+                UserId = 2,
+                Quantity = 5,
+                Price = 250,
+            },
+        };
 
-       // GET: api/v1/cart
+        // GET: api/v1/cart
         [HttpGet]
         public ActionResult GetCarts()
         {
@@ -71,8 +71,5 @@ namespace BookStore
             carts.Remove(cart);
             return NoContent(); // Return 204 No Content on successful deletion
         }
-
-
     }
-
 }

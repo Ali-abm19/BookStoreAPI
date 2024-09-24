@@ -10,17 +10,14 @@ namespace BookStore
         public int OrderId { get; set; }
         public float TotalPrice { get; set; }
         public DateTime DateCreated { get; set; }
-        public Status OrderStatus { get; set; }//manar
-
+        public Status OrderStatus { get; set; } //manar
 
         public enum Status
         {
             Completed,
             Pending,
             Shipped,
-            Cancelled
+            Cancelled,
         }
-
-
     }
 }
