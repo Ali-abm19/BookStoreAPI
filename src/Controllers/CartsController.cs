@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using BookStore.src.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace BookStore
+namespace BookStore.src.Controllers
 {
     [ApiController]
     [Route("api/v1/[Controller]")]
