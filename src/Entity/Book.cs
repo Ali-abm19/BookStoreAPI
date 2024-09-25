@@ -7,8 +7,8 @@ namespace BookStore.src.Entity
 {
     public class Book
     {
-        private int _id;
-        public int Id
+        private Guid _id;
+        public Guid Id
         {
             get { return _id; }
             set { _id = value; }
@@ -33,7 +33,7 @@ namespace BookStore.src.Entity
         public Book() { }
 
         public Book(
-            int id,
+            Guid id,
             string title,
             string author,
             string isbn,

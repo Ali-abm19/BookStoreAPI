@@ -7,7 +7,7 @@ namespace BookStore.src.Entity
 {
     public class Order
     {
-        public int OrderId { get; set; }
+        public Guid OrderId { get; set; }
         public float TotalPrice { get; set; }
         public DateTime DateCreated { get; set; }
         public Status OrderStatus { get; set; } 

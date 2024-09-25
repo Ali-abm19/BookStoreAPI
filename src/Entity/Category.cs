@@ -7,7 +7,7 @@ namespace BookStore.src.Entity
 {
     public class Category
     {
-        public int CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
         public string Description { get; set; }
         public CategoryName categoryname { get; set; }
 
