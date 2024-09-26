@@ -24,7 +24,14 @@ namespace BookStore.src.Controllers
         [HttpGet]
         public ActionResult GetBooks()
         {
-            return Ok(books);
+            //pagination:
+            int nOfPages = 5,
+                sizeOfPage = 3;
+            var listToReturn = books
+                .Skip(nOfPages * sizeOfPage - nOfPages)
+                .Take(sizeOfPage)
+                .ToList();
+            return Ok(listToReturn);
         }
 
         [HttpGet("{id}")]

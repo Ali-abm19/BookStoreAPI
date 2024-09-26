@@ -23,7 +23,7 @@ namespace BookStore.src.Repository
             return b;
         }
 
-        public async Task<Book?> GetBookByIdAsync(int id)
+        public async Task<Book?> GetBookByIdAsync(Guid id)
         {
             return await _book.FindAsync(id);
         }
