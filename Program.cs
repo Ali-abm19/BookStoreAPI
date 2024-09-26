@@ -18,10 +18,8 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 
 // step 1: add controller
 builder.Services.AddControllers();
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 var app = builder.Build();
 
 // test if database is connected or not
