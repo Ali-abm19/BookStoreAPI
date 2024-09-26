@@ -42,7 +42,7 @@ namespace BookStore.src.Repository
             return true;
         }
 
-        //update 
+        //update cart 
         public async Task<bool> UpdateoneAsync(Cart updateCart )
         {
             _cart.Update(updateCart);
