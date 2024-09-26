@@ -6,31 +6,25 @@ namespace BookStore.src.Repository
 {
     public class CategoryRepository
     {
-        // table - category
+        // table 
         protected DbSet<Category> _category;
         protected DatabaseContext _databaseContext;
 
-        // DI
+
         public CategoryRepository(DatabaseContext databaseContext)
         {
             _databaseContext = databaseContext;
-            // initialize the category in database
             _category = databaseContext.Set<Category>();
         }
 
-        // method
         // create category
         public async Task<Category> CreateOneAsync(Category newCategory)
         {
-            // logic
-            // name: category1
-            // add new category in category table
+
             await _category.AddAsync(newCategory);
-            // save change
             await _databaseContext.SaveChangesAsync();
             return newCategory;
-            // id: auto
-            // name: category1
+
         }
 
         // get id

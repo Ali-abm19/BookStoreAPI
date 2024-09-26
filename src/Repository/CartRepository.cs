@@ -1,0 +1,54 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using BookStore.src.Database;
+using BookStore.src.Entity;
+using Microsoft.EntityFrameworkCore;
+
+namespace BookStore.src.Repository
+{
+    public class CartRepository
+    {
+        // table 
+        protected DbSet<Cart> _cart;
+        protected DatabaseContext _databaseContext;
+
+        public CartRepository(DatabaseContext databaseContext){
+            _databaseContext = databaseContext;
+            _cart = databaseContext.Set<Cart>();
+        
+        }
+
+        // create new cart
+        public async Task<Cart> CreateOneAsync (Cart newCart)
+        {
+            await _cart.AddAsync(newCart);
+            await _databaseContext.SaveChangesAsync();
+            return newCart;
+        }
+
+        //get cart by ID
+        public async Task<Cart?> GetByIdAsync (Guid id)
+        {
+            return await _cart.FindAsync(id);
+        }
+
+        //delete 
+        public async Task<bool> DeleteOneAsynkc (Cart cart)
+        {
+            _cart.Remove(cart);
+            await _databaseContext.SaveChangesAsync();
+            return true;
+        }
+
+        //update 
+        public async Task<bool> UpdateoneAsync(Cart updateCart )
+        {
+            _cart.Update(updateCart);
+            await _databaseContext.SaveChangesAsync();
+            return true;
+        }
+
+    }
+}
