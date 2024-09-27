@@ -1,6 +1,4 @@
-using BookStore.src.DTO;
 using BookStore.src.Entity;
-using BookStore.src.Repository;
 using BookStore.src.Services.book;
 using Microsoft.AspNetCore.Mvc;
 using static BookStore.src.DTO.BookDTO;

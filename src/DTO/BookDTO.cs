@@ -1,3 +1,5 @@
+using BookStore.src.Entity;
+
 namespace BookStore.src.DTO
 {
     public class BookDTO
@@ -35,11 +37,11 @@ namespace BookStore.src.DTO
         }
     }
 
-    public enum Format
+    /*public enum Format
     {
         Audio,
         Paperback,
         Hardcover,
         Ebook,
-    }
+    }*/
 }
