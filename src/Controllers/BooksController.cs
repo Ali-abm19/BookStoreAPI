@@ -1,5 +1,9 @@
+using BookStore.src.DTO;
 using BookStore.src.Entity;
+using BookStore.src.Repository;
+using BookStore.src.Services.book;
 using Microsoft.AspNetCore.Mvc;
+using static BookStore.src.DTO.BookDTO;
 
 namespace BookStore.src.Controllers
 {
@@ -7,37 +11,23 @@ namespace BookStore.src.Controllers
     [Route("api/v1/[controller]")]
     public class BooksController : ControllerBase
     {
-        static List<Book> books =
-        [
-            new Book()
-            {
-                Id = Guid.NewGuid(),
-                Title = "Yellowface",
-                Author = "R.F. Kuang",
-                Isbn = "9780063250833",
-                StockQuantity = 5,
-                Price = 15.81f,
-                BookFormat = Format.Hardcover,
-            },
-        ];
+        protected readonly IBookService _bookService;
+
+        public BooksController(IBookService bookService)
+        {
+            _bookService = bookService;
+        }
 
         [HttpGet]
-        public ActionResult GetBooks()
+        public async Task<ActionResult<List<Book>>> GetBooks()
         {
-            //pagination:
-            int nOfPages = 5,
-                sizeOfPage = 3;
-            var listToReturn = books
-                .Skip(nOfPages * sizeOfPage - nOfPages)
-                .Take(sizeOfPage)
-                .ToList();
-            return Ok(listToReturn);
+            return Ok(await _bookService.GetAllAsync());
         }
 
         [HttpGet("{id}")]
-        public ActionResult GetBookById(Guid id)
+        public async Task<ActionResult> GetBookById([FromRoute] Guid id)
         {
-            Book? bookToReturn = books.FirstOrDefault(i => i.Id == id);
+            var bookToReturn = await _bookService.GetBookByIdAsync(id);
             if (bookToReturn == null)
             {
                 return NotFound();
@@ -47,43 +37,34 @@ namespace BookStore.src.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateBook(Book b)
+        public async Task<ActionResult> CreateBook([FromBody] CreateBookDto b)
         {
-            books.Add(b);
+            await _bookService.CreateOneAsync(b);
             return Created("api/v1/Books" + b.Id, b);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult DeleteBook(Guid id)
+        public async Task<ActionResult> DeleteBook([FromRoute] Guid id)
         {
-            Book? b = books.FirstOrDefault(i => i.Id == id);
+            var b = _bookService.GetBookByIdAsync(id).Result;
             if (b == null)
             {
                 return NotFound();
             }
 
-            books.Remove(b);
+            await _bookService.DeleteOneAsync(b.Id);
             return NoContent();
         }
 
         [HttpPut("{id}")]
-        public ActionResult UpdateBook(Guid id, Book newBook)
+        public async Task<ActionResult> UpdateBook(
+            [FromRoute] Guid id,
+            [FromBody] UpdateBookDto changes
+        )
         {
-            Book? bookToUpdate = books.FirstOrDefault(i => i.Id == id);
-            if (bookToUpdate == null)
-            {
-                return NotFound();
-            }
+            var isUpdated = await _bookService.UpdateOneAsync(id, changes);
 
-            bookToUpdate.Id = newBook.Id;
-            bookToUpdate.Title = newBook.Title;
-            bookToUpdate.Author = newBook.Author;
-            bookToUpdate.Price = newBook.Price;
-            bookToUpdate.StockQuantity = newBook.StockQuantity;
-            bookToUpdate.Isbn = newBook.Isbn;
-            bookToUpdate.BookFormat = newBook.BookFormat;
-
-            return Ok(bookToUpdate);
+            return Ok(isUpdated);
         }
     }
 }

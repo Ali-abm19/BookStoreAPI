@@ -7,17 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.src.Database
 {
-
-
     public class DatabaseContext : DbContext
     {
-        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
-        {
-        }
+        public DatabaseContext(DbContextOptions<DatabaseContext> options)
+            : base(options) { }
 
-        public DbSet<Category> Category { get; set; }
-
-
-
+        //public DbSet<Category> Category { get; set; }
+        public DbSet<Book> Book { get; set; }
     }
 }

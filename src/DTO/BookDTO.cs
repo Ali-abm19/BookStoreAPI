@@ -4,6 +4,7 @@ namespace BookStore.src.DTO
     {
         public class CreateBookDto
         {
+            public Guid Id { get; set; }
             public string Isbn { get; set; }
             public string Title { get; set; }
             public string Author { get; set; }

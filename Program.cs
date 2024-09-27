@@ -1,20 +1,31 @@
 using System.Text.Json;
+using BookStore.Services.book;
+using BookStore.src.Database;
+using BookStore.src.Entity;
+using BookStore.src.Repository;
+using BookStore.src.Services.book;
+using BookStore.src.Utils;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
-using BookStore.src.Entity;
-using BookStore.src.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // connect database
-var dataSourceBuilder = new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("Local"));
+var dataSourceBuilder = new NpgsqlDataSourceBuilder(
+    builder.Configuration.GetConnectionString("Local")
+);
 
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {
     options.UseNpgsql(dataSourceBuilder.Build());
+});
 
-}
-);
+builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
+
+// add DI services
+builder
+    .Services.AddScoped<IBookService, BookService>()
+    .AddScoped<BookRepository, BookRepository>();
 
 // step 1: add controller
 builder.Services.AddControllers();
@@ -45,7 +56,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// step 2: use 
+// step 2: use
 app.MapControllers();
 
 if (app.Environment.IsDevelopment())
@@ -55,4 +66,3 @@ if (app.Environment.IsDevelopment())
 }
 
 app.Run();
-
