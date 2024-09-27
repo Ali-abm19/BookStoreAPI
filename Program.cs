@@ -1,9 +1,8 @@
-using System.Text.Json;
 using BookStore.Services.book;
 using BookStore.src.Database;
-using BookStore.src.Entity;
 using BookStore.src.Repository;
 using BookStore.src.Services.book;
+using BookStore.src.Services.order;
 using BookStore.src.Utils;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
@@ -20,12 +19,15 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseNpgsql(dataSourceBuilder.Build());
 });
 
+//add autoo mapper
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 
-// add DI services
+//ADD DI
 builder
-    .Services.AddScoped<IBookService, BookService>()
-    .AddScoped<BookRepository, BookRepository>();
+    .Services.AddScoped<IOrderServices, OrderServices>()
+    .AddScoped<OrderRepository, OrderRepository>();
+
+builder.Services.AddScoped<IBookService, BookService>().AddScoped<BookRepository, BookRepository>();
 
 // step 1: add controller
 builder.Services.AddControllers();
