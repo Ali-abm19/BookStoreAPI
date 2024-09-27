@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using BookStore.src.Entity;
 using BookStore.src.Database;
+using BookStore.src.Utils;
+using BookStore.src.Services.order;
+using BookStore.src.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +18,12 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 
 }
 );
+//add autoo mapper 
+builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
+//ADD DI
+builder.Services
+.AddScoped<IOrderServices, OrderServices>()
+.AddScoped<OrderRepository, OrderRepository>();
 
 // step 1: add controller
 builder.Services.AddControllers();
