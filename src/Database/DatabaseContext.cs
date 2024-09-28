@@ -16,6 +16,7 @@ namespace BookStore.src.Database
         }
 
         public DbSet<Category> Category { get; set; }
+        public DbSet<Cart> Carts { get; set; }
 
 
 

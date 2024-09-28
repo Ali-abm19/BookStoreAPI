@@ -1,76 +1,74 @@
-// using System;
-// using System.Collections.Generic;
-// using System.Diagnostics;
-// using System.Linq;
-// using System.Threading.Tasks;
-// using BookStore.src.Entity;
-// using Microsoft.AspNetCore.Mvc;
-// using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using BookStore.src.Services.cart;
+using Microsoft.AspNetCore.Mvc;
+using static BookStore.src.DTO.CartDTO;
 
-// namespace BookStore.src.Controllers
-// {
-//     [ApiController]
-//     [Route("api/v1/[Controller]")]
-//     public class CartsController : ControllerBase
-//     {
-//         //In-memory cart
-//         List<Cart> carts = new List<Cart>
-//         {
-//             new Cart
-//             {
-//                 CartId = 1,
-//                 UserId = 3,
-//                 Quantity = 3,
-//                 Price = 100,
-//             },
-//             new Cart
-//             {
-//                 CartId = 2,
-//                 UserId = 2,
-//                 Quantity = 5,
-//                 Price = 250,
-//             },
-//         };
+namespace BookStore.src.Controllers
+{
+    [ApiController]
+    [Route("api/v1/[controller]")]
+    // api/v1/carts
+    public class CartsController : ControllerBase
+    {
+        protected readonly ICartService _cartService;
 
-//         // GET: api/v1/cart
-//         [HttpGet]
-//         public ActionResult GetCarts()
-//         {
-//             return Ok(carts); // Return all carts
-//         }
+        // Dependency Injection
+        public CartsController(ICartService cartService)
+        {
+            _cartService = cartService;
+        }
 
-//         // GET: api/v1/cart/{id} by ID
-//         [HttpGet("{id}")]
-//         public ActionResult GetCartById(int id)
-//         {
-//             var cart = carts.FirstOrDefault(c => c.CartId == id);
-//             if (cart == null)
-//             {
-//                 return NotFound(); // 404 Not Found if the cart doesn't exist
-//             }
-//             return Ok(cart); // Return the cart object
-//         }
+        // Create a new cart
+        [HttpPost]
+        public async Task<ActionResult<CartReadDto>> CreateOne([FromBody] CartCreateDto createDto)
+        {
+            var cartCreated = await _cartService.CreateOneAsync(createDto);
+            return Ok(cartCreated); }
 
-//         // POST: api/v1/cart
-//         [HttpPost]
-//         public ActionResult CreateCart(Cart newCart)
-//         {
-//             // Add a new cart
-//             carts.Add(newCart);
-//             return CreatedAtAction(nameof(GetCartById), new { id = newCart.CartId }, newCart); // Return 201 Created
-//         }
+        // Get all carts
+        [HttpGet]
+        public async Task<ActionResult<List<CartReadDto>>> GetAll()
+        {
+            var cartList = await _cartService.GetAllAsync();
+            return Ok(cartList);
+        }
 
-//         // DELETE: api/v1/cart/{id}
-//         [HttpDelete("{id}")]
-//         public ActionResult DeleteCart(int id)
-//         {
-//             var cart = carts.FirstOrDefault(c => c.CartId == id);
-//             if (cart == null)
-//             {
-//                 return NotFound(); // 404 Not Found if the cart doesn't exist
-//             }
-//             carts.Remove(cart);
-//             return NoContent(); // Return 204 No Content on successful deletion
-//         }
-//     }
-// }
+        // Get cart by ID
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CartReadDto>> GetById([FromRoute] Guid id)
+        {
+            var foundCart = await _cartService.GetByIdAsync(id);
+            if (foundCart == null)
+            {
+                return NotFound();
+            }
+            return Ok(foundCart);
+        }
+
+        // Delete cart by ID
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteOne(Guid id)
+        {
+            bool isDeleted = await _cartService.DeleteOneAsync(id);
+            if (!isDeleted)
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
+
+        // Update cart by ID
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateOne(Guid id, CartUpdateDto updateDto)
+        {
+            bool isUpdated = await _cartService.UpdateOneAsync(id, updateDto);
+            if (!isUpdated)
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
+    }
+}

@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using BookStore.src.Entity;
 using BookStore.src.Database;
+using BookStore.src.Utils;
+using BookStore.src.Services.cart;
+using BookStore.src.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +18,14 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 
 }
 );
+
+// add auto-mapper
+builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
+
+// add DI services
+builder.Services
+     .AddScoped<ICartService, CartService>()
+     .AddScoped<CartRepository, CartRepository>();
 
 // step 1: add controller
 builder.Services.AddControllers();
