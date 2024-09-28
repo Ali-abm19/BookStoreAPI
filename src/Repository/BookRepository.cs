@@ -28,6 +28,11 @@ namespace BookStore.src.Repository
             return await _book.FindAsync(id);
         }
 
+        public async Task<List<Book>> GetAllAsync()
+        {
+            return await _book.ToListAsync();
+        }
+
         public async Task<bool> DeleteOneAsync(Book book)
         {
             _book.Remove(entity: book);

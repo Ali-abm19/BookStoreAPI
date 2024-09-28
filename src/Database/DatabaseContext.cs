@@ -7,8 +7,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.src.Database
 {
-
-
     public class DatabaseContext : DbContext
     {
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
@@ -17,8 +15,6 @@ namespace BookStore.src.Database
 
         public DbSet<Category> Category { get; set; }
         public DbSet<Order> Order { get; set; }
-
-
-
+        public DbSet<Book> Book { get; set; }
     }
 }
