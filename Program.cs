@@ -2,6 +2,7 @@ using BookStore.Services.book;
 using BookStore.src.Database;
 using BookStore.src.Repository;
 using BookStore.src.Services.book;
+using BookStore.src.Services.category;
 using BookStore.src.Services.order;
 using BookStore.src.Utils;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,7 @@ builder
     .AddScoped<OrderRepository, OrderRepository>();
 
 builder.Services.AddScoped<IBookService, BookService>().AddScoped<BookRepository, BookRepository>();
+builder.Services.AddScoped<ICategoryService, CategoryService>().AddScoped<CategoryRepository, CategoryRepository>();
 
 // step 1: add controller
 builder.Services.AddControllers();
