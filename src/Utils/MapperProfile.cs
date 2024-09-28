@@ -1,9 +1,9 @@
 using AutoMapper;
 using BookStore.src.Entity;
 using static BookStore.src.DTO.BookDTO;
+using static BookStore.src.DTO.CategoryDTO;
 using static BookStore.src.DTO.OrderDTO;
 using static BookStore.src.DTO.UserDTO;
-
 
 namespace BookStore.src.Utils
 {
@@ -29,6 +29,16 @@ namespace BookStore.src.Utils
             CreateMap<UserCreateDto, User>();
             CreateMap<UserUpdateDto, User>()
                 .ForAllMembers(opts =>
+                    opts.Condition((src, dest, srcProperty) => srcProperty != null)
+                );
+
+            CreateMap<Category, CategoryReadDto>();
+            CreateMap<CategoryCreateDto, Category>();
+            CreateMap<CategoryUpdateNameDto, Category>();
+            CreateMap<CategoryUpdateDesDto, Category>()
+                .
+                //condtion for convert
+                ForAllMembers(opts =>
                     opts.Condition((src, dest, srcProperty) => srcProperty != null)
                 );
         }
