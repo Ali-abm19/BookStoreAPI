@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BookStore.src.Entity;
 using BookStore.src.DTO;
 using AutoMapper;
-using BookStore.src.Entity;
 using static BookStore.src.DTO.BookDTO;
 using static BookStore.src.DTO.CategoryDTO;
 using static BookStore.src.DTO.OrderDTO;
@@ -17,6 +12,7 @@ namespace BookStore.src.Utils
     {
         public MapperProfile()
         {
+            //Book 
             CreateMap<Book, ReadBookDto>();
             CreateMap<CreateBookDto, Book>();
             CreateMap<UpdateBookDto, Book>()
@@ -30,14 +26,14 @@ namespace BookStore.src.Utils
                 .ForAllMembers(opts =>
                     opts.Condition((src, dest, srcProperty) => srcProperty != null)
                 );
-
+            // User 
             CreateMap<User, UserReadDto>();
             CreateMap<UserCreateDto, User>();
             CreateMap<UserUpdateDto, User>()
                 .ForAllMembers(opts =>
                     opts.Condition((src, dest, srcProperty) => srcProperty != null)
                 );
-
+            // Category 
             CreateMap<Category, CategoryReadDto>();
             CreateMap<CategoryCreateDto, Category>();
             CreateMap<CategoryUpdateNameDto, Category>();
@@ -47,17 +43,17 @@ namespace BookStore.src.Utils
                 ForAllMembers(opts =>
                     opts.Condition((src, dest, srcProperty) => srcProperty != null)
                 );
+
+            // Mapping between Cart entity and DTOs
+            CreateMap<Cart, CartDTO.CartReadDto>();
+            CreateMap<CartDTO.CartCreateDto, Cart>();
+            CreateMap<CartDTO.CartUpdateDto, Cart>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcProperty) => srcProperty != null));
         }
     }
 }
 
-         public MapperProfile(){
 
-        // Mapping between Cart entity and DTOs
-        CreateMap<Cart, CartDTO.CartReadDto>();
-        CreateMap<CartDTO.CartCreateDto, Cart>();
-        CreateMap<CartDTO.CartUpdateDto, Cart>()
-            .ForAllMembers(opts => opts.Condition((src, dest, srcProperty) => srcProperty != null));
-    }
-         }
-    }
+
+
+
