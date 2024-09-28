@@ -2,6 +2,8 @@ using AutoMapper;
 using BookStore.src.Entity;
 using static BookStore.src.DTO.BookDTO;
 using static BookStore.src.DTO.OrderDTO;
+using static BookStore.src.DTO.UserDTO;
+
 
 namespace BookStore.src.Utils
 {
@@ -19,6 +21,13 @@ namespace BookStore.src.Utils
             CreateMap<Order, OrderReadDto>();
             CreateMap<OrderCreateDto, Order>();
             CreateMap<OrderUpdateDto, Order>()
+                .ForAllMembers(opts =>
+                    opts.Condition((src, dest, srcProperty) => srcProperty != null)
+                );
+
+            CreateMap<User, UserReadDto>();
+            CreateMap<UserCreateDto, User>();
+            CreateMap<UserUpdateDto, User>()
                 .ForAllMembers(opts =>
                     opts.Condition((src, dest, srcProperty) => srcProperty != null)
                 );
