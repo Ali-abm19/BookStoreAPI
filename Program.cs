@@ -1,4 +1,10 @@
-using System.Text.Json;
+using BookStore.Services.book;
+using BookStore.src.Database;
+using BookStore.src.Repository;
+using BookStore.src.Services.book;
+using BookStore.src.Services.category;
+using BookStore.src.Services.order;
+using BookStore.src.Utils;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using BookStore.src.Entity;
@@ -10,14 +16,25 @@ using BookStore.src.Repository;
 var builder = WebApplication.CreateBuilder(args);
 
 // connect database
-var dataSourceBuilder = new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("Local"));
+var dataSourceBuilder = new NpgsqlDataSourceBuilder(
+    builder.Configuration.GetConnectionString("Local")
+);
 
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {
     options.UseNpgsql(dataSourceBuilder.Build());
+});
 
-}
-);
+//add autoo mapper
+builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
+
+//ADD DI
+builder
+    .Services.AddScoped<IOrderServices, OrderServices>()
+    .AddScoped<OrderRepository, OrderRepository>();
+
+builder.Services.AddScoped<IBookService, BookService>().AddScoped<BookRepository, BookRepository>();
+builder.Services.AddScoped<ICategoryService, CategoryService>().AddScoped<CategoryRepository, CategoryRepository>();
 
 // add auto-mapper
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
@@ -56,7 +73,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// step 2: use 
+// step 2: use
 app.MapControllers();
 
 if (app.Environment.IsDevelopment())
@@ -66,4 +83,3 @@ if (app.Environment.IsDevelopment())
 }
 
 app.Run();
-

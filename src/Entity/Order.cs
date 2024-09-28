@@ -10,7 +10,8 @@ namespace BookStore.src.Entity
         public Guid OrderId { get; set; }
         public float TotalPrice { get; set; }
         public DateTime DateCreated { get; set; }
-        public Status OrderStatus { get; set; } 
+        public DateTime? DateUpdated { get; set; }
+        public Status OrderStatus { get; set; }
 
         public enum Status
         {
