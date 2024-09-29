@@ -81,7 +81,7 @@ namespace BookStore.src.Services.category
                 return false;
             }
             _mapper.Map(updateDto, foundCategory);
-            return await _categoryRepo.UpdateDesOneAsync(foundCategory);
+            return await _categoryRepo.UpdateOneAsync(foundCategory);
         }
     }
 }
