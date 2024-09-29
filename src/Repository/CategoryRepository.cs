@@ -50,7 +50,7 @@ namespace BookStore.src.Repository
             return true;
         }
 
-        // update category name
+        // update category name & des
         public async Task<bool> UpdateOneAsync(Category updateCategory)
         {
             _category.Update(updateCategory);
@@ -58,12 +58,6 @@ namespace BookStore.src.Repository
             return true;
         }
 
-        // update category name
-        public async Task<bool> UpdateDesOneAsync(Category updateCategory)
-        {
-            _category.Update(updateCategory);
-            await _databaseContext.SaveChangesAsync();
-            return true;
-        }
+     
     }
 }

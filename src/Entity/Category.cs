@@ -14,7 +14,7 @@ namespace BookStore.src.Entity
         //connections to other entities
         public List<Book> Books { get; set; }
 
-        public enum CategoryName
+        public enum CategoryType 
         {
             History,
             Science,

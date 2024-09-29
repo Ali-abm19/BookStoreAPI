@@ -13,7 +13,7 @@ using static BookStore.src.DTO.OrderDTO;
 namespace BookStore.src.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/v1/[controller]")]
     public class OrdersController : ControllerBase
     {
 
