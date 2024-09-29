@@ -17,6 +17,9 @@ namespace BookStore.src.Database
         public DbSet<Order> Order { get; set; }
         public DbSet<Book> Book { get; set; }
         public DbSet<User> User { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+
+
 
     }
 }

@@ -7,6 +7,11 @@ using BookStore.src.Services.order;
 using BookStore.src.Utils;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using BookStore.src.Entity;
+using BookStore.src.Database;
+using BookStore.src.Utils;
+using BookStore.src.Services.cart;
+using BookStore.src.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +35,14 @@ builder
 
 builder.Services.AddScoped<IBookService, BookService>().AddScoped<BookRepository, BookRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>().AddScoped<CategoryRepository, CategoryRepository>();
+
+// add auto-mapper
+builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
+
+// add DI services
+builder.Services
+     .AddScoped<ICartService, CartService>()
+     .AddScoped<CartRepository, CartRepository>();
 
 // step 1: add controller
 builder.Services.AddControllers();

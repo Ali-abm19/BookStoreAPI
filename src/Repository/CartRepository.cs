@@ -34,8 +34,14 @@ namespace BookStore.src.Repository
             return await _cart.FindAsync(id);
         }
 
+        // get all 
+        public async Task<List<Cart>> GetAllAsync()
+        {
+            return await _cart.ToListAsync();
+        }
+
         //delete 
-        public async Task<bool> DeleteOneAsynkc (Cart cart)
+        public async Task<bool> DeleteOneAsync (Cart cart)
         {
             _cart.Remove(cart);
             await _databaseContext.SaveChangesAsync();
@@ -43,7 +49,7 @@ namespace BookStore.src.Repository
         }
 
         //update cart 
-        public async Task<bool> UpdateoneAsync(Cart updateCart )
+        public async Task<bool> UpdateOneAsync(Cart updateCart )
         {
             _cart.Update(updateCart);
             await _databaseContext.SaveChangesAsync();
