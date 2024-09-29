@@ -9,6 +9,10 @@ public class Book
     public float Price { get; set; }
     public int StockQuantity { get; set; }
     public Format BookFormat { get; set; }
+
+    //connections to other entities
+    public required Guid CategoryId { get; set; }
+    public Category Category { get; set; } = null!;
 }
 
 public enum Format

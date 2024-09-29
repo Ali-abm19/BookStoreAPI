@@ -11,6 +11,9 @@ namespace BookStore.src.Entity
         public string Description { get; set; }
         public CategoryName categoryname { get; set; }
 
+        //connections to other entities
+        public List<Book> Books { get; set; }
+
         public enum CategoryName
         {
             History,
