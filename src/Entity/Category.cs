@@ -9,12 +9,12 @@ namespace BookStore.src.Entity
     {
         public Guid CategoryId { get; set; }
         public string Description { get; set; }
-        public CategoryName categoryname { get; set; }
+        public CategoryType Categoryname { get; set; }
 
         //connections to other entities
         public List<Book> Books { get; set; }
 
-        public enum CategoryType 
+        public enum CategoryType
         {
             History,
             Science,
