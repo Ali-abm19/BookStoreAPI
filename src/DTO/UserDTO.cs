@@ -12,15 +12,9 @@ namespace BookStore.src.DTO
             {
                 public string? Name { get; set; }
 
-                public string? Address { get; set; }
-
-                public long? Phone { get; set; }
-
                 public string Email { get; set; }
 
                 public string Password { get; set; }
-
-                public byte[]? Salt { get; set; }
             }
 
             public class UserReadDto
@@ -35,8 +29,6 @@ namespace BookStore.src.DTO
                 public string Email { get; set; }
 
                 public string Password { get; set; }
-
-                public byte[]? Salt { get; set; }
             }
 
             public class UserUpdateDto
@@ -50,8 +42,6 @@ namespace BookStore.src.DTO
                 public string Email { get; set; }
 
                 public string Password { get; set; }
-
-                public byte[]? Salt { get; set; }
             }
         }
     }

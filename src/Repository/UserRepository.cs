@@ -25,6 +25,11 @@ namespace BookStore.src.Repository
             return newUser;
     
         }
+
+        public async Task<List<User>> GetAllAsync()
+        {
+            return await _user.ToListAsync();
+        }
         public async Task<User?> GetByIdAsync(Guid id)
         {
             return await _user.FindAsync(id);
