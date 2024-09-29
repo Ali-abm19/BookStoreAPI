@@ -12,6 +12,7 @@ using BookStore.src.Database;
 using BookStore.src.Utils;
 using BookStore.src.Services.cart;
 using BookStore.src.Repository;
+using BookStore.src.Services.user;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +36,7 @@ builder
 
 builder.Services.AddScoped<IBookService, BookService>().AddScoped<BookRepository, BookRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>().AddScoped<CategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IUserService, UserService>().AddScoped<UserRepository, UserRepository>();
 
 // add auto-mapper
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
