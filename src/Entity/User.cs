@@ -19,5 +19,13 @@ namespace BookStore.src.Entity
         public string Password { get; set; }
 
         public byte[]? Salt { get; set; }
+
+        public Role Role { get; set; } = Role.Customer;
+    }
+
+    public enum Role
+    {
+        Admin,
+        Customer,
     }
 }
