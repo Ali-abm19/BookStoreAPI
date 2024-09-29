@@ -13,6 +13,6 @@ namespace BookStore.src.Services.user
         Task<UserReadDto> GetByIdAsync(Guid id);
         Task<bool> DeleteOneAsync(Guid id);
         Task<bool> UpdateOneAsync(Guid id, UserUpdateDto updateDto);
-
+        Task<string> SignInAsync(UserCreateDto createDto);
     }
 }

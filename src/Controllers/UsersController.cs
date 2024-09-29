@@ -13,9 +13,8 @@ using static BookStore.src.DTO.UserDTO;
 
 namespace BookStore.src.Controllers
 {
-    [ApiController]
+   [ApiController]
     [Route("api/v1/[controller]")]
-
     public class UsersController : ControllerBase
     {
         protected readonly IUserService _userService;
@@ -24,54 +23,18 @@ namespace BookStore.src.Controllers
             _userService = service;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<UserReadDto>>> GetAll()
-        {
-            var userList = await _userService.GetAllAsync();
-            return Ok(userList);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<UserReadDto>> GetById([FromRoute] Guid id)
-        {
-            var user = await _userService.GetByIdAsync(id);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(user);
-        }
-
         [HttpPost]
-        public async Task<ActionResult<UserReadDto>> CreateOne(UserCreateDto createDto)
+        public async Task<ActionResult<UserReadDto>> CreateOne([FromBody] UserCreateDto createDto)
         {
-            var userCreated = await _userService.CreateOneAsync(createDto);
-            return Ok(userCreated);
+            var UserCreated = await _userService.CreateOneAsync(createDto);
+            return Ok(UserCreated);
         }
 
-
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateOne(Guid id, UserUpdateDto updateDto)
+        [HttpPost("signIn")]
+        public async Task<ActionResult<string>> SignInUser([FromBody] UserCreateDto createDto)
         {
-            var userUpdatedById = await _userService.UpdateOneAsync(id, updateDto);
-            if (!userUpdatedById)
-            {
-                return NotFound();
-            }
-            return Ok();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteOne(Guid id)
-        {
-            var userDelete = await _userService.DeleteOneAsync(id);
-            if (!userDelete)
-            {
-                return NotFound();
-            }
-            return NoContent();
+            var token = await _userService.SignInAsync(createDto);
+            return Ok(token);
         }
     }
 }
