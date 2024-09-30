@@ -8,8 +8,11 @@ namespace BookStore.src.Entity
     public class Cart
     {
         public Guid CartId { get; set; }
-        public Guid UserId { get; set; }
         public int Quantity { get; set; }
         public double Price { get; set; }
+
+        // connnections with other entities
+        public User User { get; set; }
+        public List<Book> Book { get; set; }
     }
 }

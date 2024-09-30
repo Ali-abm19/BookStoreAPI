@@ -7,7 +7,7 @@ namespace BookStore.src.Entity
 {
     public class User
     {
-        public Guid? Id { get; set; }
+        public Guid Id { get; set; }
         public string? Name { get; set; }
 
         public string? Address { get; set; }
@@ -21,6 +21,14 @@ namespace BookStore.src.Entity
         public byte[]? Salt { get; set; }
 
         public Role Role { get; set; } = Role.Customer;
+
+        // connnections with other entities
+
+        public Guid? OrderId { get; set; }
+        public List<Order>? Order { get; set; }
+
+        public Guid? CartId { get; set; }
+       // public Cart? Cart { get; set; }
     }
 
     public enum Role
