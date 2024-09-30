@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BookStore.src.Entity;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace BookStore.src.Database
 {
     public class DatabaseContext : DbContext
@@ -18,7 +19,7 @@ namespace BookStore.src.Database
         public DbSet<User> User { get; set; }
         public DbSet<Cart> Cart { get; set; }
 
-        protected override void O OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasPostgresEnum<Role>();
         }
