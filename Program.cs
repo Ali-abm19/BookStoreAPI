@@ -70,6 +70,9 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddAuthorization(options => {
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+});
 // step 1: add controller
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
