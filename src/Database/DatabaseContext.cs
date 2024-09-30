@@ -18,7 +18,7 @@ namespace BookStore.src.Database
         public DbSet<User> User { get; set; }
         public DbSet<Cart> Cart { get; set; }
 
-        protected override void  OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasPostgresEnum<Role>();
         }
