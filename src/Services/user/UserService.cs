@@ -16,13 +16,11 @@ namespace BookStore.src.Services.user
         protected readonly IMapper _mapper;
         protected readonly IConfiguration _config;
 
-        public UserService(UserRepository userRepo, IMapper mapper)
+        public UserService(UserRepository userRepo, IMapper mapper, IConfiguration config)
         {
             _userRepo = userRepo;
             _mapper = mapper;
-           // _config = config;
-        
-
+            _config = config;
         }
         /*        public async Task<UserReadDto> CreateOneAsync(UserCreateDto createDto)
                 {
