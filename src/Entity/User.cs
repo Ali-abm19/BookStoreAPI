@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace BookStore.src.Entity
@@ -28,8 +29,10 @@ namespace BookStore.src.Entity
         public List<Order>? Order { get; set; }
 
         public Guid? CartId { get; set; }
-       // public Cart? Cart { get; set; }
+        // public Cart? Cart { get; set; }
     }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
 
     public enum Role
     {
