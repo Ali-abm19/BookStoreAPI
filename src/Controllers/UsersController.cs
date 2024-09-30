@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BookStore.src.Entity;
 using BookStore.src.Services.user;
 using BookStore.src.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,7 @@ namespace BookStore.src.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<UserReadDto>>> GetAll()
         {
             var userList = await _userService.GetAllAsync();
@@ -32,6 +34,7 @@ namespace BookStore.src.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<UserReadDto>> GetById([FromRoute] Guid id)
         {
             var user = await _userService.GetByIdAsync(id);
@@ -45,6 +48,7 @@ namespace BookStore.src.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<ActionResult> UpdateOne(Guid id, UserUpdateDto updateDto)
         {
             var userUpdatedById = await _userService.UpdateOneAsync(id, updateDto);
@@ -56,6 +60,7 @@ namespace BookStore.src.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult> DeleteOne(Guid id)
         {
             var userDelete = await _userService.DeleteOneAsync(id);
@@ -74,6 +79,7 @@ namespace BookStore.src.Controllers
         }
 
         [HttpPost("signIn")]
+        [Authorize]
         public async Task<ActionResult<string>> SignInUser([FromBody] UserSigninDto createDto)
         {
             var token = await _userService.SignInAsync(createDto);
