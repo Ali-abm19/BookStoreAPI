@@ -2,6 +2,7 @@ using BookStore.src.Entity;
 using BookStore.src.Services.book;
 using Microsoft.AspNetCore.Mvc;
 using static BookStore.src.DTO.BookDTO;
+using BookStore.src.Utils;
 
 namespace BookStore.src.Controllers
 {
@@ -10,16 +11,19 @@ namespace BookStore.src.Controllers
     public class BooksController : ControllerBase
     {
         protected readonly IBookService _bookService;
-
-        public BooksController(IBookService bookService)
+        
+        public BooksController(IBookService service)
         {
-            _bookService = bookService;
+            _bookService = service;
         }
 
+       
+
         [HttpGet]
-        public async Task<ActionResult<List<Book>>> GetBooks()
+        public async Task<ActionResult<List<Book>>> GetBooks([FromQuery] PaginationOptions paginationOptions)
         {
-            return Ok(await _bookService.GetAllAsync());
+            var bookList = await _bookService.GetAllAsync(paginationOptions);
+            return Ok(bookList);
         }
 
         [HttpGet("{id}")]
