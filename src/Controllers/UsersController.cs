@@ -18,6 +18,7 @@ namespace BookStore.src.Controllers
     public class UsersController : ControllerBase
     {
         protected readonly IUserService _userService;
+
         public UsersController(IUserService service)
         {
             _userService = service;
@@ -43,7 +44,6 @@ namespace BookStore.src.Controllers
             return Ok(user);
         }
 
-
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateOne(Guid id, UserUpdateDto updateDto)
         {
@@ -66,7 +66,7 @@ namespace BookStore.src.Controllers
             return NoContent();
         }
 
-        [HttpPost]
+        [HttpPost("logIn")]
         public async Task<ActionResult<UserReadDto>> CreateOne([FromBody] UserCreateDto createDto)
         {
             var UserCreated = await _userService.CreateOneAsync(createDto);
