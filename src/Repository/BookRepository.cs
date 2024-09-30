@@ -30,7 +30,7 @@ namespace BookStore.src.Repository
 
         public async Task<List<Book>> GetAllAsync(PaginationOptions paginationOptions)
         {
-            return await _book.ToListAsync();
+            return  await _book.Skip(paginationOptions.Offset).Take(paginationOptions.Limit).ToListAsync();
         }
 
         public async Task<bool> DeleteOneAsync(Book book)

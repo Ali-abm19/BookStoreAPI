@@ -79,7 +79,7 @@ namespace BookStore.src.Controllers
         }
 
         [HttpPost("signIn")]
-        [Authorize]
+    
         public async Task<ActionResult<string>> SignInUser([FromBody] UserSigninDto createDto)
         {
             var token = await _userService.SignInAsync(createDto);
