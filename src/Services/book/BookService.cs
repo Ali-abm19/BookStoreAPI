@@ -4,6 +4,7 @@ using BookStore.src.Entity;
 using BookStore.src.Repository;
 using BookStore.src.Services.book;
 using static BookStore.src.DTO.BookDTO;
+using BookStore.src.Utils;
 
 namespace BookStore.Services.book
 {
@@ -40,9 +41,10 @@ namespace BookStore.Services.book
             );
         }
 
-        public async Task<List<ReadBookDto>> GetAllAsync()
+        public async Task<List<ReadBookDto>> GetAllAsync(PaginationOptions paginationOptions)
         {
-            var books = await _BookRepository.GetAllAsync();
+            
+            var books = await _BookRepository.GetAllAsync(paginationOptions);
             var dtos = _mapper.Map<List<Book>, List<ReadBookDto>>(books);
             return dtos;
         }

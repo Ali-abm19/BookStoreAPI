@@ -12,7 +12,7 @@ namespace BookStore.src.DTO
         //Create Category
         public class CategoryCreateDto
         {
-             public CategoryType CategoryName { get; set; }
+             public string CategoryName { get; set; }
             public string Description { get; set; }
         }
 
@@ -22,13 +22,13 @@ namespace BookStore.src.DTO
         {
             public Guid CategoryId { get; set; }
             public string Description { get; set; }
-             public CategoryType CategoryName { get; set; }
+             public string CategoryName { get; set; }
         }
 
         //Update Category Name
         public class CategoryUpdateNameDto
         {
-             public CategoryType CategoryName { get; set; }
+             public string CategoryName { get; set; }
         }
 
         //Update Description of the Category

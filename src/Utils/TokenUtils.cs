@@ -38,8 +38,8 @@ namespace BookStore.src.Utils
             {
                 Issuer = _config.GetSection("Jwt:Issuer").Value,
                 Audience = _config.GetSection("Jwt:Audience").Value,
-                Expires = DateTime.Now.AddHours(1.5),
-                Subject = new ClaimsIdentity(),
+                Expires = DateTime.Now.AddMinutes(5),
+                Subject = new ClaimsIdentity(claims),
                 SigningCredentials = signinCredentials,
             };
             var tokenHandler = new JwtSecurityTokenHandler();
