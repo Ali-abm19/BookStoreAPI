@@ -16,14 +16,13 @@ namespace BookStore.src.Services.user
         protected readonly IMapper _mapper;
         protected readonly IConfiguration _config;
 
-        public UserService(UserRepository userRepo, IMapper mapper)
+        public UserService(UserRepository userRepo, IMapper mapper, IConfiguration config)
         {
             _userRepo = userRepo;
             _mapper = mapper;
-           // _config = config;
-        
-
+            _config = config;
         }
+
         /*        public async Task<UserReadDto> CreateOneAsync(UserCreateDto createDto)
                 {
                     var user = _mapper.Map<UserCreateDto, User>(createDto);
@@ -37,13 +36,11 @@ namespace BookStore.src.Services.user
             return _mapper.Map<List<User>, List<UserReadDto>>(userList);
         }
 
-
         public async Task<UserReadDto> GetByIdAsync(Guid id)
         {
             var foundUser = await _userRepo.GetByIdAsync(id);
             return _mapper.Map<User, UserReadDto>(foundUser);
         }
-
 
         public async Task<bool> DeleteOneAsync(Guid id)
         {
@@ -56,7 +53,6 @@ namespace BookStore.src.Services.user
             }
             return false;
         }
-
 
         public async Task<bool> UpdateOneAsync(Guid id, UserUpdateDto updateDto)
         {
@@ -76,7 +72,6 @@ namespace BookStore.src.Services.user
 
         public async Task<UserReadDto> CreateOneAsync(UserCreateDto createDto)
         {
-
             PasswordUtils.Password(createDto.Password, out string hashedPassword, out byte[] salt);
 
             var user = _mapper.Map<UserCreateDto, User>(createDto);
@@ -84,27 +79,37 @@ namespace BookStore.src.Services.user
             user.Salt = salt;
             user.Role = Role.Customer;
 
-
             var savedUser = await _userRepo.CreateOneAsync(user);
             return _mapper.Map<User, UserReadDto>(savedUser);
-
         }
 
-//public static bool VerifyPassword(string plainPassword, byte[] salt, string hashedPassword)
+        //public static bool VerifyPassword(string plainPassword, byte[] salt, string hashedPassword)
 
-        public async Task<string> SignInAsync(UserCreateDto createDto)
+        public async Task<string> SignInAsync(UserSigninDto createDto)
         {
-            var foundUser = await _userRepo.FindByEmailAsync(createDto.Email);
-            var isMatched = PasswordUtils.
-            VerifyPassword(createDto.Password, foundUser.Salt, foundUser.Password);
-
-            if (isMatched)
+            bool isMatched = false;
+            //var foundUser = await _userRepo.FindByEmailAsync(createDto.Email);
+            List<User> userList = await _userRepo.GetAllAsync();
+            var foundUser = userList.FirstOrDefault(u => u.Email == createDto.Email);
+            if (foundUser != null)
             {
-                var tokenUtil = new TokenUtils(_config);
-                return tokenUtil.GnerateToken(foundUser);
-            }
-            return "Unauthorized";
-        }
+                isMatched = PasswordUtils.VerifyPassword(
+                    createDto.Password,
+                    foundUser.Salt,
+                    foundUser.Password
+                );
 
+                if (isMatched)
+                {
+                    var tokenUtil = new TokenUtils(_config);
+                    return tokenUtil.GnerateToken(foundUser);
+                }
+                return "Unauthorized";
+            }
+            else
+            {
+                return "Not Found";
+            }
+        }
     }
 }

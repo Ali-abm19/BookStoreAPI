@@ -11,7 +11,7 @@ namespace BookStore.src.DTO
         //create order 
         public class OrderCreateDto
         {
-            public DateTime DateCreated { get; set; }
+            public float TotalPrice { get; set; }
 
         }
 

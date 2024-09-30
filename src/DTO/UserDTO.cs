@@ -21,6 +21,13 @@ namespace BookStore.src.DTO
             public string Password { get; set; }
         }
 
+        public class UserSigninDto
+        {
+            public string Email { get; set; }
+
+            public string Password { get; set; }
+        }
+
         public class UserReadDto
         {
             public Guid Id { get; set; }
