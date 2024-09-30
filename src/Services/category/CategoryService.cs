@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BookStore.src.Entity;
 using BookStore.src.Repository;
+using BookStore.src.Utils;
 using static BookStore.src.DTO.CategoryDTO;
 
 namespace BookStore.src.Services.category
@@ -41,7 +42,11 @@ namespace BookStore.src.Services.category
         public async Task<CategoryReadDto> GetByIdAsync(Guid CategoryId)
         {
             var foundCategory = await _categoryRepo.GetByIdAsync(CategoryId);
-            //to do throw handle errto
+            //to do throw handle error
+            if (foundCategory == null)
+            {
+                throw CustomException.NotFound($"category with {CategoryId} cannot be found! ");
+            }
             return _mapper.Map<Category, CategoryReadDto>(foundCategory);
         }
 
