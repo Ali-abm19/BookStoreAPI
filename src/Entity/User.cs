@@ -32,8 +32,7 @@ namespace BookStore.src.Entity
         // public Cart? Cart { get; set; }
     }
 
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-
+[JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Role
     {
         Admin,
