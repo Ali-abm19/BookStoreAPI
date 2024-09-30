@@ -14,8 +14,8 @@ namespace BookStore.src.Entity
         public Status OrderStatus { get; set; }
 
         // connnections with other entities
-                public Guid UserId { get; set; }
-public List<Book> Book{ get; set; }
+        public Guid UserId { get; set; }
+        public List<Book> Book { get; set; }
 
         public enum Status
         {

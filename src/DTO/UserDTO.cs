@@ -19,8 +19,13 @@ namespace BookStore.src.DTO
             public string Email { get; set; }
 
             public string Password { get; set; }
+        }
 
-            public byte[]? Salt { get; set; }
+        public class UserSigninDto
+        {
+            public string Email { get; set; }
+
+            public string Password { get; set; }
         }
 
         public class UserReadDto

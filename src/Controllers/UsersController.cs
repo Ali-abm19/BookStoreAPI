@@ -19,6 +19,7 @@ namespace BookStore.src.Controllers
     public class UsersController : ControllerBase
     {
         protected readonly IUserService _userService;
+
         public UsersController(IUserService service)
         {
             _userService = service;
@@ -33,7 +34,7 @@ namespace BookStore.src.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin")]        
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<UserReadDto>> GetById([FromRoute] Guid id)
         {
             var user = await _userService.GetByIdAsync(id);
@@ -45,7 +46,6 @@ namespace BookStore.src.Controllers
 
             return Ok(user);
         }
-
 
         [HttpPut("{id}")]
         [Authorize]
@@ -71,7 +71,7 @@ namespace BookStore.src.Controllers
             return NoContent();
         }
 
-        [HttpPost]
+        [HttpPost("signUp")]
         public async Task<ActionResult<UserReadDto>> CreateOne([FromBody] UserCreateDto createDto)
         {
             var UserCreated = await _userService.CreateOneAsync(createDto);
@@ -80,10 +80,19 @@ namespace BookStore.src.Controllers
 
         [HttpPost("signIn")]
         [Authorize]
-        public async Task<ActionResult<string>> SignInUser([FromBody] UserCreateDto createDto)
+        public async Task<ActionResult<string>> SignInUser([FromBody] UserSigninDto createDto)
         {
             var token = await _userService.SignInAsync(createDto);
-            return Ok(token);
+            if (token == "Not Found")
+            {
+                return NotFound();
+            }
+            else if (token == "Unauthorized")
+            {
+                return Unauthorized();
+            }
+            else
+                return Ok(token);
         }
     }
 }
