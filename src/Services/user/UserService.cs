@@ -104,7 +104,9 @@ namespace BookStore.src.Services.user
                     var tokenUtil = new TokenUtils(_config);
                     return tokenUtil.GnerateToken(foundUser);
                 }
-                return "Unauthorized";
+               // return "Unauthorized";
+               throw CustomException.UnAuthorized($"Password for user with email {foundUser.Email} does not match !");
+
             }
             else
             {

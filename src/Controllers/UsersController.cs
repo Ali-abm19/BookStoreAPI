@@ -26,7 +26,7 @@ namespace BookStore.src.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<UserReadDto>>> GetAll()
         {
             var userList = await _userService.GetAllAsync();

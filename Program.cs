@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Npgsql;
+using System.Text;
+using BookStore.src.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -118,7 +120,11 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine($"Database connection failed: {ex.Message}");
     }
 }
-
+// add middleware 
+app.UseMiddleware<LoggingMiddleware>();
+app.UseMiddleware<ErrorHandlerMiddleware>();
+app.UseAuthentication();
+app.UseAuthorization();
 // step 2: use
 app.MapControllers();
 
