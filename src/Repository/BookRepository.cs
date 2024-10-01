@@ -32,32 +32,31 @@ namespace BookStore.src.Repository
         public async Task<List<Book>> GetAllAsync(PaginationOptions paginationOptions)
         {
             var books = await _book.ToListAsync();
+            // Apply search and pagination
             var result = books
               .Where(c =>
               {
                   string searchTerm = paginationOptions.Search.ToLower();
 
-                  if (searchTerm.StartsWith("author:"))
+                  if (searchTerm.StartsWith("author:")) // Search by Author
                   {
                       string authorName = searchTerm.Replace("author:", "").Trim();
                       return c.Author.ToLower().Contains(authorName);
                   }
 
-                  else if (searchTerm.StartsWith("title:"))
+                  else if (searchTerm.StartsWith("title:")) // Search by Title
                   {
                       string title = searchTerm.Replace("title:", "").Trim();
                       return c.Title.ToLower().Contains(title);
                   }
-                  return false;
+                  return false; // Return false if no valid search prefix is used
               })
               .Skip(paginationOptions.Offset)
               .Take(paginationOptions.Limit)
               .ToList();
 
             return result;
-           
-            //    var result = _book.Where(c => c.Title.ToLower().Contains(paginationOptions.Search.ToLower()));
-            //    return await result.Skip(paginationOptions.Offset).Take(paginationOptions.Limit).ToListAsync();
+
         }
 
         public async Task<List<Book>> GetAllAsyncWithConditions() //(Func<Book, bool> expression)
