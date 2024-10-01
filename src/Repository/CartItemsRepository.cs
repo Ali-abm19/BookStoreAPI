@@ -1,5 +1,6 @@
 using BookStore.src.Database;
 using BookStore.src.Entity;
+using BookStore.src.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.Repository
@@ -8,17 +9,23 @@ namespace BookStore.Repository
     {
         protected DbSet<CartItems> _cartItems;
         protected DatabaseContext _databaseContext;
+        protected readonly BookRepository _bookRepository;
 
-        public CartItemsRepository(DatabaseContext databaseContext)
+        public CartItemsRepository(DatabaseContext databaseContext, BookRepository BookRepository)
         {
             _databaseContext = databaseContext;
             _cartItems = databaseContext.Set<CartItems>();
+            _bookRepository = BookRepository;
         }
 
         // create new cart
         public async Task<CartItems> CreateOneAsync(CartItems newCart)
         {
-            //newCart.Price = newCart.Book.Price * newCart.Quantity;
+            var book = await _bookRepository.GetBookByIdAsync(newCart.BookId);
+
+            if (book != null)
+                newCart.Price = book.Price * newCart.Quantity;
+
             await _cartItems.AddAsync(newCart);
             await _databaseContext.SaveChangesAsync();
             return newCart;

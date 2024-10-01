@@ -24,7 +24,7 @@ namespace BookStore.src.Utils
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()!),
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()!),
                 new Claim(ClaimTypes.Role, user.Role.ToString()),
             };
             var key = new SymmetricSecurityKey(

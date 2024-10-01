@@ -10,8 +10,8 @@ namespace BookStore.src.DTO
     {
         public class CartCreateDto
         {
-            public Guid User { get; set; }
-            public List<CartItems> CartItems { get; set; }
+            public Guid UserId { get; set; }
+            //public List<CartItems> CartItems { get; set; }
             //public Guid CartId { get; set; }
             //public double TotalPrice { get; set; }
         }
