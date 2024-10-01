@@ -1,3 +1,4 @@
+using BookStore.src.Entity;
 using static BookStore.src.DTO.BookDTO;
 
 namespace BookStore.src.Services.book
@@ -9,5 +10,6 @@ namespace BookStore.src.Services.book
         Task<ReadBookDto> GetBookByIdAsync(Guid id);
         Task<bool> DeleteOneAsync(Guid id);
         Task<bool> UpdateOneAsync(Guid id, UpdateBookDto updateDto);
+        Task<List<ReadBookDto>> GetAllAsyncWithConditions();
     }
 }

@@ -25,7 +25,7 @@ namespace BookStore.src.Utils
             {
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()!),
-                new Claim(ClaimTypes.Role, user.Role.ToString())
+                new Claim(ClaimTypes.Role, user.Role.ToString()),
             };
             var key = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(_config.GetSection("Jwt:Key").Value!)
@@ -39,7 +39,7 @@ namespace BookStore.src.Utils
                 Issuer = _config.GetSection("Jwt:Issuer").Value,
                 Audience = _config.GetSection("Jwt:Audience").Value,
                 Expires = DateTime.Now.AddHours(1.5),
-                Subject = new ClaimsIdentity(),
+                Subject = new ClaimsIdentity(claims),
                 SigningCredentials = signinCredentials,
             };
             var tokenHandler = new JwtSecurityTokenHandler();

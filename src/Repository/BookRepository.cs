@@ -1,6 +1,7 @@
 using BookStore.src.Database;
 using BookStore.src.Entity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace BookStore.src.Repository
 {
@@ -31,6 +32,12 @@ namespace BookStore.src.Repository
         public async Task<List<Book>> GetAllAsync()
         {
             return await _book.ToListAsync();
+        }
+
+        public async Task<List<Book>> GetAllAsyncWithConditions() //(Func<Book, bool> expression)
+        {
+            var list = await _book.Include(i => i.Category).ToListAsync();
+            return list;
         }
 
         public async Task<bool> DeleteOneAsync(Book book)

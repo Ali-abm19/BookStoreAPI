@@ -3,6 +3,7 @@ using AutoMapper;
 using BookStore.src.Entity;
 using BookStore.src.Repository;
 using BookStore.src.Services.book;
+using BookStore.src.Services.category;
 using static BookStore.src.DTO.BookDTO;
 
 namespace BookStore.Services.book
@@ -11,17 +12,38 @@ namespace BookStore.Services.book
     {
         protected readonly BookRepository _BookRepository;
         protected readonly IMapper _mapper;
+        protected readonly CategoryRepository _categoryRepo;
 
-        public BookService(BookRepository bookRepository, IMapper mapper)
+        public BookService(
+            BookRepository bookRepository,
+            IMapper mapper,
+            CategoryRepository categoryRepo
+        )
         {
             _BookRepository = bookRepository;
             _mapper = mapper;
+            _categoryRepo = categoryRepo;
         }
 
         public async Task<ReadBookDto> CreateOneAsync(CreateBookDto createDto)
         {
             Book b = _mapper.Map<CreateBookDto, Book>(createDto); //convert CreateBookDto to Book
+
+            //update the category of the Book using the given CategroyName in the CreateBookDto
+            var categoryOfTheBook = _categoryRepo
+                .GetAllAsync()
+                .Result.FirstOrDefault(c => c.CategoryName == createDto.CategoryName);
+            if (categoryOfTheBook != null)
+            {
+                b.Category = categoryOfTheBook;
+                b.CategoryId = categoryOfTheBook.CategoryId;
+            }
+            else
+            {
+                throw new Exception("Book addition failed");
+            }
             Book created = await _BookRepository.CreateOneAsync(b);
+            // end of Category update
             return _mapper.Map<Book, ReadBookDto>(created); //return type: ReadBookDto
         }
 
@@ -43,6 +65,13 @@ namespace BookStore.Services.book
         public async Task<List<ReadBookDto>> GetAllAsync()
         {
             var books = await _BookRepository.GetAllAsync();
+            var dtos = _mapper.Map<List<Book>, List<ReadBookDto>>(books);
+            return dtos;
+        }
+
+        public async Task<List<ReadBookDto>> GetAllAsyncWithConditions()
+        {
+            var books = await _BookRepository.GetAllAsyncWithConditions();
             var dtos = _mapper.Map<List<Book>, List<ReadBookDto>>(books);
             return dtos;
         }

@@ -32,9 +32,8 @@ namespace BookStore.src.Controllers
 
             return Created($"api/v1/orders/{orderCreated.OrderId}", orderCreated);
             // return Ok(orderCreated);
-
-
         }
+        
         [HttpGet]
         public async Task<ActionResult<List<OrderReadDto>>> GetAll([FromQuery] PaginationOptions paginationOptions)
         {

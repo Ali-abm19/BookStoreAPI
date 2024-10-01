@@ -48,7 +48,7 @@ namespace BookStore.src.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> UpdateOne(Guid id, UserUpdateDto updateDto)
         {
             var userUpdatedById = await _userService.UpdateOneAsync(id, updateDto);
@@ -60,7 +60,7 @@ namespace BookStore.src.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteOne(Guid id)
         {
             var userDelete = await _userService.DeleteOneAsync(id);
@@ -79,7 +79,6 @@ namespace BookStore.src.Controllers
         }
 
         [HttpPost("signIn")]
-        [Authorize]
         public async Task<ActionResult<string>> SignInUser([FromBody] UserSigninDto createDto)
         {
             var token = await _userService.SignInAsync(createDto);

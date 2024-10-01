@@ -2,17 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BookStore.src.Entity;
 using static BookStore.src.Entity.Category;
 
 namespace BookStore.src.DTO
 {
-  
-         public class CategoryDTO
+    public class CategoryDTO
     {
         //Create Category
         public class CategoryCreateDto
         {
-             public CategoryType CategoryName { get; set; }
+            public string CategoryName { get; set; }
             public string Description { get; set; }
         }
 
@@ -22,13 +22,14 @@ namespace BookStore.src.DTO
         {
             public Guid CategoryId { get; set; }
             public string Description { get; set; }
-             public CategoryType CategoryName { get; set; }
+            public string CategoryName { get; set; }
+            public List<Book> Books { get; set; }
         }
 
         //Update Category Name
         public class CategoryUpdateNameDto
         {
-             public CategoryType CategoryName { get; set; }
+            public string CategoryName { get; set; }
         }
 
         //Update Description of the Category
