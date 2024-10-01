@@ -30,7 +30,33 @@ namespace BookStore.src.Repository
 
         public async Task<List<Book>> GetAllAsync(PaginationOptions paginationOptions)
         {
-            return  await _book.Skip(paginationOptions.Offset).Take(paginationOptions.Limit).ToListAsync();
+            var books = await _book.ToListAsync();
+            var result = books
+              .Where(c =>
+              {
+                  string searchTerm = paginationOptions.Search.ToLower();
+
+                  if (searchTerm.StartsWith("author:"))
+                  {
+                      string authorName = searchTerm.Replace("author:", "").Trim();
+                      return c.Author.ToLower().Contains(authorName);
+                  }
+
+                  else if (searchTerm.StartsWith("title:"))
+                  {
+                      string title = searchTerm.Replace("title:", "").Trim();
+                      return c.Title.ToLower().Contains(title);
+                  }
+                  return false;
+              })
+              .Skip(paginationOptions.Offset)
+              .Take(paginationOptions.Limit)
+              .ToList();
+
+            return result;
+           
+            //    var result = _book.Where(c => c.Title.ToLower().Contains(paginationOptions.Search.ToLower()));
+            //    return await result.Skip(paginationOptions.Offset).Take(paginationOptions.Limit).ToListAsync();
         }
 
         public async Task<bool> DeleteOneAsync(Book book)
