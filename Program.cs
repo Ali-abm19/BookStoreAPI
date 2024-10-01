@@ -20,6 +20,7 @@ using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // connect database
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(
     builder.Configuration.GetConnectionString("Local")

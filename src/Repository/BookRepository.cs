@@ -1,7 +1,7 @@
 using BookStore.src.Database;
 using BookStore.src.Entity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
+using BookStore.src.Utils;
 
 namespace BookStore.src.Repository
 {
@@ -29,9 +29,15 @@ namespace BookStore.src.Repository
             return await _book.FindAsync(id);
         }
 
-        public async Task<List<Book>> GetAllAsync()
+        public async Task<List<Book>> GetAllAsync(PaginationOptions paginationOptions)
         {
-            return await _book.ToListAsync();
+            return  await _book.Skip(paginationOptions.Offset).Take(paginationOptions.Limit).ToListAsync();
+        }
+
+        public async Task<List<Book>> GetAllAsyncWithConditions() //(Func<Book, bool> expression)
+        {
+            var list = await _book.Include(i => i.Category).ToListAsync();
+            return list;
         }
 
         public async Task<List<Book>> GetAllAsyncWithConditions() //(Func<Book, bool> expression)
