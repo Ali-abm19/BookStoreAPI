@@ -11,7 +11,10 @@ namespace BookStore.src.DTO
         //create order 
         public class OrderCreateDto
         {
-            public float TotalPrice { get; set; }
+            public DateTime DateCreated { get; set; }
+            public Guid OrderId { get; set; }
+            public Guid UserId { get; set; }
+            public float TotalPrice { get; set; }//
 
         }
 
@@ -22,6 +25,10 @@ namespace BookStore.src.DTO
             public float TotalPrice { get; set; }
             public DateTime DateCreated { get; set; }
             public Order.Status OrderStatus { get; set; }
+            public Guid userId { get; set; }
+            public User user { get; set; }//all inf0
+            //public Cart cart { get; set; }
+
         }
 
         //update 

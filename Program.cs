@@ -125,6 +125,7 @@ app.UseMiddleware<LoggingMiddleware>();
 app.UseMiddleware<ErrorHandlerMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
+
 // step 2: use
 app.MapControllers();
 

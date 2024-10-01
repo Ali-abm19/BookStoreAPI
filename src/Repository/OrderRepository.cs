@@ -40,9 +40,11 @@ namespace BookStore.src.Repository
 
         public async Task<Order?> GetByIdAsync(Guid id)
         {
-
-            return await _order.FindAsync(id); ;
+            //to see user and cart info
+            return await _order.Include(u => u.user).FirstOrDefaultAsync(p => p.OrderId == id);
         }
+
+
         //delete order or cancel 
         public async Task<bool> DeleteOneAsync(Order Order)
         {

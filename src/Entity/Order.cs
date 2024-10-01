@@ -15,7 +15,12 @@ namespace BookStore.src.Entity
 
         // connnections with other entities
         public Guid UserId { get; set; }
+        public User user { get; set; }
+
+
         public List<Book> Book { get; set; }
+        //cart         public Cart cart { get; set; }
+
 
         public enum Status
         {
