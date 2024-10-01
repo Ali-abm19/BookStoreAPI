@@ -1,6 +1,6 @@
-using BookStore.src.Entity;
+using BookStore.src.Utils;
 using static BookStore.src.DTO.BookDTO;
-using  BookStore.src.Utils;
+
 namespace BookStore.src.Services.book
 {
     public interface IBookService

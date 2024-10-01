@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using BookStore.src.Services.cart;
 using Microsoft.AspNetCore.Mvc;
 using static BookStore.src.DTO.CartDTO;
@@ -25,7 +22,8 @@ namespace BookStore.src.Controllers
         public async Task<ActionResult<CartReadDto>> CreateOne([FromBody] CartCreateDto createDto)
         {
             var cartCreated = await _cartService.CreateOneAsync(createDto);
-            return Ok(cartCreated); }
+            return Ok(cartCreated);
+        }
 
         // Get all carts
         [HttpGet]

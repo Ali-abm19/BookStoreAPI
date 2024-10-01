@@ -12,6 +12,6 @@ namespace BookStore.src.Entity
         public string CategoryName { get; set; }
 
         //connections to other entities
-        public List<Book> Books { get; set; }
+        //public List<Book> Books { get; set; }
     }
 }

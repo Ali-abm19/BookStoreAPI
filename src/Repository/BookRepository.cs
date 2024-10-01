@@ -31,29 +31,33 @@ namespace BookStore.src.Repository
 
         public async Task<List<Book>> GetAllAsync(PaginationOptions paginationOptions)
         {
-            var books = await _book.ToListAsync();
-            // Apply search and pagination
-            var result = books
-              .Where(c =>
-              {
-                  string searchTerm = paginationOptions.Search.ToLower();
 
-                  if (searchTerm.StartsWith("author:")) // Search by Author
-                  {
-                      string authorName = searchTerm.Replace("author:", "").Trim();
-                      return c.Author.ToLower().Contains(authorName);
-                  }
+            // Define an IQueryable to build the query dynamically
+            IQueryable<Book> query = _book;
 
-                  else if (searchTerm.StartsWith("title:")) // Search by Title
-                  {
-                      string title = searchTerm.Replace("title:", "").Trim();
-                      return c.Title.ToLower().Contains(title);
-                  }
-                  return false; // Return false if no valid search prefix is used
-              })
-              .Skip(paginationOptions.Offset)
-              .Take(paginationOptions.Limit)
-              .ToList();
+            // Apply search filter
+            if (!string.IsNullOrEmpty(paginationOptions.Search))
+            {
+                string searchTerm = paginationOptions.Search.ToLower();
+
+                if (searchTerm.StartsWith("author:")) // Search by Author
+                {
+                    string authorName = searchTerm.Replace("author:", "").Trim();
+                    query = query.Where(c => c.Author.ToLower().Contains(authorName));
+                }
+                else if (searchTerm.StartsWith("title:")) // Search by Title
+                {
+                    string title = searchTerm.Replace("title:", "").Trim();
+                    query = query.Where(c => c.Title.ToLower().Contains(title));
+                }
+            }
+
+            // Apply pagination 
+            query = query.Skip(paginationOptions.Offset)
+                         .Take(paginationOptions.Limit);
+
+            // Fetch the results from the database 
+            var result = await query.ToListAsync();
 
             return result;
 
