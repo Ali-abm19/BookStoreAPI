@@ -2,6 +2,7 @@ using BookStore.src.Database;
 using BookStore.src.Entity;
 using Microsoft.EntityFrameworkCore;
 using BookStore.src.Utils;
+
 namespace BookStore.src.Repository
 {
     public class BookRepository
@@ -57,6 +58,12 @@ namespace BookStore.src.Repository
            
             //    var result = _book.Where(c => c.Title.ToLower().Contains(paginationOptions.Search.ToLower()));
             //    return await result.Skip(paginationOptions.Offset).Take(paginationOptions.Limit).ToListAsync();
+        }
+
+        public async Task<List<Book>> GetAllAsyncWithConditions() //(Func<Book, bool> expression)
+        {
+            var list = await _book.Include(i => i.Category).ToListAsync();
+            return list;
         }
 
         public async Task<bool> DeleteOneAsync(Book book)
