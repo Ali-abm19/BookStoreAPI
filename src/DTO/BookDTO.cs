@@ -9,7 +9,7 @@ namespace BookStore.src.DTO
             public string Isbn { get; set; }
             public string Title { get; set; }
             public string Author { get; set; }
-            public float Price { get; set; }
+            public double Price { get; set; }
             public int StockQuantity { get; set; }
             public Format BookFormat { get; set; }
             public string CategoryName { get; set; }
@@ -21,7 +21,7 @@ namespace BookStore.src.DTO
             public string Isbn { get; set; }
             public string Title { get; set; }
             public string Author { get; set; }
-            public float Price { get; set; }
+            public double Price { get; set; }
             public int StockQuantity { get; set; }
             public Format BookFormat { get; set; }
             public Category Category { get; set; }
@@ -33,9 +33,9 @@ namespace BookStore.src.DTO
             public string Isbn { get; set; }
             public string Title { get; set; }
             public string Author { get; set; }
-            public float Price { get; set; }
+            public double Price { get; set; }
             public int StockQuantity { get; set; }
-            public Format BookFormat { get; set; }
+            public Guid CategoryId { get; set; }
         }
     }
 }

@@ -1,32 +1,32 @@
 using System.Text;
 using System.Text.Json.Serialization;
+using BookStore.Repository;
 using BookStore.Services.book;
 using BookStore.src.Database;
-using BookStore.src.Database;
 using BookStore.src.Entity;
-using BookStore.src.Repository;
+using BookStore.src.Middlewares;
 using BookStore.src.Repository;
 using BookStore.src.Services.book;
 using BookStore.src.Services.cart;
+using BookStore.src.Services.cartItems;
 using BookStore.src.Services.category;
 using BookStore.src.Services.order;
 using BookStore.src.Services.user;
-using BookStore.src.Utils;
 using BookStore.src.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Npgsql;
-using System.Text;
-using BookStore.src.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 // connect database
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(
     builder.Configuration.GetConnectionString("Local")
 );
+
+// add auto-mapper
+builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 
 dataSourceBuilder.MapEnum<Role>();
 
@@ -35,27 +35,23 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseNpgsql(dataSourceBuilder.Build());
 });
 
-//add autoo mapper
-builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
-
-//ADD DI
 builder
     .Services.AddScoped<IOrderServices, OrderServices>()
     .AddScoped<OrderRepository, OrderRepository>();
 
 builder.Services.AddScoped<IBookService, BookService>().AddScoped<BookRepository, BookRepository>();
+
 builder
     .Services.AddScoped<ICategoryService, CategoryService>()
     .AddScoped<CategoryRepository, CategoryRepository>();
+
 builder.Services.AddScoped<IUserService, UserService>().AddScoped<UserRepository, UserRepository>();
 
-// add auto-mapper
-builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
+builder.Services.AddScoped<ICartService, CartService>().AddScoped<CartRepository, CartRepository>();
 
-// add DI services
 builder
-    .Services.AddScoped<ICartService, CartService>()
-    .AddScoped<CartRepository, CartRepository>();
+    .Services.AddScoped<ICartItemsService, CartItemsService>()
+    .AddScoped<CartItemsRepository, CartItemsRepository>();
 
 builder
     .Services.AddAuthentication(options =>
@@ -120,11 +116,13 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine($"Database connection failed: {ex.Message}");
     }
 }
-// add middleware 
+
+// add middleware
 app.UseMiddleware<LoggingMiddleware>();
 app.UseMiddleware<ErrorHandlerMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
+
 // step 2: use
 app.MapControllers();
 
