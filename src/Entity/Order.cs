@@ -13,6 +13,8 @@ namespace BookStore.src.Entity
         public DateTime? DateUpdated { get; set; }
         public Status OrderStatus { get; set; }
 
+        //public String log
+
         // connnections with other entities
         public Guid UserId { get; set; }
         public User User { get; set; }

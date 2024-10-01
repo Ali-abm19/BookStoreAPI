@@ -13,7 +13,8 @@ namespace BookStore.src.Entity
         public double TotalPrice { get; set; } //= totalAmount += CartItems.GetAll.getPrice
 
         // connnections with other entities
-        public User User { get; set; }
-        public List<CartItems> CartItems { get; set; }
+        //public User User { get; set; }
+        public Guid UserId { get; set; }
+        public List<CartItems>? CartItems { get; set; }
     }
 }
