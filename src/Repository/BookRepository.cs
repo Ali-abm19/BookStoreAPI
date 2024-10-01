@@ -40,12 +40,6 @@ namespace BookStore.src.Repository
             return list;
         }
 
-        public async Task<List<Book>> GetAllAsyncWithConditions() //(Func<Book, bool> expression)
-        {
-            var list = await _book.Include(i => i.Category).ToListAsync();
-            return list;
-        }
-
         public async Task<bool> DeleteOneAsync(Book book)
         {
             _book.Remove(entity: book);
