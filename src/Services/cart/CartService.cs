@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using BookStore.src.Entity;
 using BookStore.src.Repository;
 using static BookStore.src.DTO.CartDTO;
-
 
 namespace BookStore.src.Services.cart
 {
