@@ -6,13 +6,13 @@ namespace BookStore.src.DTO
     {
         public class CreateBookDto
         {
-            public Guid Id { get; set; }
             public string Isbn { get; set; }
             public string Title { get; set; }
             public string Author { get; set; }
             public float Price { get; set; }
             public int StockQuantity { get; set; }
             public Format BookFormat { get; set; }
+            public string CategoryName { get; set; }
         }
 
         public class ReadBookDto
@@ -24,6 +24,8 @@ namespace BookStore.src.DTO
             public float Price { get; set; }
             public int StockQuantity { get; set; }
             public Format BookFormat { get; set; }
+            public Category Category { get; set; }
+            public Guid CategoryId { get; set; }
         }
 
         public class UpdateBookDto
@@ -36,12 +38,4 @@ namespace BookStore.src.DTO
             public Format BookFormat { get; set; }
         }
     }
-
-    /*public enum Format
-    {
-        Audio,
-        Paperback,
-        Hardcover,
-        Ebook,
-    }*/
 }

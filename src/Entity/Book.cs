@@ -12,7 +12,7 @@ public class Book
 
     //connections to other entities
     public required Guid CategoryId { get; set; }
-    public Category Category { get; set; } = null!;
+    public Category Category { get; set; }
 }
 
 public enum Format

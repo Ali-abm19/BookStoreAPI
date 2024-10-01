@@ -1,5 +1,6 @@
 using BookStore.src.Entity;
 using BookStore.src.Services.book;
+using BookStore.src.Services.category;
 using Microsoft.AspNetCore.Mvc;
 using static BookStore.src.DTO.BookDTO;
 using BookStore.src.Utils;
@@ -11,10 +12,12 @@ namespace BookStore.src.Controllers
     public class BooksController : ControllerBase
     {
         protected readonly IBookService _bookService;
-        
-        public BooksController(IBookService service)
+        protected readonly ICategoryService _categoryService;
+
+        public BooksController(IBookService bookService, ICategoryService categoryService)
         {
-            _bookService = service;
+            _bookService = bookService;
+            _categoryService = categoryService;
         }
 
        
@@ -41,8 +44,8 @@ namespace BookStore.src.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateBook([FromBody] CreateBookDto b)
         {
-            await _bookService.CreateOneAsync(b);
-            return Created("api/v1/Books" + b.Id, b);
+            var createdBook = await _bookService.CreateOneAsync(b);
+            return Created("api/v1/Books" + createdBook.Id, createdBook);
         }
 
         [HttpDelete("{id}")]
@@ -67,6 +70,22 @@ namespace BookStore.src.Controllers
             var isUpdated = await _bookService.UpdateOneAsync(id, changes);
 
             return Ok(isUpdated);
+        }
+
+        [HttpGet("category/{category}")]
+        public async Task<ActionResult> GetBooksByCategory([FromRoute] string category)
+        {
+            var booksFromDB = await _bookService.GetAllAsyncWithConditions();
+            var booksWithinCategory = booksFromDB.FindAll(cat =>
+                cat.Category.CategoryName == category
+            );
+
+            if (booksWithinCategory == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(booksWithinCategory);
         }
     }
 }
