@@ -6,8 +6,7 @@ namespace BookStore.src.DTO
     {
         public class CartItemsCreateDto
         {
-            //public Guid CartId { get; set; }
-            //public double TotalPrice { get; set; }
+
             public Guid BookId { get; set; }
             public Guid CartId { get; set; }
             public int Quantity { get; set; }
@@ -20,7 +19,10 @@ namespace BookStore.src.DTO
             public Guid CartId { get; set; }
             public int Quantity { get; set; }
             public double Price { get; set; }
+          
+          
             public Book Book { get; set; }
+  
         }
 
         // Update cart

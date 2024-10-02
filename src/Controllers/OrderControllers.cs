@@ -20,12 +20,11 @@ namespace BookStore.src.Controllers
     {
 
         protected readonly IOrderServices _orderServices;
-        private readonly ILogger<OrdersController> _logger; // new
+       
 
-        public OrdersController(IOrderServices services, ILogger<OrdersController> logger)
+        public OrdersController(IOrderServices services)
         {
             _orderServices = services;
-            _logger = logger;//new
 
         }
         //create
@@ -33,7 +32,7 @@ namespace BookStore.src.Controllers
         [HttpPost]
         [Authorize]
         public async Task<ActionResult<OrderReadDto>> CreateOnAsync([FromBody] OrderCreateDto orderCreateDto)
-        
+
 
         {
             //by token
@@ -43,7 +42,7 @@ namespace BookStore.src.Controllers
             // string => Guid
             var userGuid = new Guid(userId);
 
-            return await _orderServices.CreateOneAsync(userGuid,orderCreateDto);
+            return await _orderServices.CreateOneAsync(userGuid, orderCreateDto);
 
         }
 

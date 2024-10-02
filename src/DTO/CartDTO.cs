@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookStore.src.Entity;
+using static BookStore.src.DTO.CartItemsDTO;
 
 namespace BookStore.src.DTO
 {
@@ -11,10 +12,7 @@ namespace BookStore.src.DTO
         public class CartCreateDto
         {
             public Guid UserId { get; set; }
-           // public List<Guid> CartItemsId { get; set; } //<- we use the Guid instead of the whole object. It will be handled in CartRepo
-            // public List<CartItems> CartItems { get; set; } //<- dropped becauese it is very annoying to write the whole obejct list with every request
-            //public Guid CartId { get; set; } //generated at runtime
-            //public double TotalPrice { get; set; } //calculated at runtime in cartRepo
+
         }
 
         /*public class AddCartItemDto
@@ -27,7 +25,7 @@ namespace BookStore.src.DTO
         {
             public Guid CartId { get; set; }
             public Guid UserId { get; set; }
-            public List<CartItems> CartItems { get; set; }
+            public List<CartItemsReadDto> CartItems { get; set; } // Use the DTO
             public double TotalPrice { get; set; }
         }
 
