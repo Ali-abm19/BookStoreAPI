@@ -56,29 +56,12 @@ namespace BookStore.src.Controllers
             return Ok(category);
         }
 
-        //ْUpdate Descrption of Category
-        [HttpPut("{id}/description")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateDescription(
-            Guid id,
-            [FromBody] CategoryUpdateDesDto description
-        )
-        {
-            var category = await _categoryService.GetByIdAsync(id);
-            if (category == null)
-            { // 404
-                return NotFound();
-            }
-            var UpdateDes = await _categoryService.UpdateDesOneAsync(id, description);
-            //204
-            return NoContent();
-        }
-
-        //ْUpdate Name of Category
-        [HttpPut("{id}/name")]
+      
+        //ْUpdate Name & Des of Category
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCategoryName(
             Guid id,
-            [FromBody] CategoryUpdateNameDto name
+            [FromBody] CategoryUpdateDto name
         )
         {
             var category = await _categoryService.GetByIdAsync(id);
