@@ -42,7 +42,6 @@ namespace BookStore.src.Services.category
         public async Task<CategoryReadDto> GetByIdAsync(Guid CategoryId)
         {
             var foundCategory = await _categoryRepo.GetByIdAsync(CategoryId);
-            //to do throw handle error
             if (foundCategory == null)
             {
                 throw CustomException.NotFound($"category with {CategoryId} cannot be found! ");
@@ -54,29 +53,38 @@ namespace BookStore.src.Services.category
         public async Task<bool> DeleteOneAsync(Guid CategoryId)
         {
             var foundCategory = await _categoryRepo.GetByIdAsync(CategoryId);
-            bool isDeleted = await _categoryRepo.DeleteOneAsync(foundCategory);
-
-            if (isDeleted)
+            if (foundCategory == null)
             {
-                return true;
+                throw CustomException.NotFound(
+                    $"Category with ID {CategoryId} cannot be found for deletion."
+                );
             }
-            return false;
+            try
+            {
+                bool isDeleted = await _categoryRepo.DeleteOneAsync(foundCategory);
+                return isDeleted;
+            }
+            catch (Exception ex)
+            {
+                throw CustomException.InternalError(
+                    $"An error occurred while deleting the category with ID {CategoryId}: {ex.Message}"
+                );
+            }
         }
 
-        //Update Category
+        //Update Category by name & des
         public async Task<bool> UpdateOneAsync(Guid CategoryId, CategoryUpdateDto updateDto)
         {
             var foundCategory = await _categoryRepo.GetByIdAsync(CategoryId);
 
             if (foundCategory == null)
             {
-                return false;
+                throw CustomException.NotFound(
+                    $"Category with ID {CategoryId} cannot be found for updating."
+                );
             }
             _mapper.Map(updateDto, foundCategory);
             return await _categoryRepo.UpdateOneAsync(foundCategory);
         }
-
-      
-
     }
 }

@@ -35,31 +35,35 @@ namespace BookStore.src.Repository
             // Define an IQueryable to build the query dynamically
             IQueryable<Book> query = _book;
 
-            // Apply search filter
-            if (!string.IsNullOrEmpty(paginationOptions.Search))
-            {
-                string searchTerm = paginationOptions.Search.ToLower();
+            if (!string.IsNullOrEmpty(paginationOptions.SearchByAuthor)) // search by author
 
-                if (searchTerm.StartsWith("author:")) // Search by Author
-                {
-                    string authorName = searchTerm.Replace("author:", "").Trim();
-                    query = query.Where(c => c.Author.ToLower().Contains(authorName));
-                }
-                else if (searchTerm.StartsWith("title:")) // Search by Title
-                {
-                    string title = searchTerm.Replace("title:", "").Trim();
-                    query = query.Where(c => c.Title.ToLower().Contains(title));
-                }
+            {
+                query = query.Where(b => b.Author.Contains(paginationOptions.SearchByAuthor));
             }
 
-            // Apply pagination 
-            query = query.Skip(paginationOptions.Offset)
-                         .Take(paginationOptions.Limit);
+            if (!string.IsNullOrEmpty(paginationOptions.SearchByTitle)) // search by title
 
-            // Fetch the results from the database 
-            var result = await query.ToListAsync();
+            {
+                query = query.Where(b => b.Title.Contains(paginationOptions.SearchByTitle));
+            }
 
-            return result;
+            // Apply sorting by price: "Low to high" or "High to low"
+            if (paginationOptions.SortByPrice == "High to low")
+            {
+                query = query.OrderByDescending(b => b.Price);
+            }
+            else if (paginationOptions.SortByPrice == "Low to high")
+            {
+                query = query.OrderBy(b => b.Price);
+            }
+            // else // if null Low to high
+            // query = query.OrderBy(b => b.Price);
+
+            // // Apply pagination 
+            query = query.Skip(paginationOptions.Offset).Take(paginationOptions.Limit);
+
+           return await query.ToListAsync();
+
 
         }
 

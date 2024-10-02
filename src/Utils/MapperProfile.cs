@@ -19,6 +19,7 @@ namespace BookStore.src.Utils
                 .ForAllMembers(opts =>
                     opts.Condition((src, dest, srcProperty) => srcProperty != null)
                 );
+            CreateMap<ReadBookDto, Book>(); //we don't use this. Manar probably added it when she solved price in the controller?
             //Order class
             // CreateMap<Order, OrderReadDto>();
             // CreateMap<OrderCreateDto, Order>();
@@ -27,8 +28,11 @@ namespace BookStore.src.Utils
             //         opts.Condition((src, dest, srcProperty) => srcProperty != null)
             //     );
             CreateMap<Order, OrderReadDto>();
-            CreateMap<OrderCreateDto, Order>().
-            ForAllMembers(opts => opts.Condition((src, dest, srcProperty) => srcProperty != null));
+            CreateMap<OrderCreateDto, Order>();
+            CreateMap<OrderUpdateDto, Order>() // ali added this in 10/3/2024 1:36AM. ask manar why it wasn't here in case she doesn't want it
+                .ForAllMembers(opts =>
+                    opts.Condition((src, dest, srcProperty) => srcProperty != null)
+                );
             // User
             CreateMap<User, UserReadDto>();
             CreateMap<UserCreateDto, User>();
@@ -40,7 +44,6 @@ namespace BookStore.src.Utils
             CreateMap<Category, CategoryReadDto>();
             CreateMap<CategoryCreateDto, Category>();
             CreateMap<CategoryUpdateDto, Category>()
-           
                 .
                 //condtion for convert
                 ForAllMembers(opts =>
