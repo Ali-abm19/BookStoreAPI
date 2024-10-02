@@ -39,8 +39,8 @@ namespace BookStore.src.Utils
             // Category
             CreateMap<Category, CategoryReadDto>();
             CreateMap<CategoryCreateDto, Category>();
-            CreateMap<CategoryUpdateNameDto, Category>();
-            CreateMap<CategoryUpdateDesDto, Category>()
+            CreateMap<CategoryUpdateDto, Category>()
+           
                 .
                 //condtion for convert
                 ForAllMembers(opts =>
