@@ -2,6 +2,7 @@ using BookStore.src.Entity;
 using BookStore.src.Services.book;
 using BookStore.src.Services.category;
 using BookStore.src.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static BookStore.src.DTO.BookDTO;
 
@@ -42,6 +43,7 @@ namespace BookStore.src.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> CreateBook([FromBody] CreateBookDto b)
         {
             var createdBook = await _bookService.CreateOneAsync(b);
@@ -49,6 +51,7 @@ namespace BookStore.src.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteBook([FromRoute] Guid id)
         {
             var b = _bookService.GetBookByIdAsync(id).Result;
@@ -62,6 +65,7 @@ namespace BookStore.src.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> UpdateBook(
             [FromRoute] Guid id,
             [FromBody] UpdateBookDto changes
