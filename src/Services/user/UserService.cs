@@ -23,13 +23,6 @@ namespace BookStore.src.Services.user
             _config = config;
         }
 
-        /*        public async Task<UserReadDto> CreateOneAsync(UserCreateDto createDto)
-                {
-                    var user = _mapper.Map<UserCreateDto, User>(createDto);
-                    var userCreated = await _userRepo.CreateOneAsync(user);
-                    return _mapper.Map<User, UserReadDto>(userCreated);
-                }*/
-
         public async Task<List<UserReadDto>> GetAllAsync()
         {
             var userList = await _userRepo.GetAllAsync();

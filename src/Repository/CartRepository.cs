@@ -1,3 +1,4 @@
+using BookStore.Repository;
 using BookStore.src.Database;
 using BookStore.src.Entity;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,10 @@ namespace BookStore.src.Repository
         protected DbSet<Cart> _cart;
         protected DatabaseContext _databaseContext;
 
-        public CartRepository(DatabaseContext databaseContext)
+
+        public CartRepository(
+            DatabaseContext databaseContext
+        )
         {
             _databaseContext = databaseContext;
             _cart = databaseContext.Set<Cart>();
@@ -20,6 +24,13 @@ namespace BookStore.src.Repository
 
         public async Task<Cart> CreateOneAsync(Cart newCart)
         {
+  //ali 
+//             if (newCart == null)
+//             {
+//                 return newCart;
+//             }
+
+  //
             // Initialize TotalPrice to 0
             newCart.TotalPrice = 0;
 
@@ -34,7 +45,6 @@ namespace BookStore.src.Repository
             return newCart;
         }
 
-        //get cart by ID
         public async Task<Cart?> GetByIdAsync(Guid id)
         {
             return await _cart
@@ -42,6 +52,10 @@ namespace BookStore.src.Repository
                 .FirstOrDefaultAsync(c => c.CartId == id);
         }
 
+  //ali
+//         public async Task<List<Cart>> GetAllAsync()
+//         {
+//             return await _cart.Include(C => C.CartItems).ToListAsync();
   
         public async Task<List<Cart>> GetAllAsync()
         {
@@ -50,7 +64,6 @@ namespace BookStore.src.Repository
                 .ToListAsync();
         }
 
-        //delete
         public async Task<bool> DeleteOneAsync(Cart cart)
         {
             _cart.Remove(cart);
@@ -58,12 +71,19 @@ namespace BookStore.src.Repository
             return true;
         }
 
-        //update cart
-        public async Task<bool> UpdateOneAsync(Cart updateCart)
+        public async Task<bool> UpdateOneAsync(Guid id, List<CartItems> newCartItems)
         {
-            _cart.Update(updateCart);
-            await _databaseContext.SaveChangesAsync();
-            return true;
+            Cart updateCart = await GetByIdAsync(id);
+            if (updateCart != null)
+            {
+                updateCart.CartItems = newCartItems; //update the cartitems //check to make sure that this is necessary. I think the mapper handles it in the Cart service so we might be asigning the same value
+                updateCart.TotalPrice = updateCart.CartItems.Sum(p => p.Price); //update the total price
+                _cart.Update(updateCart);
+                await _databaseContext.SaveChangesAsync();
+                return true;
+            }
+                return false;
+            
         }
     }
 }

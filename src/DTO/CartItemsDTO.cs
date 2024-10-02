@@ -1,5 +1,4 @@
 using BookStore.src.Entity;
-using static BookStore.src.DTO.BookDTO;
 
 namespace BookStore.src.DTO
 {
@@ -20,9 +19,10 @@ namespace BookStore.src.DTO
             public Guid CartId { get; set; }
             public int Quantity { get; set; }
             public double Price { get; set; }
-            public Guid BookId { get; set; } 
-            public ReadBookDto Book { get; set; }  //i want evrey thing about book
-            public Guid? OrderId { get; set; } 
+          
+          
+            public Book Book { get; set; }
+  
         }
 
         // Update cart

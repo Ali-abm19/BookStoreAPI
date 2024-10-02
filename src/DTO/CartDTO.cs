@@ -12,11 +12,13 @@ namespace BookStore.src.DTO
         public class CartCreateDto
         {
             public Guid UserId { get; set; }
-            public List<Guid> CartItemIds { get; set; }
-            //public List<CartItems> CartItems { get; set; }
-            //public Guid CartId { get; set; }
-            //public double TotalPrice { get; set; }
+
         }
+
+        /*public class AddCartItemDto
+        {
+            public CartItems CartItems { get; set; }
+        }*/
 
         // Read cart (get data)
         public class CartReadDto
@@ -31,7 +33,7 @@ namespace BookStore.src.DTO
         public class CartUpdateDto
         {
             public List<CartItems> CartItems { get; set; }
-            public double TotalPrice { get; set; } //= totalAmount += CartItems.GetAll.getPrice
+            //updated in the CartRepo ->   //public double TotalPrice { get; set; } //= totalAmount += CartItems.GetAll.getPrice
         }
     }
 }

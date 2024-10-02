@@ -10,6 +10,7 @@ namespace BookStore.src.Services.cart
         protected readonly CartRepository _cartRepo;
         protected readonly IMapper _mapper;
 
+
         // Dependency Injection
         public CartService(CartRepository cartRepo, IMapper mapper)
         {
@@ -28,14 +29,12 @@ namespace BookStore.src.Services.cart
             return _mapper.Map<Cart, CartReadDto>(createdCart);
         }
 
-        // Get all carts
         public async Task<List<CartReadDto>> GetAllAsync()
         {
             var cartList = await _cartRepo.GetAllAsync();
             return _mapper.Map<List<Cart>, List<CartReadDto>>(cartList);
         }
 
-        // Get a cart by ID
         public async Task<CartReadDto> GetByIdAsync(Guid id)
         {
             var foundCart = await _cartRepo.GetByIdAsync(id);
@@ -47,7 +46,6 @@ namespace BookStore.src.Services.cart
             return _mapper.Map<Cart, CartReadDto>(foundCart);
         }
 
-        // Delete a cart by ID
         public async Task<bool> DeleteOneAsync(Guid id)
         {
             var foundCart = await _cartRepo.GetByIdAsync(id);
@@ -60,18 +58,17 @@ namespace BookStore.src.Services.cart
             return isDeleted;
         }
 
-        // Update an existing cart
         public async Task<bool> UpdateOneAsync(Guid id, CartUpdateDto updateDto)
         {
             var foundCart = await _cartRepo.GetByIdAsync(id);
 
-            if (foundCart == null)
+            if (foundCart.CartItems == null)
             {
                 return false;
             }
 
             _mapper.Map(updateDto, foundCart);
-            return await _cartRepo.UpdateOneAsync(foundCart);
+            return await _cartRepo.UpdateOneAsync(id, foundCart.CartItems);
         }
     }
 }
