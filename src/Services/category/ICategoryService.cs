@@ -21,9 +21,8 @@ namespace BookStore.src.Services.category
         Task<bool> DeleteOneAsync(Guid CategoryId);
 
         // Update Category by id & name
-        Task<bool> UpdateOneAsync(Guid CategoryId, CategoryUpdateNameDto updateDto);
+        Task<bool> UpdateOneAsync(Guid CategoryId, CategoryUpdateDto updateDto);
 
-        // Update Category by id & Des
-        Task<bool> UpdateDesOneAsync(Guid CategoryId, CategoryUpdateDesDto updateDto);
+
     }
 }

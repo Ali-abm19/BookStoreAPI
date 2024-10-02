@@ -13,7 +13,8 @@ namespace BookStore.src.Entity
 
         //connections
         public Guid BookId { get; set; }
-        public Book Book { get; set; }
-        public Guid CartId { get; set; }
+        public Book Book { get; set; }//
+        public Guid CartId { get; set; }//
+        public Guid? OrderId { get; set; }//how?1:20 Present the relation bridge table
     }
 }

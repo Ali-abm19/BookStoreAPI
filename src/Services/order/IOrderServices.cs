@@ -11,16 +11,16 @@ namespace BookStore.src.Services.order
     {
         //just the method
         //creat > parameter use like the info we nees the type OrderCreateDto has DateTime that we need to create order 
-        Task<OrderReadDto> CreateOneAsync(OrderCreateDto orderCreate);
+        Task<OrderReadDto> CreateOneAsync(Guid userGuid, OrderCreateDto orderCreate);
 
         //get all info for evry order
         Task<List<OrderReadDto>> GetAllAsync(PaginationOptions paginationOptions);
         //get by id 
-        Task<OrderReadDto> GetByIdAsync(Guid id);
+        Task<List<OrderReadDto>> GetByIdAsync(Guid userId);
         //delete 
         Task<bool> DeleteOneAsync(Guid id);
         //update 
-        Task<bool> UpdateOneAsync(Guid id, OrderUpdateDto orderUpdate);
+        //Task<bool> UpdateOneAsync(Guid id, OrderUpdateDto orderUpdate);
 
     }
 }

@@ -26,16 +26,13 @@ namespace BookStore.src.DTO
             public List<Book> Books { get; set; }
         }
 
-        //Update Category Name
-        public class CategoryUpdateNameDto
+        //Update Category Name + Des
+        public class CategoryUpdateDto
         {
             public string CategoryName { get; set; }
-        }
-
-        //Update Description of the Category
-        public class CategoryUpdateDesDto
-        {
             public string Description { get; set; }
         }
+
+
     }
 }

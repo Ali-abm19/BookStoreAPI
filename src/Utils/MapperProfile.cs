@@ -20,12 +20,15 @@ namespace BookStore.src.Utils
                     opts.Condition((src, dest, srcProperty) => srcProperty != null)
                 );
             //Order class
+            // CreateMap<Order, OrderReadDto>();
+            // CreateMap<OrderCreateDto, Order>();
+            // CreateMap<OrderUpdateDto, Order>()
+            //     .ForAllMembers(opts =>
+            //         opts.Condition((src, dest, srcProperty) => srcProperty != null)
+            //     );
             CreateMap<Order, OrderReadDto>();
-            CreateMap<OrderCreateDto, Order>();
-            CreateMap<OrderUpdateDto, Order>()
-                .ForAllMembers(opts =>
-                    opts.Condition((src, dest, srcProperty) => srcProperty != null)
-                );
+            CreateMap<OrderCreateDto, Order>().
+            ForAllMembers(opts => opts.Condition((src, dest, srcProperty) => srcProperty != null));
             // User
             CreateMap<User, UserReadDto>();
             CreateMap<UserCreateDto, User>();
@@ -36,8 +39,8 @@ namespace BookStore.src.Utils
             // Category
             CreateMap<Category, CategoryReadDto>();
             CreateMap<CategoryCreateDto, Category>();
-            CreateMap<CategoryUpdateNameDto, Category>();
-            CreateMap<CategoryUpdateDesDto, Category>()
+            CreateMap<CategoryUpdateDto, Category>()
+           
                 .
                 //condtion for convert
                 ForAllMembers(opts =>

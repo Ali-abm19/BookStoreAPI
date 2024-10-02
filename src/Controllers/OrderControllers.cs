@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using BookStore.src.Entity;
 using BookStore.src.Services.order;
 using BookStore.src.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using static BookStore.src.DTO.OrderDTO;
@@ -18,22 +20,33 @@ namespace BookStore.src.Controllers
     {
 
         protected readonly IOrderServices _orderServices;
-        public OrdersController(IOrderServices services)
+        private readonly ILogger<OrdersController> _logger; // new
+
+        public OrdersController(IOrderServices services, ILogger<OrdersController> logger)
         {
             _orderServices = services;
+            _logger = logger;//new
 
         }
         //create
 
         [HttpPost]
-        public async Task<ActionResult<OrderReadDto>> CreateOne([FromBody] OrderCreateDto orderCreate)
-        {
-            var orderCreated = await _orderServices.CreateOneAsync(orderCreate);
-
-            return Created($"api/v1/orders/{orderCreated.OrderId}", orderCreated);
-            // return Ok(orderCreated);
-        }
+        [Authorize]
+        public async Task<ActionResult<OrderReadDto>> CreateOnAsync([FromBody] OrderCreateDto orderCreateDto)
         
+
+        {
+            //by token
+            var authenticateClaims = HttpContext.User;
+            // get user id by claims
+            var userId = authenticateClaims.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+            // string => Guid
+            var userGuid = new Guid(userId);
+
+            return await _orderServices.CreateOneAsync(userGuid,orderCreateDto);
+
+        }
+
         [HttpGet]
         public async Task<ActionResult<List<OrderReadDto>>> GetAll([FromQuery] PaginationOptions paginationOptions)
         {
@@ -55,7 +68,14 @@ namespace BookStore.src.Controllers
         }
 
 
+        [HttpGet("user/{userId}")]
+        [Authorize]
 
+        public async Task<ActionResult<List<OrderReadDto>>> GetOrdersByUserId([FromRoute] Guid userId)
+        {
+            var orders = await _orderServices.GetByIdAsync(userId);
+            return Ok(orders);
+        }
 
         //         [HttpPut("{id}")]
         //         public ActionResult UpdateOrder(int id, Order newOrder)

@@ -20,19 +20,16 @@ namespace BookStore.Repository
         {
             _databaseContext = databaseContext;
             _cartItems = databaseContext.Set<CartItems>();
-            _bookRepository = bookRepository;
-            _cartRepository = cartRepository;
+            _bookRepository = BookRepository;
         }
 
         // create new cart
         public async Task<CartItems> CreateOneAsync(CartItems newCartItem)
         {
-            if (newCartItem.Quantity > 0)
-            {
-                var book = await _bookRepository.GetBookByIdAsync(newCartItem.BookId);
+            var book = await _bookRepository.GetBookByIdAsync(newCart.BookId);
 
-                if (book != null)
-                    newCartItem.Price = book.Price * newCartItem.Quantity;
+            if (book != null)
+                newCart.Price = book.Price * newCart.Quantity;
 
                 await _cartItems.AddAsync(newCartItem);
                 await _databaseContext.SaveChangesAsync();
