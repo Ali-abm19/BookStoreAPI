@@ -21,6 +21,7 @@ namespace BookStore.src.Repository
 
         public async Task<User> CreateOneAsync(User newUser)
         {
+            
             await _user.AddAsync(newUser);
             await _databaseContext.SaveChangesAsync();
             return newUser;

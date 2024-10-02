@@ -18,10 +18,14 @@ namespace BookStore.src.Database
         public DbSet<Book> Book { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<Cart> Cart { get; set; }
+        public DbSet<CartItems> CartItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasPostgresEnum<Role>();
+            modelBuilder.Entity<Order>()
+     .Property(o => o.DateCreated)
+     .HasDefaultValueSql("CURRENT_TIMESTAMP");
         }
     }
 }

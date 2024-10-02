@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace BookStore.src.Entity
 {
+
     public class Cart
     {
         public Guid CartId { get; set; }
@@ -17,4 +18,5 @@ namespace BookStore.src.Entity
         public Guid UserId { get; set; }
         public List<CartItems>? CartItems { get; set; }
     }
+    
 }

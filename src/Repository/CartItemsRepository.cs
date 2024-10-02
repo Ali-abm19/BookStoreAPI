@@ -11,20 +11,27 @@ namespace BookStore.Repository
         protected DatabaseContext _databaseContext;
         protected readonly BookRepository _bookRepository;
 
-        public CartItemsRepository(DatabaseContext databaseContext, BookRepository BookRepository)
+        public CartItemsRepository(DatabaseContext databaseContext, BookRepository bookRepository)
         {
             _databaseContext = databaseContext;
             _cartItems = databaseContext.Set<CartItems>();
-            _bookRepository = BookRepository;
+            _bookRepository = bookRepository;
         }
 
         // create new cart
         public async Task<CartItems> CreateOneAsync(CartItems newCart)
         {
-            var book = await _bookRepository.GetBookByIdAsync(newCart.BookId);
+     
+            var book = await _bookRepository.GetBookByIdAsync(newCart.BookId); 
 
             if (book != null)
-                newCart.Price = book.Price * newCart.Quantity;
+            {
+                newCart.Price = book.Price * newCart.Quantity; //  price
+            }
+            else
+            {
+                throw new Exception("Book not found"); 
+            }
 
             await _cartItems.AddAsync(newCart);
             await _databaseContext.SaveChangesAsync();

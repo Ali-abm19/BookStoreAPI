@@ -34,7 +34,7 @@ namespace BookStore.src.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<UserReadDto>> GetById([FromRoute] Guid id)
         {
             var user = await _userService.GetByIdAsync(id);
