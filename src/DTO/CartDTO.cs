@@ -11,6 +11,7 @@ namespace BookStore.src.DTO
         public class CartCreateDto
         {
             public Guid UserId { get; set; }
+            public List<Guid> CartItemIds { get; set; }
             //public List<CartItems> CartItems { get; set; }
             //public Guid CartId { get; set; }
             //public double TotalPrice { get; set; }

@@ -42,6 +42,10 @@ namespace BookStore.src.Controllers
             {
                 return NotFound();
             }
+
+            // Calculate TotalPrice if it hasn't been calculated already
+            foundCart.TotalPrice = foundCart.CartItems?.Sum(item => item.Price * item.Quantity) ?? 0;
+
             return Ok(foundCart);
         }
 
