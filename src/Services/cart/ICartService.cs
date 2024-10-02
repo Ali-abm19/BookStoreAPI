@@ -12,5 +12,6 @@ namespace BookStore.src.Services.cart
         Task<CartReadDto> GetByIdAsync(Guid id);
         Task<bool> DeleteOneAsync(Guid id);
         Task<bool> UpdateOneAsync(Guid id, CartUpdateDto updateDto);
+        
     }
 }

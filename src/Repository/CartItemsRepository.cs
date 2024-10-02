@@ -10,25 +10,38 @@ namespace BookStore.Repository
         protected DbSet<CartItems> _cartItems;
         protected DatabaseContext _databaseContext;
         protected readonly BookRepository _bookRepository;
+        protected readonly CartRepository _cartRepository;
 
-        public CartItemsRepository(DatabaseContext databaseContext, BookRepository BookRepository)
+        public CartItemsRepository(
+            DatabaseContext databaseContext,
+            BookRepository bookRepository,
+            CartRepository cartRepository
+        )
         {
             _databaseContext = databaseContext;
             _cartItems = databaseContext.Set<CartItems>();
-            _bookRepository = BookRepository;
+            _bookRepository = bookRepository;
+            _cartRepository = cartRepository;
         }
 
         // create new cart
-        public async Task<CartItems> CreateOneAsync(CartItems newCart)
+        public async Task<CartItems> CreateOneAsync(CartItems newCartItem)
         {
-            var book = await _bookRepository.GetBookByIdAsync(newCart.BookId);
+            if (newCartItem.Quantity > 0)
+            {
+                var book = await _bookRepository.GetBookByIdAsync(newCartItem.BookId);
 
-            if (book != null)
-                newCart.Price = book.Price * newCart.Quantity;
+                if (book != null)
+                    newCartItem.Price = book.Price * newCartItem.Quantity;
 
-            await _cartItems.AddAsync(newCart);
-            await _databaseContext.SaveChangesAsync();
-            return newCart;
+                await _cartItems.AddAsync(newCartItem);
+                await _databaseContext.SaveChangesAsync();
+
+                var ancestorCart = await _cartRepository.GetByIdAsync(newCartItem.CartId);
+                if (ancestorCart != null)
+                    ancestorCart.TotalPrice = ancestorCart.CartItems.Sum(p => p.Price);
+            }
+            return newCartItem;
         }
 
         //get cart by ID
@@ -40,7 +53,7 @@ namespace BookStore.Repository
         // get all
         public async Task<List<CartItems>> GetAllAsync()
         {
-            return await _cartItems.ToListAsync();
+            return await _cartItems.Include(b => b.Book).ToListAsync();
         }
 
         //delete
