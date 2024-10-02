@@ -19,6 +19,7 @@ namespace BookStore.src.Utils
                 .ForAllMembers(opts =>
                     opts.Condition((src, dest, srcProperty) => srcProperty != null)
                 );
+             CreateMap<ReadBookDto, Book>();
             //Order class
             // CreateMap<Order, OrderReadDto>();
             // CreateMap<OrderCreateDto, Order>();
