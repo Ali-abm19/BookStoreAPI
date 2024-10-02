@@ -25,7 +25,6 @@ namespace BookStore.src.DTO
             public int StockQuantity { get; set; }
             public Format BookFormat { get; set; }
             public Category Category { get; set; }
-            public Guid CategoryId { get; set; }
         }
 
         public class UpdateBookDto
