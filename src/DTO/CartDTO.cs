@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookStore.src.Entity;
+using static BookStore.src.DTO.CartItemsDTO;
 
 namespace BookStore.src.DTO
 {
@@ -22,7 +23,7 @@ namespace BookStore.src.DTO
         {
             public Guid CartId { get; set; }
             public Guid UserId { get; set; }
-            public List<CartItems> CartItems { get; set; }
+            public List<CartItemsReadDto> CartItems { get; set; } // Use the DTO
             public double TotalPrice { get; set; }
         }
 

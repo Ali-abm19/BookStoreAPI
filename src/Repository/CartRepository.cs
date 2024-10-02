@@ -17,6 +17,7 @@ namespace BookStore.src.Repository
         }
 
         // create new cart
+
         public async Task<Cart> CreateOneAsync(Cart newCart)
         {
             // Initialize TotalPrice to 0
@@ -24,8 +25,8 @@ namespace BookStore.src.Repository
 
             if (newCart.CartItems != null && newCart.CartItems.Any())
             {
-                // Calculate TotalPrice based only on valid prices
-                newCart.TotalPrice = newCart.CartItems.Sum(item => item.Price);
+                // Calculate TotalPrice based on quantity and price
+                newCart.TotalPrice = newCart.CartItems.Sum(item => item.Price * item.Quantity);
             }
 
             await _cart.AddAsync(newCart);
@@ -37,14 +38,16 @@ namespace BookStore.src.Repository
         public async Task<Cart?> GetByIdAsync(Guid id)
         {
             return await _cart
-                .Include(c => c.CartItems) // Ensure CartItems are included
+                .Include(c => c.CartItems)
                 .FirstOrDefaultAsync(c => c.CartId == id);
         }
 
-        // get all
+  
         public async Task<List<Cart>> GetAllAsync()
         {
-            return await _cart.ToListAsync();
+            return await _cart
+                .Include(c => c.CartItems) // Include CartItems 
+                .ToListAsync();
         }
 
         //delete

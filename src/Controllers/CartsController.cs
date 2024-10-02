@@ -1,6 +1,8 @@
 using BookStore.src.Services.cart;
 using Microsoft.AspNetCore.Mvc;
+using static BookStore.src.DTO.BookDTO;
 using static BookStore.src.DTO.CartDTO;
+using static BookStore.src.DTO.CartItemsDTO;
 
 namespace BookStore.src.Controllers
 {
@@ -25,12 +27,39 @@ namespace BookStore.src.Controllers
             return Ok(cartCreated);
         }
 
-        // Get all carts
+  
         [HttpGet]
         public async Task<ActionResult<List<CartReadDto>>> GetAll()
         {
             var cartList = await _cartService.GetAllAsync();
-            return Ok(cartList);
+
+            if (cartList == null || !cartList.Any())
+            {
+                return NotFound(); // Return 404 if there is no cart 
+            }
+
+            var cartReadDtos = cartList.Select(cart => new CartReadDto
+            {
+                CartId = cart.CartId,
+                UserId = cart.UserId,
+                CartItems = cart.CartItems.Select(item => new CartItemsReadDto
+                {
+                    CartItemsId = item.CartItemsId,
+                    Quantity = item.Quantity,
+                    Price = item.Price,
+                    BookId = item.BookId,
+                    Book = new ReadBookDto
+                    {
+                        // map  book properties here 
+                    },
+                    CartId = item.CartId,
+                    OrderId = item.OrderId
+                }).ToList(),
+                // Calculate TotalPrice on the cart items
+                TotalPrice = cart.CartItems.Sum(item => item.Price * item.Quantity)
+            }).ToList();
+
+            return Ok(cartReadDtos); //list of CartReadDto
         }
 
         // Get cart by ID
@@ -72,5 +101,6 @@ namespace BookStore.src.Controllers
             }
             return NoContent();
         }
+        
     }
 }
