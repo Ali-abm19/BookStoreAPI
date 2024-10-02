@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookStore.src.Entity;
+using static BookStore.src.DTO.CartItemsDTO;
 
 namespace BookStore.src.DTO
 {
@@ -11,10 +12,12 @@ namespace BookStore.src.DTO
         //create order 
         public class OrderCreateDto
         {
-            public DateTime DateCreated { get; set; }
-            public Guid OrderId { get; set; }
-            public Guid UserId { get; set; }
-            public float TotalPrice { get; set; }//
+            //public DateTime DateCreated { get; set; }
+            //public Guid OrderId { get; set; }
+            //public Guid UserId { get; set; }
+            //public float TotalPrice { get; set; }//
+           //public List<OrderDetailCreateDto> OrderDetails { get; set; }
+            public List<CartItemsCreateDto> CartItems { get; set; }
 
         }
 
@@ -27,7 +30,8 @@ namespace BookStore.src.DTO
             public Order.Status OrderStatus { get; set; }
             public Guid userId { get; set; }
             public User user { get; set; }//all inf0
-            //public Cart cart { get; set; }
+            public Cart cart { get; set; }
+            public List<CartItemsReadDto> CartItemsReadDto { get; set; }
 
         }
 

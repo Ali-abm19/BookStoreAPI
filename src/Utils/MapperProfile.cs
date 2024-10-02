@@ -20,12 +20,15 @@ namespace BookStore.src.Utils
                     opts.Condition((src, dest, srcProperty) => srcProperty != null)
                 );
             //Order class
+            // CreateMap<Order, OrderReadDto>();
+            // CreateMap<OrderCreateDto, Order>();
+            // CreateMap<OrderUpdateDto, Order>()
+            //     .ForAllMembers(opts =>
+            //         opts.Condition((src, dest, srcProperty) => srcProperty != null)
+            //     );
             CreateMap<Order, OrderReadDto>();
-            CreateMap<OrderCreateDto, Order>();
-            CreateMap<OrderUpdateDto, Order>()
-                .ForAllMembers(opts =>
-                    opts.Condition((src, dest, srcProperty) => srcProperty != null)
-                );
+            CreateMap<OrderCreateDto, Order>().
+            ForAllMembers(opts => opts.Condition((src, dest, srcProperty) => srcProperty != null));
             // User
             CreateMap<User, UserReadDto>();
             CreateMap<UserCreateDto, User>();

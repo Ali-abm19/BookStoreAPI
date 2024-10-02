@@ -26,11 +26,12 @@ namespace BookStore.src.Services.order
             _mapper = mapper;
 
         }
-        public async Task<OrderReadDto> CreateOneAsync(OrderCreateDto orderCreate)
+        public async Task<OrderReadDto> CreateOneAsync(Guid userId, OrderCreateDto orderCreate)
         {
             var order = _mapper.Map<OrderCreateDto, Order>(orderCreate);
-            var orderCreated = await _orderRepository.CreateOneAsync(order);
-            return _mapper.Map<Order, OrderReadDto>(orderCreated);
+            order.UserId = userId;
+            await _orderRepository.CreateOneAsync(order);
+            return _mapper.Map<Order, OrderReadDto>(order);
         }
 
         public async Task<List<OrderReadDto>> GetAllAsync(PaginationOptions paginationOptions)
@@ -38,40 +39,48 @@ namespace BookStore.src.Services.order
             var orderList = await _orderRepository.GetAllAsync(paginationOptions);
             return _mapper.Map<List<Order>, List<OrderReadDto>>(orderList);
         }
-        public async Task<OrderReadDto> GetByIdAsync(Guid id)
+        public async Task<List<OrderReadDto>> GetByIdAsync(Guid id)
         {
-            var foundOrderById = await _orderRepository.GetByIdAsync(id);
-            return _mapper.Map<Order, OrderReadDto>(foundOrderById);
+            var orders = await _orderRepository.GetByIdAsync(id);
+            var orderList = _mapper.Map<List<Order>, List<OrderReadDto>>(orders);
+            return orderList;
+
+   
         }
 
         public async Task<bool> DeleteOneAsync(Guid id)
         {
 
-            var foundOrderById = await _orderRepository.GetByIdAsync(id);
+            var foundOrdersById = await _orderRepository.GetByIdAsync(id);
+
+            var foundOrderById = foundOrdersById.FirstOrDefault(); 
+
+            if (foundOrderById == null)
+            {
+                return false; 
+            }
 
             bool deletedOrderById = await _orderRepository.DeleteOneAsync(foundOrderById);
 
-            if (deletedOrderById)
-            {
-                return true;
-            }
-            return false;
+            return deletedOrderById;
         }
 
-        public async Task<bool> UpdateOneAsync(Guid id, OrderUpdateDto orderUpdate)
-        {
-            var foundOrderById = await _orderRepository.GetByIdAsync(id);
-            bool updatedOrder = await _orderRepository.UpdateOneAsync(foundOrderById);
+        // public async Task<bool> UpdateOneAsync(Guid id, OrderUpdateDto orderUpdate)
+        // {
+        //     var foundOrderById = await _orderRepository.GetByIdAsync(id);
 
-            if (updatedOrder == null)
-            {
-                return false;
-            }
+        //     if (foundOrderById == null)
+        //     {
+        //         return false; 
+        //     }
 
+        //     _mapper.Map(orderUpdate, foundOrderById);
+        //     return await _orderRepository.UpdateOneAsync(foundOrderById);
+        // }CreateOneAsync
 
-            _mapper.Map(orderUpdate, foundOrderById);
-            return await _orderRepository.UpdateOneAsync(foundOrderById);
-        }
-
+        // public Task<OrderReadDto> CreateOneAsync(OrderCreateDto orderCreate)
+        // {
+        //     throw new NotImplementedException();
+        // }
     }
 }

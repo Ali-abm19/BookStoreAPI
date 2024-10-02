@@ -45,7 +45,7 @@ namespace BookStore.src.Controllers
         public async Task<ActionResult> CreateBook([FromBody] CreateBookDto b)
         {
             var createdBook = await _bookService.CreateOneAsync(b);
-            return Created("api/v1/Books" + createdBook.Id, createdBook);
+            return Created("api/v1/Books" + createdBook.BookId, createdBook);
         }
 
         [HttpDelete("{id}")]
@@ -57,7 +57,7 @@ namespace BookStore.src.Controllers
                 return NotFound();
             }
 
-            await _bookService.DeleteOneAsync(b.Id);
+            await _bookService.DeleteOneAsync(b.BookId);
             return NoContent();
         }
 

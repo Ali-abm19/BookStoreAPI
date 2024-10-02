@@ -9,19 +9,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.src.Repository
 {
-    public class OrderRepository//m talk to datda base by query bu using DI
+    public class OrderRepository
     {
-        //first i want to access order table 
-        protected DbSet<Order> _order;
-        //access to database its self
-        protected DatabaseContext _databaseContext;
-        //now by using DI use costructor INJUCT the database into repo class 
+        protected readonly DbSet<Order> _order;
+        protected readonly DatabaseContext _databaseContext;
 
         public OrderRepository(DatabaseContext databaseContext)
         {
-            //INJUCT the database into repo class 
             _databaseContext = databaseContext;
-            //then initalize the order table in the database 
             _order = databaseContext.Set<Order>();
 
         }
@@ -29,23 +24,32 @@ namespace BookStore.src.Repository
         //method 
 
         //create order
-        public async Task<Order> CreateOneAsync(Order newOrder)
+        public async Task<Order? > CreateOneAsync(Order newOrder)
         {
             await _order.AddAsync(newOrder);
             await _databaseContext.SaveChangesAsync();
-            return newOrder;
+            var orderWithCaryItems = await _order
+           .Include(o => o.CartItems)
+           .ThenInclude(od => od.Book)
+           .FirstOrDefaultAsync(o => o.OrderId == newOrder.OrderId);
+            return orderWithCaryItems;
+    
         }
 
         //get order by id 
 
-        public async Task<Order?> GetByIdAsync(Guid id)
+        public async Task<List<Order>> GetByIdAsync(Guid userId)
         {
-            //to see user and cart info
-            return await _order.Include(u => u.user).FirstOrDefaultAsync(p => p.OrderId == id);
-        }
+        
+            return await _order
+            .Include(o => o.CartItems)
+            .ThenInclude(od => od.Book)
+            .Where(o => o.UserId == userId)
+            .ToListAsync();
 
+      }
 
-        //delete order or cancel 
+            //delete order or cancel 
         public async Task<bool> DeleteOneAsync(Order Order)
         {
             _order.Remove(Order);
@@ -60,18 +64,6 @@ namespace BookStore.src.Repository
             return true;
         }
 
-        //get all order 
-
-        // public async Task<List<Order>> GetAllAsync(PaginationOptions paginationOptions)
-        // {
-
-        //     var result = _order.Where(o =>
-        //            o.DateCreated.ToString("yyyy-MM-dd").Contains(paginationOptions.Search));
-
-        //     return await result.Skip(paginationOptions.Offset).Take(paginationOptions.Limit).ToListAsync();
-
-        //     // return await _order.ToListAsync();
-        // }
         public async Task<List<Order>> GetAllAsync(PaginationOptions paginationOptions)
         {
             if (paginationOptions == null)

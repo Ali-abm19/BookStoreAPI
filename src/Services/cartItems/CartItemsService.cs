@@ -1,6 +1,7 @@
 using AutoMapper;
 using BookStore.Repository;
 using BookStore.src.Entity;
+using BookStore.src.Repository;
 using static BookStore.src.DTO.CartItemsDTO;
 
 namespace BookStore.src.Services.cartItems
@@ -8,23 +9,38 @@ namespace BookStore.src.Services.cartItems
     public class CartItemsService : ICartItemsService
     {
         protected readonly CartItemsRepository _cartItemsRepo;
+        protected readonly BookRepository _bookRepository;
         protected readonly IMapper _mapper;
 
         // Dependency Injection
-        public CartItemsService(CartItemsRepository cartItemsRepo, IMapper mapper)
+        public CartItemsService(CartItemsRepository cartItemsRepo, BookRepository bookRepository, IMapper mapper)
         {
             _cartItemsRepo = cartItemsRepo;
+            _bookRepository = bookRepository;
             _mapper = mapper;
         }
 
         // Create a new cart
         public async Task<CartItemsReadDto> CreateOneAsync(CartItemsCreateDto createDto)
         {
-            var cart = _mapper.Map<CartItemsCreateDto, CartItems>(createDto);
+            
 
-            var createdCart = await _cartItemsRepo.CreateOneAsync(cart);
+            var cartItem = _mapper.Map<CartItemsCreateDto, CartItems>(createDto);
+            cartItem.CartItemsId = Guid.NewGuid(); 
 
-            return _mapper.Map<CartItems, CartItemsReadDto>(createdCart);
+            var book = await _bookRepository.GetBookByIdAsync(cartItem.BookId); 
+            if (book != null)
+            {
+                cartItem.Price = book.Price * cartItem.Quantity; 
+            }
+            else
+            {
+                throw new Exception("Book not found"); 
+            }
+
+            var createdCartItem = await _cartItemsRepo.CreateOneAsync(cartItem);
+
+            return _mapper.Map<CartItems, CartItemsReadDto>(createdCartItem);
         }
 
         // Get all carts
