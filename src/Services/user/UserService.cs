@@ -32,19 +32,31 @@ namespace BookStore.src.Services.user
         public async Task<UserReadDto> GetByIdAsync(Guid id)
         {
             var foundUser = await _userRepo.GetByIdAsync(id);
+            if (foundUser == null)
+            {
+                throw CustomException.NotFound($"user with {id} cannot be found! ");
+            }
             return _mapper.Map<User, UserReadDto>(foundUser);
         }
 
         public async Task<bool> DeleteOneAsync(Guid id)
         {
             var foundUser = await _userRepo.GetByIdAsync(id);
-            bool isDeleted = await _userRepo.DeleteOneAsync(foundUser);
-
-            if (isDeleted)
+            if (foundUser == null)
             {
-                return true;
+                throw CustomException.NotFound($"user with ID {id} cannot be found for deletion.");
             }
-            return false;
+            try
+            {
+                bool isDeleted = await _userRepo.DeleteOneAsync(foundUser);
+                return isDeleted;
+            }
+            catch (Exception ex)
+            {
+                throw CustomException.InternalError(
+                    $"An error occurred while deleting the user with ID {id}: {ex.Message}"
+                );
+            }
         }
 
         public async Task<bool> UpdateOneAsync(Guid id, UserUpdateDto updateDto)
@@ -53,7 +65,7 @@ namespace BookStore.src.Services.user
 
             if (foundUser == null)
             {
-                return false;
+                throw CustomException.NotFound($"user with ID {id} cannot be found for updating.");
             }
 
             _mapper.Map(updateDto, foundUser);
@@ -97,13 +109,16 @@ namespace BookStore.src.Services.user
                     var tokenUtil = new TokenUtils(_config);
                     return tokenUtil.GnerateToken(foundUser);
                 }
-               // return "Unauthorized";
-               throw CustomException.UnAuthorized($"Password for user with email {foundUser.Email} does not match !");
-
+                // return "Unauthorized";
+                throw CustomException.UnAuthorized(
+                    $"Password for user with email {foundUser.Email} does not match !"
+                );
             }
             else
             {
-                return "Not Found";
+                //return "Not Found";
+                //ًWhen users entered email address does not exist in our database
+                throw CustomException.NotFound($"User with email {createDto.Email} not found.");
             }
         }
     }

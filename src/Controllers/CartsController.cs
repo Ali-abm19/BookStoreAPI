@@ -27,11 +27,17 @@ namespace BookStore.src.Controllers
             return Ok(cartCreated);
         }
 
+
   
         // [HttpGet]
         // public async Task<ActionResult<List<CartReadDto>>> GetAll()
         // {
         //     var cartList = await _cartService.GetAllAsync();
+  /*
+        [HttpGet]
+        public async Task<ActionResult<List<CartReadDto>>> GetAll()
+        {
+            var cartList = await _cartService.GetAllAsync();
 
         //     if (cartList == null || !cartList.Any())
         //     {
@@ -69,6 +75,8 @@ namespace BookStore.src.Controllers
         }
 
         
+*/
+
         // Get cart by ID
         [HttpGet("{id}")]
         public async Task<ActionResult<CartReadDto>> GetById([FromRoute] Guid id)
