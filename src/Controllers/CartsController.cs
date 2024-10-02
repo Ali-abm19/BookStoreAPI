@@ -27,7 +27,7 @@ namespace BookStore.src.Controllers
             return Ok(cartCreated);
         }
 
-  
+  /*
         [HttpGet]
         public async Task<ActionResult<List<CartReadDto>>> GetAll()
         {
@@ -61,7 +61,7 @@ namespace BookStore.src.Controllers
 
             return Ok(cartReadDtos); //list of CartReadDto
         }
-
+*/
         // Get cart by ID
         [HttpGet("{id}")]
         public async Task<ActionResult<CartReadDto>> GetById([FromRoute] Guid id)
