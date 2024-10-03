@@ -57,7 +57,7 @@ namespace BookStore.src.Services.order
 
             if (foundOrderById == null)
             {
-                return false; 
+                throw CustomException.NotFound($"Order with ID {id} cannot be found!");
             }
 
             bool deletedOrderById = await _orderRepository.DeleteOneAsync(foundOrderById);
