@@ -2,6 +2,7 @@ using AutoMapper;
 using BookStore.Repository;
 using BookStore.src.Entity;
 using BookStore.src.Repository;
+using BookStore.src.Utils;
 using static BookStore.src.DTO.CartItemsDTO;
 
 namespace BookStore.src.Services.cartItems
@@ -35,7 +36,7 @@ namespace BookStore.src.Services.cartItems
             }
             else
             {
-                throw new Exception("Book not found"); 
+                throw CustomException.NotFound("Book not found");
             }
 
             var createdCartItem = await _cartItemsRepo.CreateOneAsync(cartItem);
@@ -53,40 +54,40 @@ namespace BookStore.src.Services.cartItems
         // Get a cart by ID
         public async Task<CartItemsReadDto> GetByIdAsync(Guid id)
         {
-            var foundCart = await _cartItemsRepo.GetByIdAsync(id);
+            var foundCartItem = await _cartItemsRepo.GetByIdAsync(id);
             // Handle error if not found
-            if (foundCart == null)
+            if (foundCartItem == null)
             {
-                throw new Exception("CartItems not found");
+                 throw CustomException.NotFound("CartItems not found");
             }
-            return _mapper.Map<CartItems, CartItemsReadDto>(foundCart);
+            return _mapper.Map<CartItems, CartItemsReadDto>(foundCartItem);
         }
 
         // Delete a cart by ID
         public async Task<bool> DeleteOneAsync(Guid id)
         {
-            var foundCart = await _cartItemsRepo.GetByIdAsync(id);
-            if (foundCart == null)
+            var foundCartItem = await _cartItemsRepo.GetByIdAsync(id);
+            if (foundCartItem == null)
             {
-                return false;
+                 throw CustomException.NotFound($"CartItem with {id} cannot be found for deletion!");
             }
 
-            bool isDeleted = await _cartItemsRepo.DeleteOneAsync(foundCart);
+            bool isDeleted = await _cartItemsRepo.DeleteOneAsync(foundCartItem);
             return isDeleted;
         }
 
         // Update an existing cart
         public async Task<bool> UpdateOneAsync(Guid id, CartItemsUpdateDto updateDto)
         {
-            var foundCart = await _cartItemsRepo.GetByIdAsync(id);
+            var foundCartItem = await _cartItemsRepo.GetByIdAsync(id);
 
-            if (foundCart == null)
+            if (foundCartItem == null)
             {
-                return false;
+                 throw CustomException.NotFound($"CartItem with {id} cannot be found for updating!");
             }
 
-            _mapper.Map(updateDto, foundCart);
-            return await _cartItemsRepo.UpdateOneAsync(foundCart);
+            _mapper.Map(updateDto, foundCartItem);
+            return await _cartItemsRepo.UpdateOneAsync(foundCartItem);
         }
     }
 }
