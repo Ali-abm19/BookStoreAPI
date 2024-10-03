@@ -45,7 +45,7 @@ namespace BookStore.src.Services.order
             var orderList = _mapper.Map<List<Order>, List<OrderReadDto>>(orders);
             return orderList;
 
-   
+
         }
 
         public async Task<bool> DeleteOneAsync(Guid id)
@@ -53,11 +53,12 @@ namespace BookStore.src.Services.order
 
             var foundOrdersById = await _orderRepository.GetByIdAsync(id);
 
-            var foundOrderById = foundOrdersById.FirstOrDefault(); 
+            var foundOrderById = foundOrdersById.FirstOrDefault();
 
             if (foundOrderById == null)
             {
                 throw CustomException.NotFound($"Order with ID {id} cannot be found!");
+
             }
 
             bool deletedOrderById = await _orderRepository.DeleteOneAsync(foundOrderById);
