@@ -1,6 +1,7 @@
 using AutoMapper;
 using BookStore.src.Entity;
 using BookStore.src.Repository;
+using BookStore.src.Utils;
 using static BookStore.src.DTO.CartDTO;
 
 namespace BookStore.src.Services.cart
@@ -41,7 +42,7 @@ namespace BookStore.src.Services.cart
             // Handle error if not found
             if (foundCart == null)
             {
-                throw new Exception("Cart not found");
+                throw CustomException.NotFound($"Cart with {id} cannot be found!");
             }
             return _mapper.Map<Cart, CartReadDto>(foundCart);
         }
@@ -49,9 +50,9 @@ namespace BookStore.src.Services.cart
         public async Task<bool> DeleteOneAsync(Guid id)
         {
             var foundCart = await _cartRepo.GetByIdAsync(id);
-            if (foundCart == null)
+              if (foundCart == null)
             {
-                return false;
+                throw CustomException.NotFound($"Cart with {id}cannot be found for deletion!");
             }
 
             bool isDeleted = await _cartRepo.DeleteOneAsync(foundCart);
@@ -62,9 +63,9 @@ namespace BookStore.src.Services.cart
         {
             var foundCart = await _cartRepo.GetByIdAsync(id);
 
-            if (foundCart.CartItems == null)
+            if (foundCart == null)
             {
-                return false;
+                throw CustomException.NotFound($"Cart with {id}cannot be found for updating!");
             }
 
             _mapper.Map(updateDto, foundCart);
