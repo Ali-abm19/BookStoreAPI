@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookStore.src.Entity;
 using Microsoft.EntityFrameworkCore;
-
+using static BookStore.src.Entity.Order;
 
 namespace BookStore.src.Database
 {
@@ -23,9 +23,12 @@ namespace BookStore.src.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasPostgresEnum<Role>();
-            modelBuilder.Entity<Order>()
-     .Property(o => o.DateCreated)
-     .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            modelBuilder.HasPostgresEnum<Format>();
+           modelBuilder.HasPostgresEnum<Status>();
+            modelBuilder
+                .Entity<Order>()
+                .Property(o => o.DateCreated)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
         }
     }
 }
