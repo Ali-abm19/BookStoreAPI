@@ -2,6 +2,7 @@ using BookStore.Repository;
 using BookStore.src.Database;
 using BookStore.src.Entity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 
 namespace BookStore.src.Repository
 {
@@ -11,10 +12,7 @@ namespace BookStore.src.Repository
         protected DbSet<Cart> _cart;
         protected DatabaseContext _databaseContext;
 
-
-        public CartRepository(
-            DatabaseContext databaseContext
-        )
+        public CartRepository(DatabaseContext databaseContext)
         {
             _databaseContext = databaseContext;
             _cart = databaseContext.Set<Cart>();
@@ -24,44 +22,37 @@ namespace BookStore.src.Repository
 
         public async Task<Cart> CreateOneAsync(Cart newCart)
         {
-  //ali 
-//             if (newCart == null)
-//             {
-//                 return newCart;
-//             }
+            //ali
 
-  //
-            // Initialize TotalPrice to 0
-            newCart.TotalPrice = 0;
-
-            if (newCart.CartItems != null && newCart.CartItems.Any())
+            if (newCart != null)
             {
-                // Calculate TotalPrice based on quantity and price
-                newCart.TotalPrice = newCart.CartItems.Sum(item => item.Price * item.Quantity);
+                await _cart.AddAsync(newCart);
+                await _databaseContext.SaveChangesAsync();
             }
-
-            await _cart.AddAsync(newCart);
-            await _databaseContext.SaveChangesAsync();
             return newCart;
         }
 
         public async Task<Cart?> GetByIdAsync(Guid id)
         {
-            return await _cart
+            var cartById = await _cart
                 .Include(c => c.CartItems)
                 .FirstOrDefaultAsync(c => c.CartId == id);
+            if (cartById != null && cartById.CartItems != null)
+            {
+                cartById.TotalPrice = cartById.CartItems.Sum(p => p.Price);
+            }
+            await _databaseContext.SaveChangesAsync();
+
+            return cartById;
         }
 
-  //ali
-//         public async Task<List<Cart>> GetAllAsync()
-//         {
-//             return await _cart.Include(C => C.CartItems).ToListAsync();
-  
         public async Task<List<Cart>> GetAllAsync()
         {
-            return await _cart
-                .Include(c => c.CartItems) // Include CartItems 
-                .ToListAsync();
+            var cartWithUpdatedPrices = await _cart.Include(c => c.CartItems).ToListAsync();
+            cartWithUpdatedPrices.ForEach(c => c.TotalPrice = c.CartItems.Sum(c => c.Price));
+
+            await _databaseContext.SaveChangesAsync();
+            return cartWithUpdatedPrices;
         }
 
         public async Task<bool> DeleteOneAsync(Cart cart)
@@ -82,8 +73,7 @@ namespace BookStore.src.Repository
                 await _databaseContext.SaveChangesAsync();
                 return true;
             }
-                return false;
-            
+            return false;
         }
     }
 }

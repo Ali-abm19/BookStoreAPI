@@ -19,8 +19,6 @@ namespace BookStore.src.DTO
             public Guid CartId { get; set; }
             public int Quantity { get; set; }
             public double Price { get; set; }
-          
-          
             public Book Book { get; set; }
   
         }

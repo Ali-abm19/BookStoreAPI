@@ -21,6 +21,7 @@ namespace BookStore.Repository
             _databaseContext = databaseContext;
             _cartItems = databaseContext.Set<CartItems>();
             _bookRepository = bookRepository;
+            _cartRepository = cartRepository;
         }
 
         // create new cart
@@ -28,16 +29,14 @@ namespace BookStore.Repository
         {
             var book = await _bookRepository.GetBookByIdAsync(newCartItem.BookId);
 
-            if (book != null){
+            if (book != null)
+            {
                 newCartItem.Price = book.Price * newCartItem.Quantity;
 
                 await _cartItems.AddAsync(newCartItem);
                 await _databaseContext.SaveChangesAsync();
-
-                var ancestorCart = await _cartRepository.GetByIdAsync(newCartItem.CartId);
-                if (ancestorCart != null)
-                    ancestorCart.TotalPrice = ancestorCart.CartItems.Sum(p => p.Price);
             }
+
             return newCartItem;
         }
 

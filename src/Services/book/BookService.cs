@@ -51,6 +51,9 @@ namespace BookStore.Services.book
         public async Task<ReadBookDto> GetBookByIdAsync(Guid id)
         {
             var b = await _BookRepository.GetBookByIdAsync(id);
+            if(b == null){
+                throw CustomException.NotFound($"Book {id} deoes not exist ");
+            }
             var dto = _mapper.Map<Book, ReadBookDto>(b);
             return dto;
         }
@@ -58,9 +61,15 @@ namespace BookStore.Services.book
         public async Task<bool> DeleteOneAsync(Guid id)
         {
             var bookToDelete = await GetBookByIdAsync(id);
-            return await _BookRepository.DeleteOneAsync(
+            bool result = await _BookRepository.DeleteOneAsync(
                 _mapper.Map<ReadBookDto, Book>(bookToDelete)
             );
+
+            if(result == false){
+                 throw CustomException.BadRequest($"Book {id} was not deleted ");
+            }
+
+            else return result;
         }
 
         public async Task<List<ReadBookDto>> GetAllAsync(PaginationOptions paginationOptions)
@@ -83,7 +92,7 @@ namespace BookStore.Services.book
             var bookToUpdate = await GetBookByIdAsync(id);
             if (bookToUpdate == null)
             {
-                return false;
+                 throw CustomException.NotFound($"Book {id} was not Found. Update faild ");
             }
             _mapper.Map(updateDto, bookToUpdate);
             return await _BookRepository.UpdateOneAsync(
