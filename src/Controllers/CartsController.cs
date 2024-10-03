@@ -1,4 +1,5 @@
 using BookStore.src.Services.cart;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static BookStore.src.DTO.BookDTO;
 using static BookStore.src.DTO.CartDTO;
@@ -28,6 +29,7 @@ namespace BookStore.src.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<CartReadDto>>> GetAll()
         {
             var cartList = await _cartService.GetAllAsync();

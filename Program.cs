@@ -33,6 +33,7 @@ dataSourceBuilder.MapEnum<Role>();
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {
     options.UseNpgsql(dataSourceBuilder.Build());
+    options.EnableSensitiveDataLogging();
 });
 
 builder

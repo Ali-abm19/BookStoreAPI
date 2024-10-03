@@ -24,6 +24,7 @@ namespace BookStore.src.Controllers
 
         // Create category
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<CategoryReadDto>> CreateOne(
             [FromBody] CategoryCreateDto createDto
         )
@@ -56,9 +57,9 @@ namespace BookStore.src.Controllers
             return Ok(category);
         }
 
-      
         //ْUpdate Name & Des of Category
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateCategoryName(
             Guid id,
             [FromBody] CategoryUpdateDto name
@@ -76,6 +77,7 @@ namespace BookStore.src.Controllers
 
         //Delete Categoy by id
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteCategory([FromRoute] Guid id)
         {
             var category = _categoryService.GetByIdAsync(id).Result;
