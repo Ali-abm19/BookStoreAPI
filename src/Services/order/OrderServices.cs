@@ -14,7 +14,7 @@ namespace BookStore.src.Services.order
     public class OrderServices : IOrderServices
 
     {
-  
+
 
         protected readonly OrderRepository _orderRepository;
         protected readonly IMapper _mapper;
@@ -80,47 +80,28 @@ namespace BookStore.src.Services.order
         }
 
 
+        // //Delete Order 
 
-
-
-        //Delete Order 
-        public async Task<bool> DeleteOneAsync(Guid id)
+        public async Task<bool> DeleteOneAsync(Guid id, Guid userId, bool isAdmin)
         {
-
-            var foundOrdersById = await _orderRepository.GetByIdAsync(id);
-
-            var foundOrderById = foundOrdersById.FirstOrDefault();
+            var foundOrderById = await _orderRepository.FindOrderByIdAsync(id);
 
             if (foundOrderById == null)
             {
                 throw CustomException.NotFound($"Order with ID {id} cannot be found!");
-
             }
 
-            bool deletedOrderById = await _orderRepository.DeleteOneAsync(foundOrderById);
+            // If the user is not an admin, check if they are the owner of the order
+            if (!isAdmin && foundOrderById.UserId != userId)
+            {
+                throw CustomException.Forbidden("You do not have permission to delete this order.");
+            }
 
-            return deletedOrderById;
+            // Proceed to delete the order
+            return await _orderRepository.DeleteOneAsync(foundOrderById);
         }
-/// <summary>
-/// ////////
-/// </summary>
-/// <param name="id"></param>
-/// <param name="orderUpdate"></param>
-/// <returns></returns>
 
-        //updat Order status
-        // public async Task<bool> UpdateOneAsync(Guid id, OrderUpdateDto orderUpdate)
-        // {
-        //     var foundOrderById = await _orderRepository.GetByIdAsync(id);
 
-        //     if (foundOrderById == null)
-        //     {
-        //         return false; 
-        //     }
-
-        //     _mapper.Map(orderUpdate, foundOrderById);
-        //     return await _orderRepository.UpdateOneAsync(foundOrderById);
-        // }
 
         public async Task<bool> UpdateOneAsync(Guid id, OrderUpdateDto orderUpdate)
         {
@@ -166,3 +147,4 @@ namespace BookStore.src.Services.order
         }
     }
 }
+

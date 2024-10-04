@@ -11,8 +11,10 @@ namespace BookStore.src.Services.order
     public interface IOrderServices
     {
         //The method
+
+        //Create Order
         Task<OrderReadDto> CreateOneAsync(Guid userGuid, OrderCreateDto orderCreate);
-        
+
         //Get all Orders Info
         Task<List<OrderReadDto>> GetAllAsync();
 
@@ -20,13 +22,12 @@ namespace BookStore.src.Services.order
         Task<List<OrderReadDto>> GetByIdAsync(Guid userId);
 
         //Delete Order 
-        Task<bool> DeleteOneAsync(Guid id);
-
+        Task<bool> DeleteOneAsync(Guid id, Guid userId, bool isAdmin);
         //Get by UserId 
-       Task<List<OrderReadDto>> GetAllByUserIdAsync(Guid userId);
+        Task<List<OrderReadDto>> GetAllByUserIdAsync(Guid userId);
         //update 
         Task<bool> UpdateOneAsync(Guid id, OrderUpdateDto orderUpdate);
         // Find Order by ID
-        Task<OrderReadDto> FindOrderByIdAsync(Guid id);////@
+        Task<OrderReadDto> FindOrderByIdAsync(Guid id);
     }
 }

@@ -59,9 +59,9 @@ namespace BookStore.src.Repository
         }
 
         //Delete Order  
-        public async Task<bool> DeleteOneAsync(Order Order)
+        public async Task<bool> DeleteOneAsync(Order order)
         {
-            _order.Remove(Order);
+            _order.Remove(order);
             await _databaseContext.SaveChangesAsync();
             return true;
         }
@@ -69,19 +69,6 @@ namespace BookStore.src.Repository
 
 
 
-        /// <summary>
-        /// /
-        /// </summary>
-        /// <param name="updateOrder"></param>
-        /// <returns></returns>
-
-        //update method
-        // public async Task<bool> UpdateOneAsync(Order UpdateOrder)
-        // {
-        //     _order.Update(UpdateOrder);
-        //     await _databaseContext.SaveChangesAsync();
-        //     return true;
-        // }
 
 
         public async Task<bool> UpdateOneAsync(Order updateOrder)
@@ -106,21 +93,3 @@ namespace BookStore.src.Repository
 
     }
 }
-
-//Get Order by UserId
-// public async Task<List<Order>> GetAllByUserIdAsync(Guid userId)
-// {
-//     return await _order
-//         .Include(o => o.CartItems)
-//         .ThenInclude(od => od.Book)
-//         .Where(o => o.UserId == userId)
-//         .ToListAsync();
-// }
-
-// public async Task<List<Order>> GetAllAsync()
-// {
-//     return await _order
-//         .Include(o => o.CartItems)
-//         .ThenInclude(od => od.Book)
-//         .ToListAsync(); 
-// }

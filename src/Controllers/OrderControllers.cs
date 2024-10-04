@@ -66,7 +66,41 @@ namespace BookStore.src.Controllers
             }
         }
 
+        // Delete Order
 
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<ActionResult> DeleteOrder(Guid id)
+        {
+            try
+            {
+                var userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+                if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userGuid))
+                {
+                    return Unauthorized("User not authenticated.");
+                }
+
+                var isAdmin = HttpContext.User.IsInRole("Admin");
+
+                // Call the service to delete the order
+                var deleteSuccessful = await _orderServices.DeleteOneAsync(id, userGuid, isAdmin);
+
+                if (!deleteSuccessful)
+                {
+                    return NotFound("Order could not be deleted.");
+                }
+
+                return NoContent(); // Return 204 No Content on successful deletion
+            }
+            catch (CustomException ex)
+            {
+                return StatusCode(ex.StatusCode, ex.Message); // Return specific status and message
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An unexpected error occurred: " + ex.Message); // General error handling
+            }
+        }
 
         //Get Order by UserId
         [HttpGet("{id}")]
@@ -81,9 +115,9 @@ namespace BookStore.src.Controllers
 
             return Ok(order);
         }
-
+        //Get User Orders
         [HttpGet("orders")] // Route for getting user orders
-        [Authorize] // Ensure the user is authenticated
+        [Authorize]
         public async Task<ActionResult<List<OrderReadDto>>> GetAllUserOrder()
         {
             // Get user ID from claims
@@ -95,7 +129,6 @@ namespace BookStore.src.Controllers
                 return Unauthorized("User not authenticated.");
             }
 
-            // Convert string to Guid
             if (!Guid.TryParse(userIdClaim.Value, out var userGuid))
             {
                 return BadRequest("Invalid user ID.");
@@ -116,102 +149,8 @@ namespace BookStore.src.Controllers
 
 
 
-
-
-
-
-
-        /// <summary>
-        /// ////////
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="orderUpdate"></param>
-        /// <returns></returns>
-
-        //         [HttpPut("{id}")]
-        //         public ActionResult UpdateOrder(int id, Order newOrder)
-        //         {
-        //             Order? foundOrder = orders.FirstOrDefault(p => p.OrderId == id);
-        //             if (foundOrder == null)
-        //             {
-        //                 return NotFound();
-        //             }
-        //             foundOrder.OrderStatus = newOrder.OrderStatus;
-        //             return Ok(foundOrder);
-        //   }
-
-        // [HttpPut("{id}")]and this 
-        // public async Task<ActionResult> UpdateOrder(Guid id, [FromBody] OrderUpdateDto orderUpdate)
-        // {
-        //     try
-        //     {
-        //         // Call the service to update the order
-        //         var result = await _orderServices.UpdateOneAsync(id, orderUpdate);
-
-        //         // If the update was unsuccessful, return NotFound
-        //         if (!result)
-        //         {
-        //             return NotFound();
-        //         }
-
-        //         return NoContent(); // Return 204 No Content on success
-        //     }
-        //     catch (CustomException ex)
-        //     {
-        //         // Handle specific custom exceptions
-        //         return StatusCode(ex.StatusCode, ex.Message);
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         // Handle general exceptions
-        //         return StatusCode(500, "Internal server error: " + ex.Message);
-        //     }
-        // }
-        // [HttpPut("{id}")]also this
-        // public async Task<ActionResult> UpdateOrder(Guid id, [FromBody] OrderUpdateDto orderUpdate)
-        // {
-        //     try
-        //     {
-        //         // Retrieve the existing order to get the current status
-        //         var existingOrder = await _orderServices.FindOrderByIdAsync(id);
-        //         if (existingOrder == null)
-        //         {
-        //             return NotFound(); // Return 404 if the order doesn't exist
-        //         }
-
-        //         // Call the service to update the order
-        //         var updateSuccessful = await _orderServices.UpdateOneAsync(id, orderUpdate);
-
-        //         // If the update was unsuccessful, return NotFound
-        //         if (!updateSuccessful)
-        //         {
-        //             return NotFound();
-        //         }
-
-        //         // Retrieve the updated order to get the new status
-        //         var updatedOrder = await _orderServices.FindOrderByIdAsync(id);
-
-        //         // Prepare the response with previous and current status
-        //         var response = new
-        //         {
-        //             PreviousStatus = existingOrder.OrderStatus,
-        //             CurrentStatus = updatedOrder.OrderStatus
-        //         };
-
-        //         return Ok(response); // Return 200 OK with the status information
-        //     }
-        //     catch (CustomException ex)
-        //     {
-        //         // Handle specific custom exceptions
-        //         return StatusCode(ex.StatusCode, ex.Message);
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         // Handle general exceptions
-        //         return StatusCode(500, "Internal server error: " + ex.Message);
-        //     }
-        // }
-        [HttpPut("{id}")]//this work
+        //Updata By Order Id
+        [HttpPut("{id}")]
         public async Task<ActionResult> UpdateOrder(Guid id, [FromBody] OrderUpdateDto orderUpdate)
         {
             try
@@ -255,5 +194,19 @@ namespace BookStore.src.Controllers
                 return StatusCode(500, "Internal server error: " + ex.Message);
             }
         }
+
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
