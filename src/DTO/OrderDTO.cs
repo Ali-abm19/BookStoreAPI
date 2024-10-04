@@ -29,7 +29,7 @@ namespace BookStore.src.DTO
             public DateTime DateCreated { get; set; }
             public Order.Status OrderStatus { get; set; }
             public Guid userId { get; set; }
-            public User user { get; set; }//all inf0
+            public User user { get; set; }
             public Cart cart { get; set; }
             public List<CartItemsReadDto> CartItemsReadDto { get; set; }
 
