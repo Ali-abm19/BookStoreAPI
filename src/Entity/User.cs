@@ -30,12 +30,14 @@ namespace BookStore.src.Entity
 
         public Guid? OrderId { get; set; }
         public List<Order>? Order { get; set; }
-
+        
+         [ForeignKey("CartId")]
         public Guid? CartId { get; set; }
-        // public Cart? Cart { get; set; }
+        // \\public Cart? Cart { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
+
     public enum Role
     {
         Admin,
