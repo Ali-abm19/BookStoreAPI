@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 using BookStore.src.Entity;
-using static BookStore.src.Entity.Category;
 
 namespace BookStore.src.DTO
 {
@@ -12,7 +8,14 @@ namespace BookStore.src.DTO
         //Create Category
         public class CategoryCreateDto
         {
+            [Required(ErrorMessage = "Category name is required")]
             public string CategoryName { get; set; }
+
+            [StringLength(
+                120,
+                MinimumLength = 10,
+                ErrorMessage = "Description must be between 10 and 120 characters."
+            )]
             public string Description { get; set; }
         }
 
@@ -29,10 +32,15 @@ namespace BookStore.src.DTO
         //Update Category Name + Des
         public class CategoryUpdateDto
         {
-            public string CategoryName { get; set; }
-            public string Description { get; set; }
+            [Required(ErrorMessage = "Category name is required")]
+            public string? CategoryName { get; set; }
+
+            [StringLength(
+                120,
+                MinimumLength = 10,
+                ErrorMessage = "Description must be between 10 and 120 characters."
+            )]
+            public string? Description { get; set; }
         }
-
-
     }
 }
