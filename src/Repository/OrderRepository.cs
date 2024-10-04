@@ -23,8 +23,8 @@ namespace BookStore.src.Repository
 
         //method 
 
-        //create order
-        public async Task<Order? > CreateOneAsync(Order newOrder)
+        //Create Order
+        public async Task<Order?> CreateOneAsync(Order newOrder)
         {
             await _order.AddAsync(newOrder);
             await _databaseContext.SaveChangesAsync();
@@ -33,66 +33,94 @@ namespace BookStore.src.Repository
            .ThenInclude(od => od.Book)
            .FirstOrDefaultAsync(o => o.OrderId == newOrder.OrderId);
             return orderWithCaryItems;
-    
+
+        }
+        //Get all Orders Info
+        public async Task<List<Order>> GetAllAsync()
+        {
+            return await _order
+                .Include(o => o.CartItems)
+                .ThenInclude(od => od.Book)
+                .ToListAsync();
         }
 
-        //get order by id 
 
-        public async Task<List<Order>> GetByIdAsync(Guid userId)
+
+        //Get Order Or User by id 
+        public async Task<List<Order>> GetByIdAsync(Guid id)
         {
-        
+
             return await _order
             .Include(o => o.CartItems)
             .ThenInclude(od => od.Book)
-            .Where(o => o.UserId == userId)
+            .Where(o => o.UserId == id)
             .ToListAsync();
 
-      }
+        }
 
-            //delete order or cancel 
+        //Delete Order  
         public async Task<bool> DeleteOneAsync(Order Order)
         {
             _order.Remove(Order);
             await _databaseContext.SaveChangesAsync();
             return true;
         }
+
+
+
+
+        /// <summary>
+        /// /
+        /// </summary>
+        /// <param name="updateOrder"></param>
+        /// <returns></returns>
+
         //update method
-        public async Task<bool> UpdateOneAsync(Order UpdateOrder)
+        // public async Task<bool> UpdateOneAsync(Order UpdateOrder)
+        // {
+        //     _order.Update(UpdateOrder);
+        //     await _databaseContext.SaveChangesAsync();
+        //     return true;
+        // }
+
+
+        public async Task<bool> UpdateOneAsync(Order updateOrder)
         {
-            _order.Update(UpdateOrder);
+            _order.Update(updateOrder);
             await _databaseContext.SaveChangesAsync();
             return true;
         }
 
-        public async Task<List<Order>> GetAllAsync(PaginationOptions paginationOptions)
+        // Find Order by ID
+        public async Task<Order?> FindOrderByIdAsync(Guid id)
         {
-            if (paginationOptions == null)
-                throw new ArgumentNullException(nameof(paginationOptions));
-
-            if (paginationOptions.Offset < 0)
-                throw new ArgumentOutOfRangeException(nameof(paginationOptions.Offset), "Offset must be non-negative.");
-
-            if (paginationOptions.Limit <= 0)
-                throw new ArgumentOutOfRangeException(nameof(paginationOptions.Limit), "Limit must be positive.");
-
-            var result = _order.AsQueryable();
-
-            if (!string.IsNullOrEmpty(paginationOptions.Search))
-            {
-                if (DateTime.TryParse(paginationOptions.Search, out DateTime searchDate))
-                {
-                    // Ensure the search date is treated as UTC
-                    searchDate = DateTime.SpecifyKind(searchDate, DateTimeKind.Utc);
-                    result = result.Where(o => o.DateCreated.Date == searchDate.Date);
-                }
-                else
-                {
-                    return new List<Order>(); // Handle invalid date format
-                }
-            }
-
-            return await result.Skip(paginationOptions.Offset).Take(paginationOptions.Limit).ToListAsync();
+            return await _order
+                .Include(o => o.CartItems)
+                .ThenInclude(od => od.Book)
+                .FirstOrDefaultAsync(o => o.OrderId == id);
+            // Ensure this is looking for OrderId
         }
+
+
+
 
     }
 }
+
+//Get Order by UserId
+// public async Task<List<Order>> GetAllByUserIdAsync(Guid userId)
+// {
+//     return await _order
+//         .Include(o => o.CartItems)
+//         .ThenInclude(od => od.Book)
+//         .Where(o => o.UserId == userId)
+//         .ToListAsync();
+// }
+
+// public async Task<List<Order>> GetAllAsync()
+// {
+//     return await _order
+//         .Include(o => o.CartItems)
+//         .ThenInclude(od => od.Book)
+//         .ToListAsync(); 
+// }

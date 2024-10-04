@@ -23,10 +23,10 @@ namespace BookStore.src.Entity
 
         public enum Status
         {
-            Completed,
-            Pending,
-            Shipped,
-            Cancelled,
+            Completed,//0
+            Pending,//1
+            Shipped,//2
+            Cancelled,//3
         }
     }
 }
