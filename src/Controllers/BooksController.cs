@@ -13,12 +13,10 @@ namespace BookStore.src.Controllers
     public class BooksController : ControllerBase
     {
         protected readonly IBookService _bookService;
-        protected readonly ICategoryService _categoryService;
 
         public BooksController(IBookService bookService, ICategoryService categoryService)
         {
             _bookService = bookService;
-            _categoryService = categoryService;
         }
 
         [HttpGet]
