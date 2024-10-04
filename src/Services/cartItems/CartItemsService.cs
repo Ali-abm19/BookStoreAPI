@@ -24,23 +24,31 @@ namespace BookStore.src.Services.cartItems
         // Create a new cart
         public async Task<CartItemsReadDto> CreateOneAsync(CartItemsCreateDto createDto)
         {
-            
+
 
             var cartItem = _mapper.Map<CartItemsCreateDto, CartItems>(createDto);
-            cartItem.CartItemsId = Guid.NewGuid(); 
+            cartItem.CartItemsId = Guid.NewGuid();
 
-            var book = await _bookRepository.GetBookByIdAsync(cartItem.BookId); 
-            if (book != null)
-            {
-                cartItem.Price = book.Price * cartItem.Quantity; 
-            }
-            else
+            var book = await _bookRepository.GetBookByIdAsync(cartItem.BookId);
+
+            if (book == null)
             {
                 throw CustomException.NotFound("Book not found");
             }
 
-            var createdCartItem = await _cartItemsRepo.CreateOneAsync(cartItem);
+            // Check if there is enough quantity of the book available
+            if (book.StockQuantity < cartItem.Quantity)
+            {
+                throw CustomException.BadRequest($"Not enough stock available for book: {book.Title}. Available: {book.StockQuantity}");
+            }
 
+            cartItem.Price = book.Price * cartItem.Quantity; // Update the price of item based on the book price
+
+            book.StockQuantity -= cartItem.Quantity; // Decrease the book quantity by the quantity in the cart item
+
+            await _bookRepository.UpdateOneAsync(book); // // Update the book quantity in the repository
+
+            var createdCartItem = await _cartItemsRepo.CreateOneAsync(cartItem);  // Create the cart item
             return _mapper.Map<CartItems, CartItemsReadDto>(createdCartItem);
         }
 
@@ -58,7 +66,7 @@ namespace BookStore.src.Services.cartItems
             // Handle error if not found
             if (foundCartItem == null)
             {
-                 throw CustomException.NotFound("CartItems not found");
+                throw CustomException.NotFound("CartItems not found");
             }
             return _mapper.Map<CartItems, CartItemsReadDto>(foundCartItem);
         }
@@ -69,7 +77,7 @@ namespace BookStore.src.Services.cartItems
             var foundCartItem = await _cartItemsRepo.GetByIdAsync(id);
             if (foundCartItem == null)
             {
-                 throw CustomException.NotFound($"CartItem with {id} cannot be found for deletion!");
+                throw CustomException.NotFound($"CartItem with {id} cannot be found for deletion!");
             }
 
             bool isDeleted = await _cartItemsRepo.DeleteOneAsync(foundCartItem);
@@ -83,7 +91,7 @@ namespace BookStore.src.Services.cartItems
 
             if (foundCartItem == null)
             {
-                 throw CustomException.NotFound($"CartItem with {id} cannot be found for updating!");
+                throw CustomException.NotFound($"CartItem with {id} cannot be found for updating!");
             }
 
             _mapper.Map(updateDto, foundCartItem);

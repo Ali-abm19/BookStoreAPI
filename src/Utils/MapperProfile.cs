@@ -58,6 +58,8 @@ namespace BookStore.src.Utils
                     opts.Condition((src, dest, srcProperty) => srcProperty != null)
                 );
 
+
+
             // Mapping between CartItems entity and DTOs
             CreateMap<CartItems, CartItemsDTO.CartItemsReadDto>();
             CreateMap<CartItemsDTO.CartItemsCreateDto, CartItems>();
@@ -65,6 +67,7 @@ namespace BookStore.src.Utils
                 .ForAllMembers(opts =>
                     opts.Condition((src, dest, srcProperty) => srcProperty != null)
                 );
+                
         }
     }
 }
