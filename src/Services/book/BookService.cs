@@ -4,8 +4,8 @@ using BookStore.src.Entity;
 using BookStore.src.Repository;
 using BookStore.src.Services.book;
 using BookStore.src.Services.category;
-using static BookStore.src.DTO.BookDTO;
 using BookStore.src.Utils;
+using static BookStore.src.DTO.BookDTO;
 
 namespace BookStore.Services.book
 {
@@ -51,7 +51,8 @@ namespace BookStore.Services.book
         public async Task<ReadBookDto> GetBookByIdAsync(Guid id)
         {
             var b = await _BookRepository.GetBookByIdAsync(id);
-            if(b == null){
+            if (b == null)
+            {
                 throw CustomException.NotFound($"Book {id} deoes not exist ");
             }
             var dto = _mapper.Map<Book, ReadBookDto>(b);
@@ -60,21 +61,19 @@ namespace BookStore.Services.book
 
         public async Task<bool> DeleteOneAsync(Guid id)
         {
-            var bookToDelete = await GetBookByIdAsync(id);
-            bool result = await _BookRepository.DeleteOneAsync(
-                _mapper.Map<ReadBookDto, Book>(bookToDelete)
-            );
+            var bookToDelete = await _BookRepository.GetBookByIdAsync(id);
+            bool result = await _BookRepository.DeleteOneAsync(bookToDelete);
 
-            if(result == false){
-                 throw CustomException.BadRequest($"Book {id} was not deleted ");
+            if (result == false)
+            {
+                throw CustomException.BadRequest($"Book {id} was not deleted ");
             }
-
-            else return result;
+            else
+                return result;
         }
 
         public async Task<List<ReadBookDto>> GetAllAsync(PaginationOptions paginationOptions)
         {
-            
             var books = await _BookRepository.GetAllAsync(paginationOptions);
             var dtos = _mapper.Map<List<Book>, List<ReadBookDto>>(books);
             return dtos;
@@ -89,15 +88,13 @@ namespace BookStore.Services.book
 
         public async Task<bool> UpdateOneAsync(Guid id, UpdateBookDto updateDto)
         {
-            var bookToUpdate = await GetBookByIdAsync(id);
+            var bookToUpdate = await _BookRepository.GetBookByIdAsync(id);
             if (bookToUpdate == null)
             {
-                 throw CustomException.NotFound($"Book {id} was not Found. Update faild ");
+                throw CustomException.NotFound($"Book {id} was not Found. Update faild ");
             }
             _mapper.Map(updateDto, bookToUpdate);
-            return await _BookRepository.UpdateOneAsync(
-                _mapper.Map<ReadBookDto, Book>(bookToUpdate)
-            );
+            return await _BookRepository.UpdateOneAsync(bookToUpdate);
         }
     }
 }

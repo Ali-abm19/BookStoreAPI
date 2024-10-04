@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Npgsql;
+using static BookStore.src.Entity.Order;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,8 @@ var dataSourceBuilder = new NpgsqlDataSourceBuilder(
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 
 dataSourceBuilder.MapEnum<Role>();
+dataSourceBuilder.MapEnum<Status>();
+dataSourceBuilder.MapEnum<Format>();
 
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {

@@ -26,6 +26,7 @@ namespace BookStore.src.Repository
 
             if (newCart != null)
             {
+
                 await _cart.AddAsync(newCart);
                 await _databaseContext.SaveChangesAsync();
             }
@@ -35,7 +36,7 @@ namespace BookStore.src.Repository
         public async Task<Cart?> GetByIdAsync(Guid id)
         {
             var cartById = await _cart
-                .Include(c => c.CartItems)
+                .Include(c => c.CartItems).ThenInclude(c => c.Book)
                 .FirstOrDefaultAsync(c => c.CartId == id);
             if (cartById != null && cartById.CartItems != null)
             {
@@ -48,7 +49,7 @@ namespace BookStore.src.Repository
 
         public async Task<List<Cart>> GetAllAsync()
         {
-            var cartWithUpdatedPrices = await _cart.Include(c => c.CartItems).ToListAsync();
+            var cartWithUpdatedPrices = await _cart.Include(c => c.CartItems).ThenInclude(b => b.Book).ToListAsync();
             cartWithUpdatedPrices.ForEach(c => c.TotalPrice = c.CartItems.Sum(c => c.Price));
 
             await _databaseContext.SaveChangesAsync();

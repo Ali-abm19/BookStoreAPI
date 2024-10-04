@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace BookStore.src.Entity
@@ -21,6 +22,7 @@ namespace BookStore.src.Entity
        // public Guid CartId { get; set; }
         public LinkedList<CartItems> CartItems { get; set; }//i wamt list from the cat 1:21 more than book
 
+    [JsonConverter(typeof(JsonStringEnumConverter))]
         public enum Status
         {
             Completed,//0
