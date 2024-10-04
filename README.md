@@ -1,52 +1,121 @@
-# E-commerce Application API
+# Bookstore Backend Project 📚
 
-This repository contains ASP.NET Core application with RESTful API endpoints for e-commerce application. The API allows you to interact with products in the store.
+## Project Overview
+This is a backend solution for online bookstores. Built with .Net 6 and includes many functionalities that are considered initial for online stores. 
 
-`This is a teamwork assignment where you will work as a team within your group`
+## Features ✨
 
-**_DEADLINE: 06.10.2024_**
+- **User Management**:
+  - Register new user
+  - User authentication with JWT token
+  - Role-based access control (Admin, Customer)
+- **Book Management**:
+  - Add, update and delete books
+  - Pagination to get all books
+  - Search functionality implemented (Search by Title, Search by Author)
+- **Category Management**:
+  - Add, update and delete catagories
+- **Cart & CartItmes Management**:
+  - Add, update and delete carts
+- **Order Management**:
+  - Create orders
+  - Pagination to get all orders
+  - Get total price
 
-## How to work
+## Technologies Used
 
-1. One team member (admin) should fork the repo and add other members to that admin repo as collaborators.
-2. The other team members should fork then clone the forked repo (the admin repo).
-3. Any change/update made should be submitted to admin repo as pull request.
-4. Each change should be done in a separate pull request.
-5. Pull request must be reviewed by at least 2 members before merged to admin repo.
-6. Admin should open a PR to the original (Integrify) repo.
+- **.Net 8**: Web API Framework
+- **Entity Framework Core**: ORM for database interactions
+- **PostgreSQl**: Relational database for storing data
+- **JWT**: For user authentication and authorization
+- **AutoMapper**: For object mapping
+- **Swagger**: API documentation
 
-Please ask your instructor or supporting instructor if you have any questions or need help.
+## Prerequisites
 
-## Level 1: Basic Requirements
+- .Net 8 SDK
+- SQL Server
+- VSCode
 
-In this level, the application includes the following features:
+## Getting Started
 
-1. Identify Entities: Identify the main entities that need to be stored in the database. These could include customers, products, categories, orders, etc.
-2. Define Attributes: For each entity, list and define the attributes or properties associated with it. For example, for a "customer" entity, attributes might include "id," "firstName," "lastName," "email" and so on.
-3. Establish Relationships: Determine the relationships between entities. Relationships can be one-to-one, one-to-many, or many-to-many. For instance, in an E-commerce system, a "customer" may have multiple "orders".
-4. Key: When establishing relationships, remember to create a key in your ERD to explain the notation used for relationships.
-5. According to the ERD above, create the entities, and build the database with Entity Framework Core. Add ERD in screenshots folders
-6. Create basic CRUD operations for each endpoint.
-7. Use authentication and role-based authorization
+### 1. Clone the repository:
 
-## Level 2: Additional Requirements
+```bash
+git clone git@github.com:ManarkhalidA/sda-3-online-Backend_Teamwork.git
+```
 
-In addition to the basic requirements, the application enhances its functionality with the following features:
+### 2. Setup database
 
-1. Include pagination functionality to the method getting all products.
-2. Implement search functionality to allow users to search for specific products based on keywords or specific fields (e.g., by title).
-3. Add validation checks to ensure the data meets certain criteria before executing the actions.
+- Make sure PostgreSQL Server is running
+- Create `appsettings.json` file
+- Update the connection string in `appsettings.json`
 
-## Level 3: Advanced Requirements
+```json
+{
+  "ConnectionStrings": {
+    "Local": "Server=localhost;Database=ECommerceDb;User Id=your_username;Password=your_password;"
+  }
+}
+```
 
-If you have a higher skill level and finish the previous requirements before the deadline, you can tackle the following bonus tasks:
+- Run migrations to create database
 
-1. Refactor method getting all products to also handle query parameters for filtering and sorting products based on specific criteria (e.g., price range, by title, by date, etc). Pagination still need to be integrated.
-2. Use claim-based or resource-based where applicable.
-3. Peer Review:
-   - Review 2 assignments from other teams.
-   - Provide constructive feedback and suggestions for improvement.
+```bash
+dotnet ef migrations add InitialCreate
+dotnet ef database update
+```
 
-`Please note that the bonus requirements and reviews are optional and can be completed if you have additional time and advanced skills.`
+- Run the application
 
-Happy coding!
+```bash
+dotnet watch
+```
+
+The API will be available at: `http://localhost:5125`
+
+### Swagger
+
+- Navigate to `http://localhost:5125/swagger/index.html` to explore the API endpoints.
+
+## Project structure
+
+```bash
+|-- Controllers: API controllers with request and response
+|-- Database # DbContext and Database Configurations
+|-- DTOs # Data Transfer Objects
+|-- Entities # Database Entities (User, Book, Category, Cart, CartItems, Order)
+|-- Middleware # Logging request, response and Error Handler
+|-- Repositories # Repository Layer for database operations
+|-- Services # Business Logic Layer
+|-- Utils # Common logics
+|-- Migrations # Entity Framework Migrations
+|-- Program.cs # Application Entry Point
+```
+
+## API Endpoints
+
+### User
+
+- **POST** `/api/users/signUp` – Register a new user.
+- **POST** `/api/users/signIn` – Login and get JWT token.
+
+## Deployment
+
+The application is deployed and can be accessed at: [https://sda-3-online-backend-teamwork-ywpj.onrender.com](https://sda-3-online-backend-teamwork-ywpj.onrender.com)
+
+## Team iDevelopers Members  💻
+
+**Lead**
+- Manar (@ManarkhalidA)
+
+**Members**  
+- Ali (@Ali-abm19)
+- Feda (@fedamousa)
+- Haya (@HayaTamimi)
+- Raghad (@xcviRaghad)
+
+
+## License
+
+This project is licensed under the MIT License.
