@@ -20,15 +20,15 @@ namespace BookStore.src.Controllers
     {
 
         protected readonly IOrderServices _orderServices;
-       
+
 
         public OrdersController(IOrderServices services)
         {
             _orderServices = services;
 
         }
-        //create
 
+        //Create Order
         [HttpPost]
         [Authorize]
         public async Task<ActionResult<OrderReadDto>> CreateOnAsync([FromBody] OrderCreateDto orderCreateDto)
@@ -45,14 +45,64 @@ namespace BookStore.src.Controllers
             return await _orderServices.CreateOneAsync(userGuid, orderCreateDto);
 
         }
-
+        //Get all Orders Info
         [HttpGet]
-        public async Task<ActionResult<List<OrderReadDto>>> GetAll([FromQuery] PaginationOptions paginationOptions)
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<List<OrderReadDto>>> GetAll()
         {
-            var orders = await _orderServices.GetAllAsync(paginationOptions);
-            return Ok(orders); // Return the list of orders
+            try
+            {
+                // Get all orders for admin
+                var orders = await _orderServices.GetAllAsync();
+                return Ok(orders); // Return the list of orders
+            }
+            catch (CustomException ex)
+            {
+                return StatusCode(ex.StatusCode, ex.Message); // Return specific status and message
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An unexpected error occurred."); // General error handling
+            }
         }
 
+        // Delete Order
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<ActionResult> DeleteOrder(Guid id)
+        {
+            try
+            {
+                var userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+                if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userGuid))
+                {
+                    return Unauthorized("User not authenticated.");
+                }
+
+                var isAdmin = HttpContext.User.IsInRole("Admin");
+
+                // Call the service to delete the order
+                var deleteSuccessful = await _orderServices.DeleteOneAsync(id, userGuid, isAdmin);
+
+                if (!deleteSuccessful)
+                {
+                    return NotFound("Order could not be deleted.");
+                }
+
+                return NoContent(); // Return 204 No Content on successful deletion
+            }
+            catch (CustomException ex)
+            {
+                return StatusCode(ex.StatusCode, ex.Message); // Return specific status and message
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An unexpected error occurred: " + ex.Message); // General error handling
+            }
+        }
+
+        //Get Order by UserId
         [HttpGet("{id}")]
         public async Task<ActionResult<OrderReadDto>> GetById([FromRoute] Guid id)
         {
@@ -65,27 +115,98 @@ namespace BookStore.src.Controllers
 
             return Ok(order);
         }
-
-
-        [HttpGet("user/{userId}")]
+        //Get User Orders
+        [HttpGet("orders")] // Route for getting user orders
         [Authorize]
-
-        public async Task<ActionResult<List<OrderReadDto>>> GetOrdersByUserId([FromRoute] Guid userId)
+        public async Task<ActionResult<List<OrderReadDto>>> GetAllUserOrder()
         {
-            var orders = await _orderServices.GetByIdAsync(userId);
+            // Get user ID from claims
+            var userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+
+            // Check if user is authenticated
+            if (userIdClaim == null)
+            {
+                return Unauthorized("User not authenticated.");
+            }
+
+            if (!Guid.TryParse(userIdClaim.Value, out var userGuid))
+            {
+                return BadRequest("Invalid user ID.");
+            }
+
+            // Get orders belonging to the user
+            var orders = await _orderServices.GetAllByUserIdAsync(userGuid);
+
+            // Check if any orders were found
+            if (orders == null || !orders.Any())
+            {
+                return NotFound("No orders found for the user.");
+            }
+
+            // Return the list of orders
             return Ok(orders);
         }
 
-        //         [HttpPut("{id}")]
-        //         public ActionResult UpdateOrder(int id, Order newOrder)
-        //         {
-        //             Order? foundOrder = orders.FirstOrDefault(p => p.OrderId == id);
-        //             if (foundOrder == null)
-        //             {
-        //                 return NotFound();
-        //             }
-        //             foundOrder.OrderStatus = newOrder.OrderStatus;
-        //             return Ok(foundOrder);
-        //         }
+
+
+        //Updata By Order Id
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateOrder(Guid id, [FromBody] OrderUpdateDto orderUpdate)
+        {
+            try
+            {
+                // Retrieve the existing order to get the current status
+                var existingOrder = await _orderServices.FindOrderByIdAsync(id);
+                if (existingOrder == null)
+                {
+                    return NotFound(); // Return 404 if the order doesn't exist
+                }
+
+                // Call the service to update the order
+                var updateSuccessful = await _orderServices.UpdateOneAsync(id, orderUpdate);
+
+                // If the update was unsuccessful, return NotFound
+                if (!updateSuccessful)
+                {
+                    return NotFound();
+                }
+
+                // Retrieve the updated order to get the new status
+                var updatedOrder = await _orderServices.FindOrderByIdAsync(id);
+
+                // Prepare the response with previous and current status
+                var response = new
+                {
+                    PreviousStatus = existingOrder.OrderStatus.ToString(), // Convert enum to string
+                    CurrentStatus = updatedOrder.OrderStatus.ToString() // Convert enum to string
+                };
+
+                return Ok(response); // Return 200 OK with the status information
+            }
+            catch (CustomException ex)
+            {
+                // Handle specific custom exceptions
+                return StatusCode(ex.StatusCode, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                // Handle general exceptions
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
+        }
+
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

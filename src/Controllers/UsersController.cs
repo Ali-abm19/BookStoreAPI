@@ -26,7 +26,7 @@ namespace BookStore.src.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+       // [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<UserReadDto>>> GetAll()
         {
             var userList = await _userService.GetAllAsync();
@@ -60,7 +60,7 @@ namespace BookStore.src.Controllers
         }
 
         [HttpDelete("{id}")]
-       [Authorize(Roles = "Admin")]
+       //[Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteOne(Guid id)
         {
             var userDelete = await _userService.DeleteOneAsync(id);

@@ -25,10 +25,10 @@ namespace BookStore.src.Entity
     [JsonConverter(typeof(JsonStringEnumConverter))]
         public enum Status
         {
-            Completed,
-            Pending,
-            Shipped,
-            Cancelled,
+            Completed,//0
+            Pending,//1
+            Shipped,//2
+            Cancelled,//3
         }
     }
 }
