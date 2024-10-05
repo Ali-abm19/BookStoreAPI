@@ -19,14 +19,8 @@ namespace BookStore.src.Utils
                 .ForAllMembers(opts =>
                     opts.Condition((src, dest, srcProperty) => srcProperty != null)
                 );
-            CreateMap<ReadBookDto, Book>(); //we don't use this. Manar probably added it when she solved price in the controller?
-            //Order class
-            // CreateMap<Order, OrderReadDto>();
-            // CreateMap<OrderCreateDto, Order>();
-            // CreateMap<OrderUpdateDto, Order>()
-            //     .ForAllMembers(opts =>
-            //         opts.Condition((src, dest, srcProperty) => srcProperty != null)
-            //     );
+            CreateMap<ReadBookDto, Book>(); //we don't use this. Manar probably added it when she solved price in the controller? @ali
+            //Order
             CreateMap<Order, OrderReadDto>();
             CreateMap<OrderCreateDto, Order>();
             CreateMap<OrderUpdateDto, Order>() // ali added this in 10/3/2024 1:36AM. ask manar why it wasn't here in case she doesn't want it
@@ -58,8 +52,6 @@ namespace BookStore.src.Utils
                     opts.Condition((src, dest, srcProperty) => srcProperty != null)
                 );
 
-
-
             // Mapping between CartItems entity and DTOs
             CreateMap<CartItems, CartItemsDTO.CartItemsReadDto>();
             CreateMap<CartItemsDTO.CartItemsCreateDto, CartItems>();
@@ -67,7 +59,6 @@ namespace BookStore.src.Utils
                 .ForAllMembers(opts =>
                     opts.Condition((src, dest, srcProperty) => srcProperty != null)
                 );
-                
         }
     }
 }

@@ -22,17 +22,15 @@ namespace BookStore.src.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           modelBuilder.HasPostgresEnum<Role>();
+            modelBuilder.HasPostgresEnum<Role>();
             modelBuilder.HasPostgresEnum<Format>();
-           modelBuilder.HasPostgresEnum<Status>();
+            modelBuilder.HasPostgresEnum<Status>();
             modelBuilder
                 .Entity<Order>()
                 .Property(o => o.DateCreated)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                 modelBuilder.Entity<Book>()
-        .Property(b => b.BookFormat)
-        .HasColumnType("format");
+            //modelBuilder.Entity<Book>().Property(b => b.BookFormat).HasColumnType("format");
         }
     }
 }

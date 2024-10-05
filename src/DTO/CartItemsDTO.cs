@@ -26,8 +26,6 @@ namespace BookStore.src.DTO
             public int Quantity { get; set; }
             public double Price { get; set; }
             public Book Book { get; set; }
-            
-
         }
 
         // Update cart
@@ -35,11 +33,14 @@ namespace BookStore.src.DTO
         {
             [Range(1, int.MaxValue, ErrorMessage = "Quantity must be at least 1.")]
             public int Quantity { get; set; }
+
             [Required(ErrorMessage = "Book ID is required.")]
+            // book id is already provided in the endpoint so this is not needed.
+            //However, I'll keep it because i'm not sure wher exacly feda used it. @ali
             public Guid BookId { get; set; }
 
             // public double Price { get; set; }
-            // add book id or book 
+            // add book id or book
         }
     }
 }
