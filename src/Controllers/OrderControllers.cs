@@ -18,33 +18,32 @@ namespace BookStore.src.Controllers
     [Route("api/v1/[controller]")]
     public class OrdersController : ControllerBase
     {
-
         protected readonly IOrderServices _orderServices;
-
 
         public OrdersController(IOrderServices services)
         {
             _orderServices = services;
-
         }
 
         //Create Order
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<OrderReadDto>> CreateOnAsync([FromBody] OrderCreateDto orderCreateDto)
-
-
+        public async Task<ActionResult<OrderReadDto>> CreateOnAsync(
+            [FromBody] OrderCreateDto orderCreateDto
+        )
         {
             //by token
             var authenticateClaims = HttpContext.User;
             // get user id by claims
-            var userId = authenticateClaims.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+            var userId = authenticateClaims
+                .FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!
+                .Value;
             // string => Guid
             var userGuid = new Guid(userId);
 
             return await _orderServices.CreateOneAsync(userGuid, orderCreateDto);
-
         }
+
         //Get all Orders Info
         [HttpGet]
         [Authorize(Roles = "Admin")]
@@ -103,7 +102,10 @@ namespace BookStore.src.Controllers
         }
 
         //Get Order by UserId
-        [HttpGet("{id}")]
+        [HttpGet("userId/{id}")]
+        /*Manar, please.. why would we get the orders by userId? this is OrderController,
+        the expetations for this endpoint would be to get the Order by OrderId
+        You already did the UserOrder method which uses claims to return the user's orders, this is not needed. @ali */
         public async Task<ActionResult<OrderReadDto>> GetById([FromRoute] Guid id)
         {
             var order = await _orderServices.GetByIdAsync(id);
@@ -115,8 +117,24 @@ namespace BookStore.src.Controllers
 
             return Ok(order);
         }
+
+        [HttpGet("{orderId}")]
+        [Authorize(Roles = "Admin")]
+        //This method takes the OrderId and returns the Order if found. easy, simple, and nice. @ali
+        public async Task<ActionResult<OrderReadDto>> GetByOrderId([FromRoute] Guid orderId)
+        {
+            var order = await _orderServices.FindOrderByIdAsync(orderId);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(order);
+        }
+
         //Get User Orders
-        [HttpGet("orders")] // Route for getting user orders
+        [HttpGet("UserOrders")] //Route for getting user orders
         [Authorize]
         public async Task<ActionResult<List<OrderReadDto>>> GetAllUserOrder()
         {
@@ -147,10 +165,9 @@ namespace BookStore.src.Controllers
             return Ok(orders);
         }
 
-
-
         //Updata By Order Id
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")] //only admin can edit the order. customer can only send requests to support
         public async Task<ActionResult> UpdateOrder(Guid id, [FromBody] OrderUpdateDto orderUpdate)
         {
             try
@@ -168,7 +185,8 @@ namespace BookStore.src.Controllers
                 // If the update was unsuccessful, return NotFound
                 if (!updateSuccessful)
                 {
-                    return NotFound();
+                    return BadRequest();
+                    /* we already established that the order exist so it makes no sense to return NotFound() @ali*/
                 }
 
                 // Retrieve the updated order to get the new status
@@ -179,6 +197,7 @@ namespace BookStore.src.Controllers
                 {
                     PreviousStatus = existingOrder.OrderStatus.ToString(), // Convert enum to string
                     CurrentStatus = updatedOrder.OrderStatus.ToString() // Convert enum to string
+                    ,
                 };
 
                 return Ok(response); // Return 200 OK with the status information
@@ -194,19 +213,5 @@ namespace BookStore.src.Controllers
                 return StatusCode(500, "Internal server error: " + ex.Message);
             }
         }
-
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

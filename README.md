@@ -1,7 +1,7 @@
 # Bookstore Backend Project 📚
 
 ## Project Overview
-This is a backend solution for online bookstores. Built with .Net 6 and includes many functionalities that are considered initial for online stores. 
+This is a backend solution for online bookstores. Built with .Net 8 and includes many functionalities that are considered initial for online stores. 
 
 ## Features ✨
 
@@ -9,18 +9,23 @@ This is a backend solution for online bookstores. Built with .Net 6 and includes
   - Register new user
   - User authentication with JWT token
   - Role-based access control (Admin, Customer)
+  - Update user info
+  - Delete User
 - **Book Management**:
   - Add, update and delete books
   - Pagination to get all books
   - Search functionality implemented (Search by Title, Search by Author)
 - **Category Management**:
   - Add, update and delete catagories
+  - Get all categoies
 - **Cart & CartItmes Management**:
   - Add, update and delete carts
+  - Get all the carts with nested CartItems
 - **Order Management**:
-  - Create orders
-  - Pagination to get all orders
-  - Get total price
+  - Create orders using Cart
+  - Update Order status
+  - Get all Orders for Admin
+  - Get Orders using Customer Token
 
 ## Technologies Used
 
@@ -54,7 +59,7 @@ git clone git@github.com:ManarkhalidA/sda-3-online-Backend_Teamwork.git
 ```json
 {
   "ConnectionStrings": {
-    "Local": "Server=localhost;Database=ECommerceDb;User Id=your_username;Password=your_password;"
+    "Local": "Server=localhost;Database=BookStoreDB;User Id=your_username;Password=your_password;"
   }
 }
 ```

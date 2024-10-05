@@ -38,7 +38,7 @@ namespace BookStore.src.Utils
             {
                 Issuer = _config.GetSection("Jwt:Issuer").Value,
                 Audience = _config.GetSection("Jwt:Audience").Value,
-                Expires = DateTime.Now.AddHours(1.5),
+                Expires = DateTime.Now.AddHours(4.5),
                 Subject = new ClaimsIdentity(claims),
                 SigningCredentials = signinCredentials,
             };

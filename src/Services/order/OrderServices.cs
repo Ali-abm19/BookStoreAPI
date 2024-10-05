@@ -12,28 +12,43 @@ using static BookStore.src.DTO.OrderDTO;
 namespace BookStore.src.Services.order
 {
     public class OrderServices : IOrderServices
-
     {
-
-
         protected readonly OrderRepository _orderRepository;
         protected readonly IMapper _mapper;
-        public OrderServices(OrderRepository orderRepository, IMapper mapper)
+        protected readonly CartRepository _cartRepo;
+
+        public OrderServices(
+            OrderRepository orderRepository,
+            IMapper mapper,
+            CartRepository cartRepo
+        )
         {
             _orderRepository = orderRepository;
             _mapper = mapper;
-
+            _cartRepo = cartRepo;
         }
+
         //Create Order
         public async Task<OrderReadDto> CreateOneAsync(Guid userId, OrderCreateDto orderCreate)
         {
-            var order = _mapper.Map<OrderCreateDto, Order>(orderCreate);
+            var carts = await _cartRepo.GetAllAsync();
+            var userCart = carts.FirstOrDefault(c => c.UserId == userId);
+
+            var order = _mapper.Map<OrderCreateDto, Order>(orderCreate); //orderCreate only has CartId
             order.UserId = userId;
-            await _orderRepository.CreateOneAsync(order);
+            if (userCart != null)
+            {
+                order.CartId = userCart.CartId;
+                order.Cart = userCart;
+                order.DateCreated = DateTime.UtcNow;
+                order.TotalPrice = userCart.TotalPrice;
+                order.OrderStatus = Order.Status.Pending;
+                await _orderRepository.CreateOneAsync(order);
+            }
             return _mapper.Map<Order, OrderReadDto>(order);
         }
 
-        //Get Order by id  
+        //Get Order by id
 
         //Get all Orders Info
         public async Task<List<OrderReadDto>> GetAllAsync()
@@ -48,15 +63,12 @@ namespace BookStore.src.Services.order
             return _mapper.Map<List<Order>, List<OrderReadDto>>(orderList);
         }
 
-
         //Get by UserId
         public async Task<List<OrderReadDto>> GetByIdAsync(Guid id)
         {
             var orders = await _orderRepository.GetByIdAsync(id);
             var orderList = _mapper.Map<List<Order>, List<OrderReadDto>>(orders);
             return orderList;
-
-
         }
 
         public async Task<List<OrderReadDto>> GetAllByUserIdAsync(Guid userId)
@@ -71,7 +83,7 @@ namespace BookStore.src.Services.order
             var orders = await _orderRepository.GetByIdAsync(userId);
 
             // Check if orders are found
-            if (orders == null || !orders.Any())
+            if (orders == null || orders.Count == 0)
             {
                 throw CustomException.NotFound("No orders found for the user.");
             }
@@ -79,8 +91,7 @@ namespace BookStore.src.Services.order
             return _mapper.Map<List<Order>, List<OrderReadDto>>(orders);
         }
 
-
-        // //Delete Order 
+        // //Delete Order
 
         public async Task<bool> DeleteOneAsync(Guid id, Guid userId, bool isAdmin)
         {
@@ -101,8 +112,6 @@ namespace BookStore.src.Services.order
             return await _orderRepository.DeleteOneAsync(foundOrderById);
         }
 
-
-
         public async Task<bool> UpdateOneAsync(Guid id, OrderUpdateDto orderUpdate)
         {
             // Retrieve the order by ID using the new method
@@ -115,14 +124,16 @@ namespace BookStore.src.Services.order
             }
 
             // Update the properties selectively
-            if (orderUpdate.DateUpdated.HasValue)
-            {
-                foundOrderById.DateUpdated = orderUpdate.DateUpdated.Value;
-            }
-
+            //if (orderUpdate.DateUpdated.HasValue){foundOrderById.DateUpdated = orderUpdate.DateUpdated.Value;}
+            /* DateUpdated should update to Date.Now because this is an update method,
+            so by invoking it we are updating the date.
+            Request sender shouldn't input a date into the request to begin with. @ali*/
+            foundOrderById.DateUpdated = DateTime.UtcNow;
             if (orderUpdate.TotalPrice.HasValue)
             {
                 foundOrderById.TotalPrice = orderUpdate.TotalPrice.Value;
+                /*I don't think the price should be changed
+                but maybe the customer was offered a discount or something so i'll keep this for now @ali*/
             }
 
             foundOrderById.OrderStatus = orderUpdate.OrderStatus; // Update order status
@@ -147,4 +158,3 @@ namespace BookStore.src.Services.order
         }
     }
 }
-
