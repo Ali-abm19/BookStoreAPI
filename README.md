@@ -107,10 +107,10 @@ The API will be available at: `http://localhost:5125`
 ```bash
 |-- Controllers: API controllers with request and response
 |-- Database # DbContext and Database Configurations
-|-- DTOs # Data Transfer Objects
-|-- Entities # Database Entities (User, Book, Category, Cart, CartItems, Order)
-|-- Middleware # Logging request, response and Error Handler
-|-- Repositories # Repository Layer for database operations
+|-- DTO # Data Transfer Objects
+|-- Entity # Database Entities (User, Book, Category, Cart, CartItems, Order)
+|-- Middlewares # Logging request, response and Error Handler
+|-- Repository # Repository Layer for database operations
 |-- Services # Business Logic Layer
 |-- Utils # Customs Exception, Mapper Profile, Pagination Options, Password Utils, Token Utils
 |-- Migrations # Entity Framework Migrations
@@ -164,6 +164,18 @@ The API will be available at: `http://localhost:5125`
   - `POST /api/v1/Users/signUp`
   - `POST /api/v1/Users/signIn`
 
+
+## How to 📝
+Endpoint adjustments in get `api/v1/Books` for Search functionality:
+- title: `api/v1/Books?SearchByTitle=Algorithms%20in%20Depth`
+- author : `api/v1/Books?SearchByAuthor=Jane%20Doe`
+
+- price
+  - high : `api/v1/Books?Limit=6&SortByPrice=High%20to%20low`
+  - low : `api/v1/Books?Limit=6&SortByPrice=Low%20to%20high`
+
+- limit : `api/v1/Books?Limit=3`
+- offset : `api/v1/Books?Offset=2`
   
 ## Deployment
 
