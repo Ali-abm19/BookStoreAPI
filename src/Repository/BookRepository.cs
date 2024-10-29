@@ -33,7 +33,7 @@ namespace BookStore.src.Repository
         public async Task<List<Book>> GetAllAsync(PaginationOptions paginationOptions)
         {
             // Define an IQueryable to build the query dynamically
-            IQueryable<Book> query = _book;
+            IQueryable<Book> query = _book.Include(i => i.Category);
 
             if (!string.IsNullOrEmpty(paginationOptions.SearchByAuthor)) // search by author
             {
