@@ -10,6 +10,6 @@ namespace BookStore.src.Services.book
         Task<ReadBookDto> GetBookByIdAsync(Guid id);
         Task<bool> DeleteOneAsync(Guid id);
         Task<bool> UpdateOneAsync(Guid id, UpdateBookDto updateDto);
-        Task<List<ReadBookDto>> GetAllAsyncWithConditions();
+        // Task<List<ReadBookDto>> GetAllAsyncWithConditions();
     }
 }

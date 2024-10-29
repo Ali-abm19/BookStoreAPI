@@ -74,20 +74,20 @@ namespace BookStore.src.Controllers
             return Ok(isUpdated);
         }
 
-        [HttpGet("category/{category}")]
-        public async Task<ActionResult> GetBooksByCategory([FromRoute] string category)
-        {
-            var booksFromDB = await _bookService.GetAllAsyncWithConditions();
-            var booksWithinCategory = booksFromDB.FindAll(cat =>
-                cat.Category.CategoryName == category
-            );
+        // [HttpGet("category/{category}")]
+        // public async Task<ActionResult> GetBooksByCategory([FromRoute] string category)
+        // {
+        //     var booksFromDB = await _bookService.GetAllAsync();
+        //     var booksWithinCategory = booksFromDB.FindAll(cat =>
+        //         cat.Category.CategoryName == category
+        //     );
 
-            if (booksWithinCategory == null)
-            {
-                return NotFound();
-            }
+        //     if (booksWithinCategory == null)
+        //     {
+        //         return NotFound();
+        //     }
 
-            return Ok(booksWithinCategory);
-        }
+        //     return Ok(booksWithinCategory);
+        // }
     }
 }

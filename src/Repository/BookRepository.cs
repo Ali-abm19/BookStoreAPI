@@ -46,14 +46,18 @@ namespace BookStore.src.Repository
             }
 
             // Apply sorting by price: "Low to high" or "High to low"
-            if (paginationOptions.SortByPrice == "High to low")
+            if (paginationOptions.SortByPrice == "high_low")
             {
                 query = query.OrderByDescending(b => b.Price);
             }
-            else if (paginationOptions.SortByPrice == "Low to high")
+            else if (paginationOptions.SortByPrice == "low_high")
             {
                 query = query.OrderBy(b => b.Price);
             }
+
+            query = query.Where(b =>
+                b.Price > paginationOptions.MinPrice && b.Price < paginationOptions.MaxPrice
+            );
             // else // if null Low to high
             // query = query.OrderBy(b => b.Price);
 
@@ -61,19 +65,6 @@ namespace BookStore.src.Repository
             query = query.Skip(paginationOptions.Offset).Take(paginationOptions.Limit);
 
             return await query.ToListAsync();
-        }
-
-        public async Task<List<Book>> GetAllAsyncWithConditions() //(Func<Book, bool> expression)
-        {
-            var list = await _book.Include(i => i.Category).ToListAsync();
-            return list;
-        }
-
-        public async Task<List<Book>> GetAllAsyncWithConditions(Func<Book, bool> func) //(Func<Book, bool> expression)
-        {
-            var list = await _book.Include(i => i.Category).ToListAsync();
-            list = list.Where(func).ToList();
-            return list;
         }
 
         public async Task<bool> DeleteOneAsync(Book book)

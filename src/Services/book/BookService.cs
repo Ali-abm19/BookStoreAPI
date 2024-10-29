@@ -79,19 +79,19 @@ namespace BookStore.Services.book
             return dtos;
         }
 
-        public async Task<List<ReadBookDto>> GetAllAsyncWithConditions()
-        {
-            var books = await _BookRepository.GetAllAsyncWithConditions();
-            var dtos = _mapper.Map<List<Book>, List<ReadBookDto>>(books);
-            return dtos;
-        }
+        // public async Task<List<ReadBookDto>> GetAllAsyncWithConditions()
+        // {
+        //     var books = await _BookRepository.GetAllAsyncWithConditions();
+        //     var dtos = _mapper.Map<List<Book>, List<ReadBookDto>>(books);
+        //     return dtos;
+        // }
 
         public async Task<bool> UpdateOneAsync(Guid id, UpdateBookDto updateDto)
         {
             var bookToUpdate = await _BookRepository.GetBookByIdAsync(id);
             if (bookToUpdate == null)
             {
-                throw CustomException.NotFound($"Book {id} was not Found. Update faild ");
+                throw CustomException.NotFound($"Book {id} was not Found. Update failed ");
             }
             _mapper.Map(updateDto, bookToUpdate);
             return await _BookRepository.UpdateOneAsync(bookToUpdate);
