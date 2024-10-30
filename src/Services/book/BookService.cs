@@ -79,6 +79,11 @@ namespace BookStore.Services.book
             return dtos;
         }
 
+                public async Task<int> GetBookCount(){
+                    int count = await _BookRepository.GetBooksCount();
+                    return count;
+                }
+
         // public async Task<List<ReadBookDto>> GetAllAsyncWithConditions()
         // {
         //     var books = await _BookRepository.GetAllAsyncWithConditions();

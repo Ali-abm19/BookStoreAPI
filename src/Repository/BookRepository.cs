@@ -27,7 +27,7 @@ namespace BookStore.src.Repository
 
         public async Task<Book?> GetBookByIdAsync(Guid id)
         {
-            return await _book.FindAsync(id);
+            return await _book.Include(i=> i.Category).FirstOrDefaultAsync(f=>f.BookId == id);
         }
 
         public async Task<List<Book>> GetAllAsync(PaginationOptions paginationOptions)
@@ -37,20 +37,24 @@ namespace BookStore.src.Repository
 
             if (!string.IsNullOrEmpty(paginationOptions.SearchByAuthor)) // search by author
             {
-                query = query.Where(b => b.Author.Contains(paginationOptions.SearchByAuthor));
+                query = query.Where(b =>
+                    b.Author.ToLower().Contains(paginationOptions.SearchByAuthor.ToLower())
+                );
             }
 
             if (!string.IsNullOrEmpty(paginationOptions.SearchByTitle)) // search by title
             {
-                query = query.Where(b => b.Title.Contains(paginationOptions.SearchByTitle));
+                query = query.Where(b =>
+                    b.Title.ToLower().Contains(paginationOptions.SearchByTitle.ToLower())
+                );
             }
 
             // Apply sorting by price: "Low to high" or "High to low"
-            if (paginationOptions.SortByPrice == "high_low")
+            if (paginationOptions.SortByPrice.ToLower() == "high_low")
             {
                 query = query.OrderByDescending(b => b.Price);
             }
-            else if (paginationOptions.SortByPrice == "low_high")
+            else if (paginationOptions.SortByPrice.ToLower() == "low_high")
             {
                 query = query.OrderBy(b => b.Price);
             }
@@ -65,6 +69,11 @@ namespace BookStore.src.Repository
             query = query.Skip(paginationOptions.Offset).Take(paginationOptions.Limit);
 
             return await query.ToListAsync();
+        }
+
+        public async Task<int> GetBooksCount()
+        {
+            return await _book.CountAsync();
         }
 
         public async Task<bool> DeleteOneAsync(Book book)

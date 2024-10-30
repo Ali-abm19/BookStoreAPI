@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using BookStore.src.Utils;
 
 namespace BookStore.src.Entity
 {
@@ -21,6 +22,7 @@ namespace BookStore.src.Entity
         public string Email { get; set; }
         
         [DataType(DataType.Password), Required]
+        [PasswordComplexityAttribute]
         public string Password { get; set; }
 
         public byte[]? Salt { get; set; }

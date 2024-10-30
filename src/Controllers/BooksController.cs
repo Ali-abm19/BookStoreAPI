@@ -25,7 +25,10 @@ namespace BookStore.src.Controllers
         )
         {
             var bookList = await _bookService.GetAllAsync(paginationOptions);
-            return Ok(bookList);
+            var count = await _bookService.GetBookCount();
+            var response = new BookListDto { Books = bookList, Count = count };
+
+            return Ok(response);
         }
 
         [HttpGet("{id}")]

@@ -49,5 +49,11 @@ namespace BookStore.src.DTO
             public int? StockQuantity { get; set; }
             public Guid? CategoryId { get; set; }
         }
+
+        public class BookListDto
+        {
+            public List<ReadBookDto>? Books { get; set; }
+            public int Count { get; set; }
+        }
     }
 }

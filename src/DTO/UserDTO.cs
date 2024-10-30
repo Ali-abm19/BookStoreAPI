@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using BookStore.src.Entity;
+using BookStore.src.Utils;
 
 namespace BookStore.src.DTO
 {
@@ -21,6 +22,7 @@ namespace BookStore.src.DTO
             public string Email { get; set; }
 
             [DataType(DataType.Password), Required]
+            [PasswordComplexityAttribute]
             public string Password { get; set; }
         }
 

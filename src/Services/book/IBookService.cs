@@ -11,5 +11,7 @@ namespace BookStore.src.Services.book
         Task<bool> DeleteOneAsync(Guid id);
         Task<bool> UpdateOneAsync(Guid id, UpdateBookDto updateDto);
         // Task<List<ReadBookDto>> GetAllAsyncWithConditions();
+        Task<int> GetBookCount();
+        
     }
 }
