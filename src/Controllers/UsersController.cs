@@ -79,19 +79,19 @@ namespace BookStore.src.Controllers
         }
 
         [HttpPost("signIn")]
-        public async Task<ActionResult<string>> SignInUser([FromBody] UserSigninDto createDto)
+        public async Task<ActionResult<UserSignedInInfoDto>> SignInUser([FromBody] UserSigninDto createDto)
         {
-            var token = await _userService.SignInAsync(createDto);
-            if (token == "Not Found")
+            var SignedInDto = await _userService.SignInAsync(createDto);
+            if (SignedInDto.Token == "Not Found")
             {
                 return NotFound();
             }
-            else if (token == "Unauthorized")
+            else if (SignedInDto.Token == "Unauthorized")
             {
                 return Unauthorized();
             }
             else
-                return Ok(token);
+                return Ok(SignedInDto);
         }
     }
 }

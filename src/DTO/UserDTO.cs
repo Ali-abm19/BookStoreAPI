@@ -29,10 +29,9 @@ namespace BookStore.src.DTO
         public class UserSigninDto
         {
             [EmailAddress, Required]
-
             public string Email { get; set; }
-            [DataType(DataType.Password), Required]
 
+            [DataType(DataType.Password), Required]
             public string Password { get; set; }
         }
 
@@ -63,6 +62,12 @@ namespace BookStore.src.DTO
             public string Password { get; set; }
 
             public byte[]? Salt { get; set; }
+        }
+
+        public class UserSignedInInfoDto
+        {
+            public string Token { get; set; }
+            public UserReadDto dto { get; set; }
         }
     }
 }

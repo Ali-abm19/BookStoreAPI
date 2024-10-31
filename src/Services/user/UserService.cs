@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using BookStore.src.Entity;
 using BookStore.src.Repository;
@@ -90,7 +86,7 @@ namespace BookStore.src.Services.user
 
         //public static bool VerifyPassword(string plainPassword, byte[] salt, string hashedPassword)
 
-        public async Task<string> SignInAsync(UserSigninDto createDto)
+        public async Task<UserSignedInInfoDto> SignInAsync(UserSigninDto createDto)
         {
             bool isMatched = false;
             //var foundUser = await _userRepo.FindByEmailAsync(createDto.Email);
@@ -107,18 +103,22 @@ namespace BookStore.src.Services.user
                 if (isMatched)
                 {
                     var tokenUtil = new TokenUtils(_config);
-                    return tokenUtil.GnerateToken(foundUser);
+                    UserSignedInInfoDto u =  new()
+                    {
+                    dto =  _mapper.Map<User, UserReadDto>(foundUser),
+                    Token = tokenUtil.GnerateToken(foundUser)
+                    };
+                   
+
+                 return u;
                 }
-                // return "Unauthorized";
-                throw CustomException.UnAuthorized(
-                    $"Password for user with email {foundUser.Email} does not match !"
-                );
+                throw CustomException.UnAuthorized($"The Password or Email are wrong");
             }
             else
             {
                 //return "Not Found";
-                //ًWhen users entered email address does not exist in our database
-                throw CustomException.NotFound($"User with email {createDto.Email} not found.");
+                //When users entered email address does not exist in our database
+                throw CustomException.NotFound($"User with email {createDto.Email} was not found");
             }
         }
     }
