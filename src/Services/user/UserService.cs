@@ -57,15 +57,39 @@ namespace BookStore.src.Services.user
 
         public async Task<bool> UpdateOneAsync(Guid id, UserUpdateDto updateDto)
         {
-            var foundUser = await _userRepo.GetByIdAsync(id);
-
-            if (foundUser == null)
+            if (updateDto.Password != null)
             {
-                throw CustomException.NotFound($"user with ID {id} cannot be found for updating.");
-            }
+                PasswordUtils.Password(
+                    updateDto.Password,
+                    out string hashedPassword,
+                    out byte[] salt
+                );
+                updateDto.Password = hashedPassword;
+                var foundUser = await _userRepo.GetByIdAsync(id);
 
-            _mapper.Map(updateDto, foundUser);
-            return await _userRepo.UpdateOneAsync(foundUser);
+                if (foundUser == null)
+                {
+                    throw CustomException.NotFound(
+                        $"user with ID {id} cannot be found for updating."
+                    );
+                }
+
+                _mapper.Map(updateDto, foundUser);
+                foundUser.Salt = salt;
+                return await _userRepo.UpdateOneAsync(foundUser);
+            }
+            else
+            {
+                var foundUser = await _userRepo.GetByIdAsync(id);
+                if (foundUser == null)
+                {
+                    throw CustomException.NotFound(
+                        $"user with ID {id} cannot be found for updating."
+                    );
+                }
+                _mapper.Map(updateDto, foundUser);
+                return await _userRepo.UpdateOneAsync(foundUser);
+            }
         }
 
         //  public Task<string> SignInAsync(UserCreateDto createDto)
@@ -103,14 +127,14 @@ namespace BookStore.src.Services.user
                 if (isMatched)
                 {
                     var tokenUtil = new TokenUtils(_config);
-                    UserSignedInInfoDto u =  new()
-                    {
-                    dto =  _mapper.Map<User, UserReadDto>(foundUser),
-                    Token = tokenUtil.GnerateToken(foundUser)
-                    };
-                   
+                    UserSignedInInfoDto u =
+                        new()
+                        {
+                            dto = _mapper.Map<User, UserReadDto>(foundUser),
+                            Token = tokenUtil.GnerateToken(foundUser),
+                        };
 
-                 return u;
+                    return u;
                 }
                 throw CustomException.UnAuthorized($"The Password or Email are wrong");
             }

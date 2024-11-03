@@ -57,11 +57,9 @@ namespace BookStore.src.DTO
 
             public long? Phone { get; set; }
 
-            public string Email { get; set; }
-
-            public string Password { get; set; }
-
-            public byte[]? Salt { get; set; }
+            [DataType(DataType.Password)]
+            [PasswordComplexityAttribute]
+            public string? Password { get; set; }
         }
 
         public class UserSignedInInfoDto

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
 using BookStore.src.Entity;
@@ -48,7 +49,7 @@ namespace BookStore.src.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         public async Task<ActionResult> UpdateOne(Guid id, UserUpdateDto updateDto)
         {
             var userUpdatedById = await _userService.UpdateOneAsync(id, updateDto);
@@ -79,7 +80,9 @@ namespace BookStore.src.Controllers
         }
 
         [HttpPost("signIn")]
-        public async Task<ActionResult<UserSignedInInfoDto>> SignInUser([FromBody] UserSigninDto createDto)
+        public async Task<ActionResult<UserSignedInInfoDto>> SignInUser(
+            [FromBody] UserSigninDto createDto
+        )
         {
             var SignedInDto = await _userService.SignInAsync(createDto);
             if (SignedInDto.Token == "Not Found")
@@ -93,5 +96,16 @@ namespace BookStore.src.Controllers
             else
                 return Ok(SignedInDto);
         }
+
+        //I think I don't need this method
+        // [HttpGet("authenticateUser")]
+        // [Authorize]
+        // public async Task<ActionResult<UserReadDto>> AuthenticateUser()
+        // {
+        //     var claim = HttpContext.User;
+        //     Guid userId = new(claim.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value);
+
+        //     return Ok(await _userService.GetByIdAsync(userId));
+        // }
     }
 }
