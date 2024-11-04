@@ -12,7 +12,7 @@ namespace BookStore.src.Services.user
         Task<List<UserReadDto>> GetAllAsync();
         Task<UserReadDto> GetByIdAsync(Guid id);
         Task<bool> DeleteOneAsync(Guid id);
-        Task<bool> UpdateOneAsync(Guid id, UserUpdateDto updateDto);
+        Task<UserReadDto> UpdateOneAsync(Guid id, UserUpdateDto updateDto);
         Task<UserSignedInInfoDto> SignInAsync(UserSigninDto createDto);
     }
 }

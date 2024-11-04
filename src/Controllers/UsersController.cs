@@ -53,11 +53,12 @@ namespace BookStore.src.Controllers
         public async Task<ActionResult> UpdateOne(Guid id, UserUpdateDto updateDto)
         {
             var userUpdatedById = await _userService.UpdateOneAsync(id, updateDto);
-            if (!userUpdatedById)
-            {
-                return NotFound();
-            }
-            return Ok();
+            
+            // if (userUpdatedById!=null)
+            // {
+            //     return NotFound();
+            // }
+            return Ok(userUpdatedById);
         }
 
         [HttpDelete("{id}")]
@@ -97,15 +98,14 @@ namespace BookStore.src.Controllers
                 return Ok(SignedInDto);
         }
 
-        //I think I don't need this method
-        // [HttpGet("authenticateUser")]
-        // [Authorize]
-        // public async Task<ActionResult<UserReadDto>> AuthenticateUser()
-        // {
-        //     var claim = HttpContext.User;
-        //     Guid userId = new(claim.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value);
+        [HttpGet("authenticateUser")]
+        [Authorize]
+        public async Task<ActionResult<UserReadDto>> AuthenticateUser()
+        {
+            var claim = HttpContext.User;
+            Guid userId = new(claim.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value);
 
-        //     return Ok(await _userService.GetByIdAsync(userId));
-        // }
+            return Ok(await _userService.GetByIdAsync(userId));
+        }
     }
 }

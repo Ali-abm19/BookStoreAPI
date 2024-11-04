@@ -57,7 +57,7 @@ namespace BookStore.src.DTO
 
             public long? Phone { get; set; }
 
-            [DataType(DataType.Password)]
+            // [DataType(DataType.Password)]
             [PasswordComplexityAttribute]
             public string? Password { get; set; }
         }

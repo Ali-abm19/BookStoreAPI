@@ -55,9 +55,9 @@ namespace BookStore.src.Services.user
             }
         }
 
-        public async Task<bool> UpdateOneAsync(Guid id, UserUpdateDto updateDto)
+        public async Task<UserReadDto> UpdateOneAsync(Guid id, UserUpdateDto updateDto)
         {
-            if (updateDto.Password != null)
+            if (!string.IsNullOrWhiteSpace(updateDto.Password))
             {
                 PasswordUtils.Password(
                     updateDto.Password,
@@ -76,7 +76,9 @@ namespace BookStore.src.Services.user
 
                 _mapper.Map(updateDto, foundUser);
                 foundUser.Salt = salt;
-                return await _userRepo.UpdateOneAsync(foundUser);
+
+                //return await _userRepo.UpdateOneAsync(foundUser);
+                return _mapper.Map<User, UserReadDto>(await _userRepo.UpdateOneAsync(foundUser));
             }
             else
             {
@@ -87,8 +89,9 @@ namespace BookStore.src.Services.user
                         $"user with ID {id} cannot be found for updating."
                     );
                 }
+                updateDto.Password = foundUser.Password;
                 _mapper.Map(updateDto, foundUser);
-                return await _userRepo.UpdateOneAsync(foundUser);
+                return _mapper.Map<User, UserReadDto>(await _userRepo.UpdateOneAsync(foundUser));
             }
         }
 

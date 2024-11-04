@@ -24,7 +24,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // connect database
 NpgsqlDataSourceBuilder dataSourceBuilder = new NpgsqlDataSourceBuilder(
-    builder.Configuration.GetConnectionString("Local"));
+    builder.Configuration.GetConnectionString("Local")
+);
 
 // add auto-mapper
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
@@ -100,10 +101,12 @@ builder.Services.AddCors(options =>
         name: MyAllowSpecificOrigins,
         policy =>
         {
-            policy.WithOrigins("http://localhost:3000")                          .AllowAnyHeader()
-                            .AllowAnyMethod()
-                            .SetIsOriginAllowed((host) => true)
-                            .AllowCredentials();
+            policy
+                .WithOrigins("http://localhost:3000")
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .SetIsOriginAllowed((host) => true)
+                .AllowCredentials();
         }
     );
 });
@@ -141,6 +144,7 @@ app.UseMiddleware<LoggingMiddleware>();
 app.UseMiddleware<ErrorHandlerMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseCors(MyAllowSpecificOrigins);
 
 // step 2: use
 app.MapControllers();
@@ -150,7 +154,5 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseCors(MyAllowSpecificOrigins);
 
 app.Run();

@@ -27,11 +27,11 @@ namespace BookStore.src.Repository
             return newUser;
         }
 
-        public async Task<bool> UpdateOneAsync(User updateUser)
+        public async Task<User> UpdateOneAsync(User updateUser)
         {
             _user.Update(updateUser);
             await _databaseContext.SaveChangesAsync();
-            return true;
+            return updateUser;
         }
         public async Task<bool> DeleteOneAsync(User user)
         {
