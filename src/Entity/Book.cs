@@ -17,8 +17,9 @@ public class Book
     [Range(1, double.MaxValue, ErrorMessage = "Price is not valid")]
     public double Price { get; set; }
 
-    [Range(1, double.MaxValue, ErrorMessage = "Stock Quantitiy is not valid")]
+    [Range(1, double.MaxValue, ErrorMessage = "Stock Quantity is not valid")]
     public int StockQuantity { get; set; }
+    public string? Image { get; set; }
     public Format BookFormat { get; set; }
 
     //connections to other entities

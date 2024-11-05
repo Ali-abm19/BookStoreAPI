@@ -16,11 +16,11 @@ namespace BookStore.src.Entity
 
         public string? Address { get; set; }
 
-        public long? Phone { get; set; }
+        public string? Phone { get; set; }
 
         [EmailAddress, Required]
         public string Email { get; set; }
-        
+
         [DataType(DataType.Password), Required]
         [PasswordComplexityAttribute]
         public string Password { get; set; }
@@ -33,14 +33,13 @@ namespace BookStore.src.Entity
 
         public Guid? OrderId { get; set; }
         public List<Order>? Order { get; set; }
-        
-         [ForeignKey("CartId")]
+
+        [ForeignKey("CartId")]
         public Guid? CartId { get; set; }
         // \\public Cart? Cart { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
-
     public enum Role
     {
         Admin,

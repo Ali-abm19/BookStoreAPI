@@ -16,7 +16,7 @@ namespace BookStore.src.DTO
 
             public string? Address { get; set; }
 
-            public long? Phone { get; set; }
+            public string? Phone { get; set; }
 
             [EmailAddress, Required]
             public string Email { get; set; }
@@ -42,7 +42,7 @@ namespace BookStore.src.DTO
 
             public string? Address { get; set; }
 
-            public long? Phone { get; set; }
+            public string? Phone { get; set; }
 
             public string Email { get; set; }
 
@@ -55,7 +55,7 @@ namespace BookStore.src.DTO
 
             public string? Address { get; set; }
 
-            public long? Phone { get; set; }
+            public string? Phone { get; set; }
 
             // [DataType(DataType.Password)]
             [PasswordComplexityAttribute]

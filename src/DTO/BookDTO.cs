@@ -18,6 +18,7 @@ namespace BookStore.src.DTO
 
             [Range(1, double.MaxValue, ErrorMessage = "Stock Quantitiy is not valid")]
             public int StockQuantity { get; set; }
+            public string? Image { get; set; }
             public Format BookFormat { get; set; }
 
             [Required]
@@ -32,6 +33,7 @@ namespace BookStore.src.DTO
             public string Author { get; set; }
             public double Price { get; set; }
             public int StockQuantity { get; set; }
+            public string? Image { get; set; }
             public Format BookFormat { get; set; }
             public Category Category { get; set; }
         }
@@ -47,6 +49,7 @@ namespace BookStore.src.DTO
 
             [Range(1, double.MaxValue, ErrorMessage = "Stock Quantitiy is not valid")]
             public int? StockQuantity { get; set; }
+            public string? Image { get; set; }
             public Guid? CategoryId { get; set; }
         }
 

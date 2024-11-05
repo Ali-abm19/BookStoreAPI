@@ -32,7 +32,7 @@ builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 
 dataSourceBuilder.MapEnum<Role>();
 dataSourceBuilder.MapEnum<Status>();
-dataSourceBuilder.MapEnum<Format>(); // why isn't order here?
+dataSourceBuilder.MapEnum<Format>();
 
 var dataSourceBuild = dataSourceBuilder.Build();
 
