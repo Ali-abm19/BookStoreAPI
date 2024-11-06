@@ -60,7 +60,7 @@ namespace BookStore.src.Repository
             }
 
             query = query.Where(b =>
-                b.Price > paginationOptions.MinPrice && b.Price < paginationOptions.MaxPrice
+                b.Price >= paginationOptions.MinPrice && b.Price < paginationOptions.MaxPrice
             );
             // else // if null Low to high
             // query = query.OrderBy(b => b.Price);

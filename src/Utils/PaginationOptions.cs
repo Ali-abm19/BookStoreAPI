@@ -17,7 +17,7 @@ namespace BookStore.src.Utils
         public string? SearchByAuthor { get; set; } //  author search
         public string? SearchByTitle { get; set; }  //  title search
         public string SortByPrice { get; set; } = ""; // sort by price "high_low" and "low_high"
-        public int? MinPrice { get; set; } = 0;
-        public int? MaxPrice { get; set; } = 1000;
+        public double? MinPrice { get; set; } = 0;
+        public double? MaxPrice { get; set; } = 1000;
     }
 }
