@@ -27,31 +27,51 @@ namespace BookStore.Repository
         // create new cart item
         public async Task<CartItems> CreateOneAsync(CartItems newCartItem)
         {
-            var book = await _bookRepository.GetBookByIdAsync(newCartItem.BookId);
-
-            if (book != null)
+            var itemAlreadyExist = _cartRepository
+                .GetByIdAsync(newCartItem.CartId)
+                .Result.CartItems.Find(b => b.BookId == newCartItem.BookId);
+            if (itemAlreadyExist == null)
             {
-                newCartItem.Price = book.Price * newCartItem.Quantity;
-                newCartItem.Book = book;
+                var book = await _bookRepository.GetBookByIdAsync(newCartItem.BookId);
 
-                await _cartItems.AddAsync(newCartItem);
-                await _databaseContext.SaveChangesAsync();
+                if (book != null)
+                {
+                    newCartItem.Price = book.Price * newCartItem.Quantity;
+                    newCartItem.Book = book;
+
+                    await _cartItems.AddAsync(newCartItem);
+                    await _databaseContext.SaveChangesAsync();
+                }
+
+                return newCartItem;
             }
+            else
+            {
+                var book = await _bookRepository.GetBookByIdAsync(newCartItem.BookId);
+                itemAlreadyExist.Quantity += newCartItem.Quantity;
+                if (book != null)
+                {
+                    newCartItem.Price = book.Price * newCartItem.Quantity;
+                    newCartItem.Book = book;
 
-            return newCartItem;
+                    _cartItems.Update(itemAlreadyExist);
+                    await _databaseContext.SaveChangesAsync();
+                }
+
+                return newCartItem;
+            }
         }
 
         //get cart item by ID
         public async Task<CartItems?> GetByIdAsync(Guid id)
         {
-             var cartItemById = await _cartItems
+            var cartItemById = await _cartItems
                 .Include(c => c.Book)
                 .FirstOrDefaultAsync(c => c.CartItemsId == id);
-          
+
             await _databaseContext.SaveChangesAsync();
 
             return cartItemById;
-          
         }
 
         // get all cart items
@@ -60,7 +80,7 @@ namespace BookStore.Repository
             return await _cartItems.Include(b => b.Book).ToListAsync();
         }
 
-        //delete cart item 
+        //delete cart item
         public async Task<bool> DeleteOneAsync(CartItems cart)
         {
             _cartItems.Remove(cart);

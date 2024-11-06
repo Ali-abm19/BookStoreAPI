@@ -11,7 +11,6 @@ namespace BookStore.src.Services.cart
         protected readonly CartRepository _cartRepo;
         protected readonly IMapper _mapper;
 
-
         // Dependency Injection
         public CartService(CartRepository cartRepo, IMapper mapper)
         {
@@ -20,14 +19,23 @@ namespace BookStore.src.Services.cart
         }
 
         // Create a new cart
-        
+
         public async Task<CartReadDto> CreateOneAsync(CartCreateDto createDto)
         {
-            var cart = _mapper.Map<CartCreateDto, Cart>(createDto);
+            var allCarts = await _cartRepo.GetAllAsync();
+            var existingCart = allCarts.Find(x => x.UserId == createDto.UserId);
+            if (existingCart == null)
+            {
+                var cart = _mapper.Map<CartCreateDto, Cart>(createDto);
 
-            var createdCart = await _cartRepo.CreateOneAsync(cart);
+                var createdCart = await _cartRepo.CreateOneAsync(cart);
 
-            return _mapper.Map<Cart, CartReadDto>(createdCart);
+                return _mapper.Map<Cart, CartReadDto>(createdCart);
+            }
+            else
+            {
+                return _mapper.Map<Cart, CartReadDto>(existingCart);
+            }
         }
 
         public async Task<List<CartReadDto>> GetAllAsync()
@@ -50,7 +58,7 @@ namespace BookStore.src.Services.cart
         public async Task<bool> DeleteOneAsync(Guid id)
         {
             var foundCart = await _cartRepo.GetByIdAsync(id);
-              if (foundCart == null)
+            if (foundCart == null)
             {
                 throw CustomException.NotFound($"Cart with {id}cannot be found for deletion!");
             }

@@ -8,7 +8,7 @@ namespace BookStore.src.Repository
 {
     public class CartRepository
     {
-        // table
+       
         protected DbSet<Cart> _cart;
         protected DatabaseContext _databaseContext;
 

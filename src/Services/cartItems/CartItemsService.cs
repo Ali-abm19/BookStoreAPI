@@ -27,7 +27,7 @@ namespace BookStore.src.Services.cartItems
 
 
             var cartItem = _mapper.Map<CartItemsCreateDto, CartItems>(createDto);
-            cartItem.CartItemsId = Guid.NewGuid();
+            //cartItem.CartItemsId = Guid.NewGuid();
 
             var book = await _bookRepository.GetBookByIdAsync(cartItem.BookId);
 
