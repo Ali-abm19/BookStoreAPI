@@ -51,8 +51,8 @@ namespace BookStore.Repository
                 itemAlreadyExist.Quantity += newCartItem.Quantity;
                 if (book != null)
                 {
-                    newCartItem.Price = book.Price * newCartItem.Quantity;
-                    newCartItem.Book = book;
+                    itemAlreadyExist.Price = book.Price * itemAlreadyExist.Quantity;
+                    itemAlreadyExist.Book = book;
 
                     _cartItems.Update(itemAlreadyExist);
                     await _databaseContext.SaveChangesAsync();
