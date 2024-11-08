@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using AutoMapper;
 using BookStore.src.Entity;
 using BookStore.src.Repository;
@@ -10,15 +11,15 @@ namespace BookStore.src.Services.cart
     {
         protected readonly CartRepository _cartRepo;
         protected readonly IMapper _mapper;
+        protected readonly BookRepository _bookRepo;
 
-        // Dependency Injection
-        public CartService(CartRepository cartRepo, IMapper mapper)
+        public CartService(CartRepository cartRepo, BookRepository bookRepo, IMapper mapper)
         {
             _cartRepo = cartRepo;
+            _bookRepo = bookRepo;
             _mapper = mapper;
         }
 
-        // Create a new cart
 
         public async Task<CartReadDto> CreateOneAsync(CartCreateDto createDto)
         {
@@ -57,11 +58,15 @@ namespace BookStore.src.Services.cart
 
         public async Task<bool> DeleteOneAsync(Guid id)
         {
-            var foundCart = await _cartRepo.GetByIdAsync(id);
-            if (foundCart == null)
-            {
-                throw CustomException.NotFound($"Cart with {id}cannot be found for deletion!");
-            }
+            var foundCart =
+                await _cartRepo.GetByIdAsync(id)
+                ?? throw CustomException.NotFound($"Cart with {id} cannot be found for deletion!");
+
+            foreach (var cartItem in foundCart.CartItems) {
+                var b = await _bookRepo.GetBookByIdAsync(cartItem.BookId);
+                b.StockQuantity += cartItem.Quantity;
+                await _bookRepo.UpdateOneAsync(b);
+             }
 
             bool isDeleted = await _cartRepo.DeleteOneAsync(foundCart);
             return isDeleted;

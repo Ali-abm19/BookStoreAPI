@@ -67,6 +67,7 @@ namespace BookStore.Repository
         {
             var cartItemById = await _cartItems
                 .Include(c => c.Book)
+                .ThenInclude(c => c.Category)
                 .FirstOrDefaultAsync(c => c.CartItemsId == id);
 
             await _databaseContext.SaveChangesAsync();
@@ -77,10 +78,9 @@ namespace BookStore.Repository
         // get all cart items
         public async Task<List<CartItems>> GetAllAsync()
         {
-            return await _cartItems.Include(b => b.Book).ToListAsync();
+            return await _cartItems.Include(b => b.Book).ThenInclude(c => c.Category).ToListAsync();
         }
 
-        //delete cart item
         public async Task<bool> DeleteOneAsync(CartItems cart)
         {
             _cartItems.Remove(cart);
@@ -88,10 +88,10 @@ namespace BookStore.Repository
             return true;
         }
 
-        //update cart
-        public async Task<bool> UpdateOneAsync(CartItems updateCart)
+        public async Task<bool> UpdateOneAsync(CartItems updateCartItem)
         {
-            _cartItems.Update(updateCart);
+            updateCartItem.Price = updateCartItem.Book.Price * updateCartItem.Quantity;
+            _cartItems.Update(updateCartItem);
             await _databaseContext.SaveChangesAsync();
             return true;
         }

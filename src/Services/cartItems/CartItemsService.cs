@@ -84,7 +84,6 @@ namespace BookStore.src.Services.cartItems
             return isDeleted;
         }
 
-        // Update an existing cart
         public async Task<bool> UpdateOneAsync(Guid id, CartItemsUpdateDto updateDto)
         {
             var foundCartItem = await _cartItemsRepo.GetByIdAsync(id);
