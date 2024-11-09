@@ -13,7 +13,6 @@ namespace BookStore.src.Services.cartItems
         protected readonly BookRepository _bookRepository;
         protected readonly IMapper _mapper;
 
-        // Dependency Injection
         public CartItemsService(CartItemsRepository cartItemsRepo, BookRepository bookRepository, IMapper mapper)
         {
             _cartItemsRepo = cartItemsRepo;
@@ -21,14 +20,11 @@ namespace BookStore.src.Services.cartItems
             _mapper = mapper;
         }
 
-        // Create a new cart
         public async Task<CartItemsReadDto> CreateOneAsync(CartItemsCreateDto createDto)
         {
 
 
             var cartItem = _mapper.Map<CartItemsCreateDto, CartItems>(createDto);
-            //cartItem.CartItemsId = Guid.NewGuid();
-
             var book = await _bookRepository.GetBookByIdAsync(cartItem.BookId);
 
             if (book == null)

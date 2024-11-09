@@ -12,13 +12,11 @@ namespace BookStore.src.Controllers
     {
         protected readonly ICartItemsService _cartItemsService;
 
-        // Dependency Injection
         public CartItemsController(ICartItemsService cartItemsService)
         {
             _cartItemsService = cartItemsService;
         }
 
-        // Create a new cart
         [HttpPost]
         public async Task<ActionResult<CartItemsReadDto>> CreateOne(
             [FromBody] CartItemsCreateDto createDto
@@ -37,6 +35,7 @@ namespace BookStore.src.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<CartItemsReadDto>> GetById([FromRoute] Guid id)
         {
             var foundCart = await _cartItemsService.GetByIdAsync(id);
@@ -48,6 +47,7 @@ namespace BookStore.src.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult> DeleteOne(Guid id)
         {
             bool isDeleted = await _cartItemsService.DeleteOneAsync(id);
@@ -59,6 +59,7 @@ namespace BookStore.src.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<ActionResult> UpdateOne(Guid id, CartItemsUpdateDto updateDto)
         {
             bool isUpdated = await _cartItemsService.UpdateOneAsync(id, updateDto);

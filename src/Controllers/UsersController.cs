@@ -98,14 +98,14 @@ namespace BookStore.src.Controllers
                 return Ok(SignedInDto);
         }
 
-        [HttpGet("authenticateUser")]
-        [Authorize]
-        public async Task<ActionResult<UserReadDto>> AuthenticateUser()
-        {
-            var claim = HttpContext.User;
-            Guid userId = new(claim.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value);
+        // [HttpGet("authenticateUser")]
+        // [Authorize]
+        // public async Task<ActionResult<UserReadDto>> AuthenticateUser()
+        // {
+        //     var claim = HttpContext.User;
+        //     Guid userId = new(claim.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value);
 
-            return Ok(await _userService.GetByIdAsync(userId));
-        }
+        //     return Ok(await _userService.GetByIdAsync(userId));
+        // }
     }
 }
