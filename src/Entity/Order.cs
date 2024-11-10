@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+
 
 namespace BookStore.src.Entity
 {
@@ -22,18 +19,11 @@ namespace BookStore.src.Entity
         [Required(ErrorMessage = "You must choose a status")]
         public Status OrderStatus { get; set; }
 
-        //public String log //<- wish i have time to add this :( @ali 10/4/2024 11PM
+        public List<string>? Log { get; set; }
 
-        // connnections with other entities
-        public Guid UserId { get; set; } //handled in the repo @ali
-        //public User User { get; set; } // handled in the repo @ali 
-        //actually, I decided we don't need the whole User object.
-
-        // public Guid CartId { get; set; }
-        public Guid CartId { get; set; } //i wamt list from the cat 1:21 more than book
-
-        //Manar used cartItems below.
-        //this is redundent logic for cart. we should just use cart @ali
+        // connections with other entities
+        public Guid UserId { get; set; }
+        public Guid CartId { get; set; }
         public Cart Cart { get; set; }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]

@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace BookStore.src.Entity;
@@ -21,6 +20,7 @@ public class Book
     public int StockQuantity { get; set; }
     public string? Image { get; set; }
     public Format BookFormat { get; set; }
+    public string? Description { get; set; }
 
     //connections to other entities
     //[ForeignKey("CategoryCategoryId")]

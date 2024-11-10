@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 using AutoMapper;
 using BookStore.src.Entity;
 using BookStore.src.Repository;
@@ -28,13 +23,12 @@ namespace BookStore.src.Services.order
             _cartRepo = cartRepo;
         }
 
-        //Create Order
         public async Task<OrderReadDto> CreateOneAsync(Guid userId, OrderCreateDto orderCreate)
         {
             var carts = await _cartRepo.GetAllAsync();
             var userCart = carts.FirstOrDefault(c => c.UserId == userId);
 
-            var order = _mapper.Map<OrderCreateDto, Order>(orderCreate); //orderCreate only has CartId
+            var order = _mapper.Map<OrderCreateDto, Order>(orderCreate);
             order.UserId = userId;
             if (userCart != null)
             {
@@ -43,14 +37,14 @@ namespace BookStore.src.Services.order
                 order.DateCreated = DateTime.UtcNow;
                 order.TotalPrice = userCart.TotalPrice;
                 order.OrderStatus = Order.Status.Pending;
+                order.Log.Add(
+                    $"Order created at {DateTime.UtcNow} with status {order.OrderStatus}"
+                );
                 await _orderRepository.CreateOneAsync(order);
             }
             return _mapper.Map<Order, OrderReadDto>(order);
         }
 
-        //Get Order by id
-
-        //Get all Orders Info
         public async Task<List<OrderReadDto>> GetAllAsync()
         {
             var orderList = await _orderRepository.GetAllAsync();
@@ -73,16 +67,13 @@ namespace BookStore.src.Services.order
 
         public async Task<List<OrderReadDto>> GetAllByUserIdAsync(Guid userId)
         {
-            // Check if userId is empty
             if (userId == Guid.Empty)
             {
                 throw CustomException.BadRequest("User ID cannot be empty.");
             }
 
-            // Fetch orders for the given user ID
             var orders = await _orderRepository.GetByIdAsync(userId);
 
-            // Check if orders are found
             if (orders == null || orders.Count == 0)
             {
                 throw CustomException.NotFound("No orders found for the user.");
@@ -90,8 +81,6 @@ namespace BookStore.src.Services.order
 
             return _mapper.Map<List<Order>, List<OrderReadDto>>(orders);
         }
-
-        // //Delete Order
 
         public async Task<bool> DeleteOneAsync(Guid id, Guid userId, bool isAdmin)
         {
@@ -107,8 +96,6 @@ namespace BookStore.src.Services.order
             {
                 throw CustomException.Forbidden("You do not have permission to delete this order.");
             }
-
-            // Proceed to delete the order
             return await _orderRepository.DeleteOneAsync(foundOrderById);
         }
 
@@ -123,37 +110,20 @@ namespace BookStore.src.Services.order
                 throw CustomException.NotFound("Order not found with the specified ID.");
             }
 
-            // Update the properties selectively
-            //if (orderUpdate.DateUpdated.HasValue){foundOrderById.DateUpdated = orderUpdate.DateUpdated.Value;}
-            /* DateUpdated should update to Date.Now because this is an update method,
-            so by invoking it we are updating the date.
-            Request sender shouldn't input a date into the request to begin with. @ali*/
             foundOrderById.DateUpdated = DateTime.UtcNow;
-            if (orderUpdate.TotalPrice.HasValue)
-            {
-                foundOrderById.TotalPrice = orderUpdate.TotalPrice.Value;
-                /*I don't think the price should be changed
-                but maybe the customer was offered a discount or something so i'll keep this for now @ali*/
-            }
+            foundOrderById.Log.Add(
+                $"Order updated from {foundOrderById.OrderStatus} to {orderUpdate.OrderStatus} at {DateTime.UtcNow}"
+            );
 
-            foundOrderById.OrderStatus = orderUpdate.OrderStatus; // Update order status
-
-            // Call the repository to update the order
+            foundOrderById.OrderStatus = orderUpdate.OrderStatus;
             return await _orderRepository.UpdateOneAsync(foundOrderById);
         }
 
         public async Task<OrderReadDto> FindOrderByIdAsync(Guid id)
         {
-            // Use the repository to find the order by ID
-            var order = await _orderRepository.FindOrderByIdAsync(id);
-
-            // Check if the order exists
-            if (order == null)
-            {
-                throw CustomException.NotFound("Order not found with the specified ID.");
-            }
-
-            // Map the found order to OrderReadDto and return it
+            var order =
+                await _orderRepository.FindOrderByIdAsync(id)
+                ?? throw CustomException.NotFound("Order not found with the specified ID.");
             return _mapper.Map<Order, OrderReadDto>(order);
         }
     }
