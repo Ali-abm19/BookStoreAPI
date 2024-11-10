@@ -13,7 +13,11 @@ namespace BookStore.src.Services.cartItems
         protected readonly BookRepository _bookRepository;
         protected readonly IMapper _mapper;
 
-        public CartItemsService(CartItemsRepository cartItemsRepo, BookRepository bookRepository, IMapper mapper)
+        public CartItemsService(
+            CartItemsRepository cartItemsRepo,
+            BookRepository bookRepository,
+            IMapper mapper
+        )
         {
             _cartItemsRepo = cartItemsRepo;
             _bookRepository = bookRepository;
@@ -22,8 +26,6 @@ namespace BookStore.src.Services.cartItems
 
         public async Task<CartItemsReadDto> CreateOneAsync(CartItemsCreateDto createDto)
         {
-
-
             var cartItem = _mapper.Map<CartItemsCreateDto, CartItems>(createDto);
             var book = await _bookRepository.GetBookByIdAsync(cartItem.BookId);
 
@@ -35,7 +37,9 @@ namespace BookStore.src.Services.cartItems
             // Check if there is enough quantity of the book available
             if (book.StockQuantity < cartItem.Quantity)
             {
-                throw CustomException.BadRequest($"Not enough stock available for book: {book.Title}. Available: {book.StockQuantity}");
+                throw CustomException.BadRequest(
+                    $"Not enough stock available for book: {book.Title}. Available: {book.StockQuantity}"
+                );
             }
 
             cartItem.Price = book.Price * cartItem.Quantity; // Update the price of item based on the book price
@@ -44,7 +48,7 @@ namespace BookStore.src.Services.cartItems
 
             await _bookRepository.UpdateOneAsync(book); // // Update the book quantity in the repository
 
-            var createdCartItem = await _cartItemsRepo.CreateOneAsync(cartItem);  // Create the cart item
+            var createdCartItem = await _cartItemsRepo.CreateOneAsync(cartItem); // Create the cart item
             return _mapper.Map<CartItems, CartItemsReadDto>(createdCartItem);
         }
 
@@ -83,6 +87,19 @@ namespace BookStore.src.Services.cartItems
         public async Task<bool> UpdateOneAsync(Guid id, CartItemsUpdateDto updateDto)
         {
             var foundCartItem = await _cartItemsRepo.GetByIdAsync(id);
+            var book = await _bookRepository.GetBookByIdAsync(foundCartItem.BookId);
+
+            //                     5 old > new 4
+            if (foundCartItem.Quantity > updateDto.Quantity)
+            {
+                book.StockQuantity++;
+            }
+            else if (foundCartItem.Quantity < updateDto.Quantity)
+            {
+                book.StockQuantity--;
+            }
+
+            await _bookRepository.UpdateOneAsync(book);
 
             if (foundCartItem == null)
             {
