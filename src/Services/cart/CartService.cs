@@ -12,20 +12,31 @@ namespace BookStore.src.Services.cart
         protected readonly CartRepository _cartRepo;
         protected readonly IMapper _mapper;
         protected readonly BookRepository _bookRepo;
+        protected readonly OrderRepository _orderRepo;
 
-        public CartService(CartRepository cartRepo, BookRepository bookRepo, IMapper mapper)
+        public CartService(
+            CartRepository cartRepo,
+            BookRepository bookRepo,
+            IMapper mapper,
+            OrderRepository orderRepo
+        )
         {
             _cartRepo = cartRepo;
             _bookRepo = bookRepo;
+            _orderRepo = orderRepo;
             _mapper = mapper;
         }
-
 
         public async Task<CartReadDto> CreateOneAsync(CartCreateDto createDto)
         {
             var allCarts = await _cartRepo.GetAllAsync();
             var existingCart = allCarts.Find(x => x.UserId == createDto.UserId);
-            if (existingCart == null)
+            var ordersByUserId = await _orderRepo.GetByIdAsync(createDto.UserId);
+            bool doesCartHaveOrder = false;
+            if (existingCart != null)
+                doesCartHaveOrder = ordersByUserId.Any(x => x.CartId == existingCart.CartId);
+
+            if (existingCart == null || doesCartHaveOrder)
             {
                 var cart = _mapper.Map<CartCreateDto, Cart>(createDto);
 
@@ -62,11 +73,12 @@ namespace BookStore.src.Services.cart
                 await _cartRepo.GetByIdAsync(id)
                 ?? throw CustomException.NotFound($"Cart with {id} cannot be found for deletion!");
 
-            foreach (var cartItem in foundCart.CartItems) {
+            foreach (var cartItem in foundCart.CartItems)
+            {
                 var b = await _bookRepo.GetBookByIdAsync(cartItem.BookId);
                 b.StockQuantity += cartItem.Quantity;
                 await _bookRepo.UpdateOneAsync(b);
-             }
+            }
 
             bool isDeleted = await _cartRepo.DeleteOneAsync(foundCart);
             return isDeleted;

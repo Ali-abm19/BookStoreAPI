@@ -80,6 +80,12 @@ namespace BookStore.src.Services.cartItems
                 throw CustomException.NotFound($"CartItem with {id} cannot be found for deletion!");
             }
 
+            var book = await _bookRepository.GetBookByIdAsync(foundCartItem.BookId);
+            if (book != null)
+            {
+                book.StockQuantity += foundCartItem.Quantity;
+                await _bookRepository.UpdateOneAsync(book);
+            }
             bool isDeleted = await _cartItemsRepo.DeleteOneAsync(foundCartItem);
             return isDeleted;
         }
@@ -92,11 +98,11 @@ namespace BookStore.src.Services.cartItems
             //                     5 old > new 4
             if (foundCartItem.Quantity > updateDto.Quantity)
             {
-                book.StockQuantity++;
-            }
+                book.StockQuantity += foundCartItem.Quantity - updateDto.Quantity;
+            } //6<10 added 4 books to the cart -> 10-6= 4 -> subtract 4 from stock
             else if (foundCartItem.Quantity < updateDto.Quantity)
             {
-                book.StockQuantity--;
+                book.StockQuantity -= updateDto.Quantity - foundCartItem.Quantity;
             }
 
             await _bookRepository.UpdateOneAsync(book);
