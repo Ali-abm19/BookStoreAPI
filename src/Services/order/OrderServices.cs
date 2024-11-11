@@ -40,7 +40,12 @@ namespace BookStore.src.Services.order
                 order.Log.Add(
                     $"Order created at {DateTime.UtcNow} with status {order.OrderStatus}"
                 );
+                if(order.TotalPrice>0){
                 await _orderRepository.CreateOneAsync(order);
+                }
+                else{
+                    throw CustomException.BadRequest("You can't make an empty order");
+                }
             }
             return _mapper.Map<Order, OrderReadDto>(order);
         }

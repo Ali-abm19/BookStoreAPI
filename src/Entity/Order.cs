@@ -19,7 +19,7 @@ namespace BookStore.src.Entity
         [Required(ErrorMessage = "You must choose a status")]
         public Status OrderStatus { get; set; }
 
-        public List<string>? Log { get; set; }
+        public List<string> Log { get; set; } =[];
 
         // connections with other entities
         public Guid UserId { get; set; }
