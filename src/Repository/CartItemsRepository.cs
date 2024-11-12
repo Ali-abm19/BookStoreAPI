@@ -42,7 +42,6 @@ namespace BookStore.Repository
                     await _cartItems.AddAsync(newCartItem);
                     await _databaseContext.SaveChangesAsync();
                 }
-
                 return newCartItem;
             }
             else

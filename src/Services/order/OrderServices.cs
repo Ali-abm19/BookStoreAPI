@@ -101,6 +101,8 @@ namespace BookStore.src.Services.order
             {
                 throw CustomException.Forbidden("You do not have permission to delete this order.");
             }
+
+            await _cartRepo.DeleteOneAsync(foundOrderById.Cart);
             return await _orderRepository.DeleteOneAsync(foundOrderById);
         }
 
