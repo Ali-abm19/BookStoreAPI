@@ -100,6 +100,10 @@ namespace BookStore.src.Services.user
 
         public async Task<UserReadDto> CreateOneAsync(UserCreateDto createDto)
         {
+            if(_userRepo.FindByEmailAsync(createDto.Email).Result!=null){
+                throw CustomException.BadRequest("The email already exist. Please Sign in or use another  email");
+            }
+
             PasswordUtils.Password(createDto.Password, out string hashedPassword, out byte[] salt);
 
             var user = _mapper.Map<UserCreateDto, User>(createDto);

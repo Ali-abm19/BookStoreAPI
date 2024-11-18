@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BookStore.src.Database;
 using BookStore.src.Entity;
-using BookStore.src.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.src.Repository

@@ -165,7 +165,7 @@ namespace BookStore.src.Controllers
             return Ok(orders);
         }
 
-        //Updata By Order Id
+        //Update By Order Id
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")] //only admin can edit the order. customer can only send requests to support
         public async Task<ActionResult> UpdateOrder(Guid id, [FromBody] OrderUpdateDto orderUpdate)

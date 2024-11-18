@@ -93,7 +93,7 @@ namespace BookStore.src.Services.order
 
             if (foundOrderById == null)
             {
-                throw CustomException.NotFound($"Order with ID {id} cannot be found!");
+                throw CustomException.NotFound($"Order with ID {id} cannot be found");
             }
 
             // If the user is not an admin, check if they are the owner of the order
